@@ -17,14 +17,15 @@
                     @method('post')
                     <div class="form-group">
                         <label for="role_user_form">Role User</label>
-                        <select id='role_user_form' class="form-control" name='role_user' required>
+                        <input type="hidden" name="update_id" id="update_id">
+                        <select id='role_user_form' class="form-control">
                             @foreach ($roles as $role)
                                 <option value="{{ $role->role_id }}">{{ $role->role_name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button id="save-project-btn" type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

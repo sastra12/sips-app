@@ -42,7 +42,7 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" id="save-btn" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

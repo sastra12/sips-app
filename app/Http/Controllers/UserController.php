@@ -25,7 +25,7 @@ class UserController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editFormRole(`' . route('user.update', $data->id) . '`)" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="editDataAdmin(' . $data->id . ')" class="btn btn-xs btn-info">Edit</button>
                 <button onclick="deleteData(`' . route('user.destroy', $data->id) . '`)" class="btn btn-xs btn-danger">Delete</button>
             ';
             })
@@ -63,8 +63,6 @@ class UserController extends Controller
     {
         $validated = Validator::make($request->all(), [
             'name' => 'required',
-            'username' => 'required',
-            'role_user' => 'required'
         ]);
 
         if ($validated->fails()) {
@@ -119,7 +117,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validated = Validator::make($request->all(), [
-            'role_user' => 'required',
+            'role' => 'required',
         ]);
         if ($validated->fails()) {
             return response()->json([
@@ -128,7 +126,7 @@ class UserController extends Controller
             ]);
         } else {
             $data = User::query()->find($id);
-            $data->role_id = $request->input('role_user');
+            $data->role_id = $request->input('role');
             $data->save();
             return response()->json([
                 'status' => 'Success',

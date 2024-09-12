@@ -19,7 +19,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
+                        {{-- <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
+                                class="fa fa-plus-circle">Tambah</i></button> --}}
+                        <button onclick="createDataVillage()" class="btn btn-success btn-xs"><i
                                 class="fa fa-plus-circle">Tambah</i></button>
                     </div>
                     <div class="card-body table-responsive">
@@ -54,17 +56,114 @@
     <script>
         let table;
 
-        function addForm(url) {
-            $('#modal-form').modal('show')
-            $('#modal-form .modal-title').html('Tambah Data Desa')
+        $("#save-project-btn").click(function(e) {
+            e.preventDefault()
+            if ($("#update_id").val() == null || $("#update_id").val() == "") {
+                storeDataVillage()
+            } else {
+                updateDataVillage()
+            }
+        })
 
-            // buat mengosongkan error listnya terlebih dahulu
+
+        function createDataVillage() {
+            // untuk menampilkan modal dan ganti title
+            $("#modal-form").modal("show")
+            $("#modal-form .modal-title").html("Tambah Data Desa Pendamping")
+
+            // Untuk membuat form isian null
+            $("#village_name").val("")
+            $("#village_code").val("")
+
+            // Membersihkan list error
             $('#error_list').html('')
             $('#error_list').removeClass('alert alert-danger')
+        }
 
-            $('#modal-form form')[0].reset()
-            $('#modal-form form').attr('action', url)
-            $('#modal-form [name=_method]').val('post')
+        function editDataVillage(id) {
+            $.ajax({
+                url: "{{ route('village.show', '') }}/" + id,
+                type: "GET",
+                success: function(response) {
+                    $("#update_id").val(id)
+                    $('#village_name').val(response.village_name)
+                    $('#village_code').val(response.village_code)
+
+                    $("#modal-form").modal("show")
+                    $("#modal-form .modal-title").html("Edit Data Desa Pendamping")
+                    $('#error_list').html('')
+                    $('#error_list').removeClass('alert alert-danger')
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function storeDataVillage() {
+            $.ajax({
+                url: "{{ route('village.store') }}",
+                type: "POST",
+                data: {
+                    village_name: $("#village_name").val(),
+                    village_code: $("#village_code").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                    } else if (response.status = "Failed added") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function updateDataVillage() {
+            const id = $("#update_id").val()
+            $.ajax({
+                url: "{{ route('village.update', '') }}/" + id,
+                type: "PUT",
+                data: {
+                    village_name: $("#village_name").val(),
+                    village_code: $("#village_code").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                        $("#update_id").val("")
+                    } else if (response.status = "Failed updated") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
         }
 
         function deleteData(url) {
@@ -100,26 +199,6 @@
                 });
         }
 
-        function editForm(url) {
-            // buat mengosongkan error listnya terlebih dahulu
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
-
-            // buat menampilkan modal
-            $('#modal-form').modal('show')
-            $('#modal-form .modal-title').html('Edit Data Kategori')
-
-            // buat aksi ke method update
-            $('#modal-form form').attr('action', url);
-            $('#modal-form [name=_method]').val('put');
-
-            $.get(url)
-                .done((response) => {
-                    $('#village_name').val(response.village_name)
-                    $('#village_code').val(response.village_code)
-                })
-        }
-
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
@@ -140,7 +219,6 @@
                     targets: "_all"
                 }],
                 columns: [{
-                        // buat penomoran
                         data: 'DT_RowIndex',
                     },
                     {
@@ -155,33 +233,6 @@
                 ]
 
             });
-
-            // Response when success or failed when submit button
-            $('#modal-form form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Added Data' || response.message ==
-                            'Success Updated Data') {
-                            $('#modal-form').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            });
-                            table.ajax.reload()
-                        } else if (response.status == 'Failed added' || response.status ==
-                            'Failed updated') {
-                            $('#error_list').html('')
-                            $('#error_list').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
-
         });
     </script>
 @endpush

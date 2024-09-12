@@ -25,8 +25,9 @@
                         <input autocomplete="off" type="text" class="form-control" id="village_code"
                             name="village_code" value="{{ old('village_code') }}">
                     </div>
+                    <input type="hidden" name="update_id" id="update_id">
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="save-project-btn">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

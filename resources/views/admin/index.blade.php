@@ -59,14 +59,16 @@
     <script>
         let table;
         // Ketika tombol save di klik
+        $("#save-btn").click(function(e) {
+            e.preventDefault()
+            storeDataAdmin()
+        })
+
         $("#save-project-btn").click(function(e) {
             e.preventDefault()
-            if ($("#update_id").val() == null || $("#update_id").val() == "") {
-                storeDataAdmin()
-            } else {
-                updateDataAdmin()
-            }
+            updateDataAdmin()
         })
+
         // Value for username and password
         $("#name").on("keyup", function() {
             let inputName = $("#name").val().toLowerCase().split(" ").join("")
@@ -114,7 +116,7 @@
                     name: $("#name").val(),
                     username: $("#username").val(),
                     password: $("#password").val(),
-                    role: $("#role_user").val(),
+                    role_user: $("#role_user").val(),
                 },
                 success: function(response) {
                     if (response.status == "Success") {

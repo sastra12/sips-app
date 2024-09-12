@@ -25,7 +25,7 @@ class WasteBankController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editForm(`' . route('waste-bank.update', $data->waste_bank_id) . '`)" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="editDataTPS3R(' . $data->waste_bank_id . ')" class="btn btn-xs btn-info">Edit</button>
                 <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-xs btn-danger">Delete</button>
             ';
             })
@@ -116,7 +116,7 @@ class WasteBankController extends Controller
     public function update(Request $request, $id)
     {
         $validated = Validator::make($request->all(), [
-            'waste_bank_name' => 'required',
+            'waste_bank_name_edit' => 'required',
         ]);
         if ($validated->fails()) {
             return response()->json([
@@ -125,7 +125,7 @@ class WasteBankController extends Controller
             ]);
         } else {
             $data = WasteBank::query()->find($id);
-            $data->waste_name = $request->input('waste_bank_name');
+            $data->waste_name = $request->input('waste_bank_name_edit');
             $data->save();
             return response()->json([
                 'status' => 'Success',

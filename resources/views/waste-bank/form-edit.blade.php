@@ -19,9 +19,10 @@
                         <label for="waste_bank_name">Nama Bank Sampah</label>
                         <input autocomplete="off" type="text" class="form-control" id="waste_bank_name_edit"
                             name="waste_bank_name" value="{{ old('waste_bank_name') }}">
+                        <input type="hidden" id="update_id">
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="save-project-edit-btn">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

@@ -16,10 +16,11 @@
                     @csrf
                     @method('post')
                     <div class="form-group">
-                        <label for="waste_bank_name">Nama Bank Sampah</label>
+                        <label for="waste_bank_name">Nama TPS3R</label>
                         <input autocomplete="off" type="text" class="form-control" id="waste_bank_name"
                             name="waste_bank_name" value="{{ old('waste_bank_name') }}">
                     </div>
+                    <input type="hidden" id="update_id">
                     <div class="form-group">
                         <label for="village">Desa</label>
                         <select id='village_id' class="form-control" name='village_id' required>
@@ -29,7 +30,7 @@
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button id="save-project-btn" type="submit" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

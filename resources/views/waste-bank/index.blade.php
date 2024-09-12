@@ -19,7 +19,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="addForm('{{ route('waste-bank.store') }}')" class="btn btn-success btn-xs"><i
+                        <button onclick="createDataTPS3R()" class="btn btn-success btn-xs"><i
                                 class="fa fa-plus-circle">Tambah</i></button>
                     </div>
                     <div class="card-body table-responsive">
@@ -54,18 +54,106 @@
 @push('script')
     <script>
         let table;
+        // Ketika tombol save di klik
+        $("#save-project-btn").click(function(e) {
+            e.preventDefault()
+            storeDataTPS3R()
+        })
+        // Ketika tombol form edit di klik
+        $("#save-project-edit-btn").click(function(e) {
+            e.preventDefault()
+            updateDataTPS3R()
+        })
 
-        function addForm(url) {
-            $('#modal-form').modal('show')
-            $('#modal-form .modal-title').html('Tambah Data Bank Sampah')
+        function createDataTPS3R() {
+            // untuk menampilkan modal dan ganti title
+            $("#modal-form").modal("show")
+            $("#modal-form .modal-title").html("Tambah Data TPS3R")
 
-            // buat mengosongkan error listnya terlebih dahulu
+            // Untuk membuat form isian null
+            $("#waste_bank_name").val("")
+
+            // Membersihkan list error
             $('#error_list').html('')
             $('#error_list').removeClass('alert alert-danger')
+        }
 
-            $('#modal-form form')[0].reset()
-            $('#modal-form form').attr('action', url)
-            $('#modal-form [name=_method]').val('post')
+        function storeDataTPS3R() {
+            $.ajax({
+                url: "{{ route('waste-bank.store') }}",
+                type: "POST",
+                data: {
+                    waste_bank_name: $("#waste_bank_name").val(),
+                    village_id: $("#village_id").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        location.reload();
+                    } else if (response.status = "Failed added") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function editDataTPS3R(id) {
+            $.ajax({
+                url: "{{ route('waste-bank.show', '') }}/" + id,
+                type: "GET",
+                success: function(response) {
+                    $("#update_id").val(id)
+                    $('#waste_bank_name_edit').val(response.waste_name)
+
+                    $("#modal-form-edit").modal("show")
+                    $("#modal-form-edit .modal-title").html("Edit Data TPS3R")
+                    $('#error_list').html('')
+                    $('#error_list').removeClass('alert alert-danger')
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function updateDataTPS3R() {
+            const id = $("#update_id").val()
+            $.ajax({
+                url: "{{ route('waste-bank.update', '') }}/" + id,
+                type: "PUT",
+                data: {
+                    waste_bank_name_edit: $("#waste_bank_name_edit").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form-edit').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                        $("#update_id").val("")
+                    } else if (response.status = "Failed updated") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
         }
 
         function deleteData(url) {
@@ -83,10 +171,7 @@
                                 method: 'DELETE',
                             })
                             .done((response) => {
-                                swal("Success data has been deleted!", {
-                                    icon: "success",
-                                });
-                                table.ajax.reload();
+                                location.reload();
                             })
                             .fail((errors) => {
                                 swal("Failed deleted data!", {
@@ -204,15 +289,6 @@
                         }
                     })
             })
-
-
-            // Value for username and password
-            $("#name").on("keyup", function() {
-                let inputName = $("#name").val().toLowerCase().split(" ").join("")
-                $("#username").val(inputName);
-                $("#password").val(inputName);
-            })
-
         });
     </script>
 @endpush

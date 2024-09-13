@@ -43,4 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
     // Manajemen Customer
     Route::get('/customer/data', [CustomerController::class, 'data'])->name('customer.data');
     Route::resource('customer', CustomerController::class);
+    Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
+    Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
 });

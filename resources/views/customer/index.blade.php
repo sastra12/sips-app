@@ -18,22 +18,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
-                        <button onclick="addForm('{{ route('customer.store') }}')" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
-                    </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Alamat</th>
-                                    <th scope="col">RT</th>
-                                    <th scope="col">RW</th>
-                                    <th scope="col">Nominal</th>
-                                    <th scope="col">Keterangan</th>
-                                    <th scope="col">Bank Sampah</th>
+                                    <th scope="col">Desa Pendamping</th>
+                                    <th scope="col">Nama TPS3R</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -46,7 +37,6 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('customer.form')
 @endsection
 
 @push('styles')
@@ -59,17 +49,41 @@
     <script>
         let table;
 
-        function addForm(url) {
-            $('#modal-form').modal('show')
-            $('#modal-form .modal-title').html('Tambah Data Pelanggan')
-
-            // buat mengosongkan error listnya terlebih dahulu
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
-
-            $('#modal-form form')[0].reset()
-            $('#modal-form form').attr('action', url)
-            $('#modal-form [name=_method]').val('post')
+        function storeDataVillage() {
+            $.ajax({
+                url: "{{ route('customer.store') }}",
+                type: "POST",
+                data: {
+                    customer_name: $("#customer_name").val(),
+                    customer_address: $("#customer_address").val(),
+                    customer_neighborhood: $("#customer_neighborhood").val(),
+                    customer_community_association: $("#customer_community_association").val(),
+                    rubbish_fee: $("#rubbish_fee").val(),
+                    customer_status: $("#customer_status").val(),
+                    waste_id: $("#waste_id").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                    } else if (response.status = "Failed added") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
         }
 
         function deleteData(url) {
@@ -155,22 +169,7 @@
                         data: 'DT_RowIndex',
                     },
                     {
-                        data: 'customer_name',
-                    },
-                    {
-                        data: 'customer_address',
-                    },
-                    {
-                        data: 'customer_neighborhood',
-                    },
-                    {
-                        data: 'customer_community_association',
-                    },
-                    {
-                        data: 'rubbish_fee',
-                    },
-                    {
-                        data: 'customer_status',
+                        data: 'village_name',
                     },
                     {
                         data: 'waste_name',

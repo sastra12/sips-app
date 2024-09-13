@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Village;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
 use DataTables;
@@ -17,30 +18,46 @@ class CustomerController extends Controller
      */
     public function data()
     {
-        $listdata = Customer::with('waste_bank')->get();
-
+        $listdata = Village::has('waste_bank.customers')->get();
         return Datatables::of($listdata)
-            // for number
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return  '
-                <button onclick="editForm(`' . route('customer.update', $data->customer_id) . '`)" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('customer.destroy', $data->customer_id) . '`)" class="btn btn-xs btn-danger">Delete</button>
-            ';
+                return '<a href="' . route('waste-cust-details', ['bankId' => $data->waste_bank->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
             })
             ->addColumn('waste_name', function ($data) {
                 return $data->waste_bank->waste_name;
             })
             ->make();
     }
+
     public function index()
+    {
+        return view('customer.index',);
+    }
+
+    public function wasteCustomerDetails()
     {
         $waste_banks = WasteBank::query()->get();
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
-        return view('customer.index', [
+        return view('customer.waste-customer-details', [
             'customer_status' => $customer_status,
             'waste_banks' => $waste_banks
         ]);
+    }
+
+    public function wasteCustData(Request $request)
+    {
+        $waste_id = $request->input('bankId');
+        $listdata = Customer::query()->where('waste_id', '=', $waste_id)->get();
+        return Datatables::of($listdata)
+            ->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return  '
+                    <button onclick="editDataCustomer(' . $data->customer_id . ')" class="btn btn-xs btn-info">Edit</button>
+                    <button onclick="deleteData(`' . route('customer.destroy', $data->customer_id) . '`)" class="btn btn-xs btn-danger">Delete</button>
+                ';
+            })
+            ->make();
     }
 
     /**
@@ -132,7 +149,6 @@ class CustomerController extends Controller
             'customer_community_association' => 'required|numeric',
             'rubbish_fee' => 'required|numeric',
             'customer_status' => 'required',
-            'waste_id' => 'required',
         ]);
         if ($validated->fails()) {
             return response()->json([
@@ -147,7 +163,6 @@ class CustomerController extends Controller
             $data->customer_community_association = $request->input('customer_community_association');
             $data->rubbish_fee = $request->input('rubbish_fee');
             $data->customer_status = $request->input('customer_status');
-            $data->waste_id = $request->input('waste_id');
             $data->save();
             return response()->json([
                 'status' => 'Success',

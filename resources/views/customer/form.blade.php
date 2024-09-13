@@ -15,6 +15,7 @@
                 <form action="" method="post">
                     @csrf
                     @method('post')
+                    <input type="hidden" name="update_id" id="update_id">
                     <div class="form-group">
                         <label for="customer_name">Nama Pelanggan</label>
                         <input autocomplete="off" type="text" class="form-control" id="customer_name"
@@ -53,12 +54,16 @@
                         <label for="waste_id">Bank Sampah</label>
                         <select id='waste_id' class="form-control" name='waste_id' required>
                             @foreach ($waste_banks as $waste_bank)
-                                <option value="{{ $waste_bank->waste_bank_id }}">{{ $waste_bank->waste_name }}</option>
+                                <option value="{{ $waste_bank->waste_bank_id }}"
+                                    {{ $waste_bank->waste_bank_id == request()->query('bankId') ? 'selected' : '' }}
+                                    disabled="disabled">
+                                    {{ $waste_bank->waste_name }}</option>
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" id="save-project-btn" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     </div>
                 </form>

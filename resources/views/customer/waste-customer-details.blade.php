@@ -189,6 +189,39 @@
             })
         }
 
+        function deleteData(url) {
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this data!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                                url: url,
+                                method: 'DELETE',
+                            })
+                            .done((response) => {
+                                swal("Success data has been deleted!", {
+                                    icon: "success",
+                                });
+                                table.ajax.reload();
+                            })
+                            .fail((errors) => {
+                                swal("Failed deleted data!", {
+                                    icon: "warning",
+                                });
+                                return;
+                            });
+
+                    } else {
+                        swal("Data is safe!");
+                    }
+                });
+        }
+
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {

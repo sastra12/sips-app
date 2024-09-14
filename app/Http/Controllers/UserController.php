@@ -26,7 +26,7 @@ class UserController extends Controller
             ->addColumn('action', function ($data) {
                 return  '
                 <button onclick="editDataAdmin(' . $data->id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('user.destroy', $data->id) . '`)" class="btn btn-xs btn-danger">Delete</button>
+                <button onclick="deleteData(`' . route('user.destroy', $data->id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
             ';
             })
             ->addColumn('role_name', function ($data) {
@@ -61,9 +61,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $role_user = $request->input('role_user');
+        $rules = [
+            'name' => 'required'
+        ];
+
+        if ($role_user == 2) {
+            $rules['waste_name'] = 'required';
+        }
+
+        $validated = Validator::make($request->all(), $rules);
 
         if ($validated->fails()) {
             return response()->json([
@@ -77,6 +84,10 @@ class UserController extends Controller
             $data->password = bcrypt($request->input('password'));
             $data->role_id = $request->input('role_user');
             $data->save();
+
+            // Menyimpan ke tabel intermediate
+            $data->user_waste_banks()->attach($request->input('waste_name'));
+
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success Added Data'
@@ -144,6 +155,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $data = User::query()->find($id);
+        $data->user_waste_banks()->detach();
         $data->delete();
     }
 }

@@ -27,7 +27,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama Bank Sampah</th>
+                                    <th scope="col">Nama TPS3R</th>
                                     <th scope="col">Desa</th>
                                     <th scope="col">Action</th>
                                 </tr>
@@ -186,25 +186,6 @@
                 });
         }
 
-        function editForm(url) {
-            // buat mengosongkan error listnya terlebih dahulu
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
-
-            // buat menampilkan modal
-            $('#modal-form-edit').modal('show')
-            $('#modal-form-edit .modal-title').html('Edit Data Bank Sampah')
-
-            // buat aksi ke method update
-            $('#modal-form-edit form').attr('action', url);
-            $('#modal-form-edit [name=_method]').val('put');
-
-            $.get(url)
-                .done((response) => {
-                    $('#waste_bank_name_edit').val(response.waste_name)
-                })
-        }
-
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
@@ -240,55 +221,6 @@
                 ]
 
             });
-
-            // Response when success or failed when submit button
-            $('#modal-form form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Added Data') {
-                            $('#modal-form').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            }).then((result) => {
-                                location.reload();
-
-                            });
-                        } else if (response.status == 'Failed added') {
-                            $('#error_list').html('')
-                            $('#error_list').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
-
-            $('#modal-form-edit form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form-edit form').attr('action'), $('#modal-form-edit form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Updated Data') {
-                            $('#modal-form-edit').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            });
-                            table.ajax.reload()
-                        } else if (response.status == 'Failed Updated Data') {
-                            $('#error_list_edit').html('')
-                            $('#error_list_edit').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list_edit').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
         });
     </script>
 @endpush

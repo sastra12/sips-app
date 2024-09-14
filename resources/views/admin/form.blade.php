@@ -41,6 +41,12 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="form-group" id="waste_name_group" style="display: none">
+                        <label for="waste_name">Nama TPS3R</label>
+                        <select id='waste_name' class="form-control" name='waste_name' required>
+                            <option value=""></option>
+                        </select>
+                    </div>
                     <div class="modal-footer">
                         <button type="submit" id="save-btn" class="btn btn-primary">Simpan</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>

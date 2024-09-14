@@ -26,13 +26,22 @@ class WasteBankController extends Controller
             ->addColumn('action', function ($data) {
                 return  '
                 <button onclick="editDataTPS3R(' . $data->waste_bank_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-xs btn-danger">Delete</button>
+                <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="createDataTobase(' . $data->waste_bank_id . ')" class="btn btn-xs btn-warning">Tambah Tonase</button>
             ';
             })
             ->addColumn('waste_bank_village', function ($data) {
                 return $data->village->village_name;
             })
             ->make();
+    }
+
+    public function unassignedWasteBank()
+    {
+        $listdata = WasteBank::doesntHave('waste_bank_users')->get();
+        return response()->json([
+            'data' => $listdata
+        ]);
     }
 
     public function index()

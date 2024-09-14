@@ -98,7 +98,7 @@
                     $('#role_user_form').val(response.role_id)
 
                     $("#modal-form-edit").modal("show")
-                    $("#modal-form-edit .modal-title").html("Edit Data Desa Pendamping")
+                    $("#modal-form-edit .modal-title").html("Edit Data Admin")
                     $('#error_list').html('')
                     $('#error_list').removeClass('alert alert-danger')
                 },
@@ -109,15 +109,23 @@
         }
 
         function storeDataAdmin() {
+            // definisikan objek data 
+            let data = {
+                name: $("#name").val(),
+                username: $("#username").val(),
+                password: $("#password").val(),
+                role_user: $("#role_user").val(),
+            }
+
+            if (data.role_user == 2) {
+                // tambahkan properties waste_name ke data
+                data.waste_name = $("#waste_name").val()
+            }
+
             $.ajax({
                 url: "{{ route('user.store') }}",
                 type: "POST",
-                data: {
-                    name: $("#name").val(),
-                    username: $("#username").val(),
-                    password: $("#password").val(),
-                    role_user: $("#role_user").val(),
-                },
+                data: data,
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form').modal('hide');
@@ -207,6 +215,38 @@
                     }
                 });
         }
+
+        $("#role_user").change(function() {
+            let userRole = $(this).val()
+            if (userRole == 2) {
+                $.ajax({
+                    url: "{{ route('waste-bank.unassigned') }}",
+                    type: 'GET',
+                    success: function(response) {
+                        $("#waste_name_group").show()
+                        $("#waste_name").empty(); // Kosongkan select sebelum menambahkan opsi baru
+                        $("#waste_name").append('<option value="">Pilih TPS3R</option>');
+
+                        response.data.map(function(value) {
+                            $("#waste_name").append('<option value="' + value.waste_bank_id +
+                                '">' + value
+                                .waste_name + '</option>')
+                        })
+                    },
+                    error: function(response) {
+                        console.log(response)
+                    }
+                })
+            }
+        })
+
+        $('#modal-form').on('hidden.bs.modal', function() {
+            // Kosongkan select ketika modal ditutup
+            $("#waste_name_group").hide()
+            $("#waste_name").empty();
+
+        });
+
 
         $(document).ready(function() {
             $.ajaxSetup({

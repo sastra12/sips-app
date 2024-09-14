@@ -25,7 +25,7 @@ class VillageController extends Controller
             ->addColumn('action', function ($data) {
                 return  '
                 <button onclick="editDataVillage(' . $data->village_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('village.destroy', $data->village_id) . '`)" class="btn btn-xs btn-danger">Delete</button>
+                <button onclick="deleteData(`' . route('village.destroy', $data->village_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
             ';
             })
             ->make();

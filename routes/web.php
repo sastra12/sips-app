@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Manajemen Waste Bank
     Route::get('/waste-bank/data', [WasteBankController::class, 'data'])->name('waste-bank.data');
+    Route::get('/unassigned-waste-banks', [WasteBankController::class, 'unassignedWasteBank'])->name('waste-bank.unassigned');
     Route::resource('waste-bank', WasteBankController::class);
 
     // Manajemen Customer

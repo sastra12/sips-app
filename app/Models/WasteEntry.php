@@ -20,4 +20,9 @@ class WasteEntry extends Model
     {
         return $this->belongsTo(WasteBank::class, 'waste_id', 'waste_bank_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

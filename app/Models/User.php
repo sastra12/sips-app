@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(WasteBank::class, 'user_waste_bank', 'user_id', 'waste_id');
     }
+
+    public function waste_entries()
+    {
+        return $this->hasMany(WasteEntry::class, 'user_id', 'id');
+    }
 }

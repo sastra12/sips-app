@@ -43,6 +43,7 @@
     </div><!-- /.container-fluid -->
     @includeIf('waste-bank.form')
     @includeIf('waste-bank.form-edit')
+    @includeIf('waste-bank.waste-entries')
 @endsection
 
 @push('styles')
@@ -185,6 +186,60 @@
                     }
                 });
         }
+
+        // Ketika klik button save tonase
+        $("#save-project-tonase").click(function(e) {
+            e.preventDefault()
+            storeDataTonase()
+        })
+
+        // Ketika tombol Tambah Tonase di klik
+        function createDataTonase(waste_bank_id) {
+            $("#waste_bank_id").val(waste_bank_id)
+
+            $("#modal-form-tonase").modal("show")
+            $("#modal-form-tonase .modal-title").html("Tambah Data Tonase Sampah")
+
+            $("#waste_organic").val("")
+            $("#waste_anorganic").val("")
+            $("#waste_residue").val("")
+            $("#date_entri").val("")
+
+            $('#error_list_tonase').html('')
+            $('#error_list_tonase').removeClass('alert alert-danger')
+        }
+
+        function storeDataTonase() {
+            let id = $("#waste_bank_id").val()
+            let data = {
+                waste_organic: $("#waste_organic").val(),
+                waste_anorganic: $("#waste_anorganic").val(),
+                waste_residue: $("#waste_residue").val(),
+                date_entri: $("#date_entri").val(),
+                waste_bank_id: id
+            }
+            $.ajax({
+                url: "{{ route('waste-entri.store') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form-tonase').modal('hide');
+                        location.reload();
+                    } else if (response.status = "Failed added") {
+                        $('#error_list_tonase').html('')
+                        $('#error_list_tonase').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list_tonase').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
 
         $(document).ready(function() {
             $.ajaxSetup({

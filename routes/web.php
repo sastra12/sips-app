@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VillageController;
 use App\Http\Controllers\WasteBankController;
+use App\Http\Controllers\WasteEntriController;
 use App\Models\WasteBank;
 use Illuminate\Support\Facades\Route;
 
@@ -45,5 +46,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('customer', CustomerController::class);
         Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
         Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
+
+        Route::resource('waste-entri', WasteEntriController::class);
     });
 });

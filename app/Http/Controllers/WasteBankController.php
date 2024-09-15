@@ -27,7 +27,7 @@ class WasteBankController extends Controller
                 return  '
                 <button onclick="editDataTPS3R(' . $data->waste_bank_id . ')" class="btn btn-xs btn-info">Edit</button>
                 <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
-                <button onclick="createDataTobase(' . $data->waste_bank_id . ')" class="btn btn-xs btn-warning">Tambah Tonase</button>
+                <button onclick="createDataTonase(' . $data->waste_bank_id . ')" class="btn btn-xs btn-warning">Tambah Tonase</button>
             ';
             })
             ->addColumn('waste_bank_village', function ($data) {

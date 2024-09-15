@@ -26,24 +26,24 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::middleware(['checkRole:1'])->group(function () {
+        // Manajemen Desa
+        Route::get('/village/data', [VillageController::class, 'data'])->name('village.data');
+        Route::resource('village', VillageController::class);
 
-    // Manajemen Desa
-    Route::get('/village/data', [VillageController::class, 'data'])->name('village.data');
-    Route::resource('village', VillageController::class);
+        // Manajemen Pengguna
+        Route::get('/user/data', [UserController::class, 'data'])->name('user.data');
+        Route::resource('user', UserController::class);
 
+        // Manajemen Waste Bank
+        Route::get('/waste-bank/data', [WasteBankController::class, 'data'])->name('waste-bank.data');
+        Route::get('/unassigned-waste-banks', [WasteBankController::class, 'unassignedWasteBank'])->name('waste-bank.unassigned');
+        Route::resource('waste-bank', WasteBankController::class);
 
-    // Manajemen Pengguna
-    Route::get('/user/data', [UserController::class, 'data'])->name('user.data');
-    Route::resource('user', UserController::class);
-
-    // Manajemen Waste Bank
-    Route::get('/waste-bank/data', [WasteBankController::class, 'data'])->name('waste-bank.data');
-    Route::get('/unassigned-waste-banks', [WasteBankController::class, 'unassignedWasteBank'])->name('waste-bank.unassigned');
-    Route::resource('waste-bank', WasteBankController::class);
-
-    // Manajemen Customer
-    Route::get('/customer/data', [CustomerController::class, 'data'])->name('customer.data');
-    Route::resource('customer', CustomerController::class);
-    Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
-    Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
+        // Manajemen Customer
+        Route::get('/customer/data', [CustomerController::class, 'data'])->name('customer.data');
+        Route::resource('customer', CustomerController::class);
+        Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
+        Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
+    });
 });

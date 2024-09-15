@@ -18,7 +18,8 @@ class UserController extends Controller
 
     public function data()
     {
-        $listdata = User::with('role')->get();
+        $listdata = User::with(['role', 'user_waste_banks'])->get();
+        // return response()->json($listdata);
 
         return Datatables::of($listdata)
             // for number
@@ -30,6 +31,9 @@ class UserController extends Controller
             ';
             })
             ->addColumn('role_name', function ($data) {
+                if (count($data->user_waste_banks) != null) {
+                    return $data->role->role_name . ' - ' .  $data->user_waste_banks[0]->waste_name;
+                }
                 return $data->role->role_name;
             })
             ->make();
@@ -127,9 +131,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'role' => 'required',
-        ]);
+        $role_user = $request->input('role');
+        $rules = [
+            'role' => 'required'
+        ];
+
+        if ($role_user == 2) {
+            $rules['waste_name'] = 'required';
+        }
+
+        $validated = Validator::make($request->all(), $rules);
+
         if ($validated->fails()) {
             return response()->json([
                 'status' => 'Failed updated',
@@ -139,6 +151,9 @@ class UserController extends Controller
             $data = User::query()->find($id);
             $data->role_id = $request->input('role');
             $data->save();
+            // Menyimpan ke tabel intermediate
+            $data->user_waste_banks()->attach($request->input('waste_name'));
+
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success Updated Data'

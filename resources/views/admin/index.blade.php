@@ -90,6 +90,10 @@
         }
 
         function editDataAdmin(id) {
+            // Kosongkan select ketika modal ditutup
+            $("#waste_name_group_edit").hide()
+            $("#waste_name_edit").empty();
+
             $.ajax({
                 url: "{{ route('user.show', '') }}/" + id,
                 type: "GET",
@@ -152,12 +156,16 @@
 
         function updateDataAdmin() {
             const id = $("#update_id").val()
+            let data = {
+                role: $("#role_user_form").val(),
+            }
+            if (data.role == 2) {
+                data.waste_name = $("#waste_name_edit").val()
+            }
             $.ajax({
                 url: "{{ route('user.update', '') }}/" + id,
                 type: "PUT",
-                data: {
-                    role: $("#role_user_form").val(),
-                },
+                data: data,
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form-edit').modal('hide');
@@ -170,10 +178,10 @@
                         table.ajax.reload()
                         $("#update_id").val("")
                     } else if (response.status = "Failed updated") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
+                        $('#error_list_edit').html('')
+                        $('#error_list_edit').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
+                            $('#error_list_edit').append('<li>' + value + '</li>')
                         })
                     }
                 },
@@ -216,6 +224,34 @@
                 });
         }
 
+        // Buat Edit data admin
+        $("#role_user_form").change(function() {
+            let userRole = $(this).val()
+            if (userRole == 2) {
+                $.ajax({
+                    url: "{{ route('waste-bank.unassigned') }}",
+                    type: 'GET',
+                    success: function(response) {
+                        $("#waste_name_group_edit").show()
+                        $("#waste_name_edit").empty(); // Kosongkan select sebelum menambahkan opsi baru
+                        $("#waste_name_edit").append('<option value="">Pilih TPS3R</option>');
+
+                        response.data.map(function(value) {
+                            $("#waste_name_edit").append('<option value="' + value
+                                .waste_bank_id +
+                                '">' + value
+                                .waste_name + '</option>')
+                        })
+                    },
+                    error: function(response) {
+                        console.log(response)
+                    }
+                })
+            }
+        })
+
+
+        // Buat store data admin
         $("#role_user").change(function() {
             let userRole = $(this).val()
             if (userRole == 2) {
@@ -286,56 +322,6 @@
                 ]
 
             });
-
-            // Response when success or failed when submit button
-            $('#modal-form form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Added Data') {
-                            $('#modal-form').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            });
-                            table.ajax.reload()
-                        } else if (response.status == 'Failed added') {
-                            $('#error_list').html('')
-                            $('#error_list').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
-
-            $('#modal-form-edit form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form-edit form').attr('action'), $('#modal-form-edit form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Updated Data') {
-                            $('#modal-form-edit').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            });
-                            table.ajax.reload()
-                        } else if (response.status == 'Failed Updated Data') {
-                            $('#error_list').html('')
-                            $('#error_list').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
-
-
-
 
         });
     </script>

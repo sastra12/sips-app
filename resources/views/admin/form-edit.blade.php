@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ul id="error_list">
+                <ul id="error_list_edit">
 
                 </ul>
                 <form action="" method="post">
@@ -22,6 +22,12 @@
                             @foreach ($roles as $role)
                                 <option value="{{ $role->role_id }}">{{ $role->role_name }}</option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="waste_name_group_edit" style="display: none">
+                        <label for="waste_name_edit">Nama TPS3R</label>
+                        <select id='waste_name_edit' class="form-control" name='waste_name_edit' required>
+                            <option value=""></option>
                         </select>
                     </div>
                     <div class="modal-footer">

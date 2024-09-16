@@ -94,6 +94,10 @@
             $("#waste_name_group_edit").hide()
             $("#waste_name_edit").empty();
 
+            // Membersihkan list error
+            $('#error_list_edit').html('')
+            $('#error_list_edit').removeClass('alert alert-danger')
+
             $.ajax({
                 url: "{{ route('user.show', '') }}/" + id,
                 type: "GET",

@@ -152,7 +152,11 @@ class UserController extends Controller
             $data->role_id = $request->input('role');
             $data->save();
             // Menyimpan ke tabel intermediate
-            $data->user_waste_banks()->attach($request->input('waste_name'));
+            if ($request->input('role') != 2) {
+                $data->user_waste_banks()->detach($request->input('waste_name'));
+            } else {
+                $data->user_waste_banks()->attach($request->input('waste_name'));
+            }
 
             return response()->json([
                 'status' => 'Success',

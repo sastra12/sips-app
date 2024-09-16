@@ -47,6 +47,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
         Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
 
+        // Manajemen Tonase
+        Route::get('/waste-entri/data', [WasteEntriController::class, 'data'])->name('waste-entri.data');
         Route::resource('waste-entri', WasteEntriController::class);
     });
+
+    // Manajemen Tonase By Admin TPS3R
+    Route::get('/waste-entri-user/data', [WasteEntriController::class, 'dataTonaseByAdminTPS3R'])->name('waste-entri-user.data');
+    Route::get('/waste-entri-user', [WasteEntriController::class, 'userIndexTonase'])->name('waste-entri-user.index');
 });

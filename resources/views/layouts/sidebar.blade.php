@@ -67,7 +67,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="" class="nav-link">
+                         <a href="{{ route('waste-entri.index') }}" class="nav-link">
                              <i class="fa fa-truck"></i>
                              <p>
                                  Manajemen Tonase Sampah
@@ -76,7 +76,7 @@
                      </li>
                  @elseif (Auth::user()->role_id == 2)
                      <li class="nav-item">
-                         <a href="#" class="nav-link">
+                         <a href="{{ route('waste-entri-user.index') }}" class="nav-link">
                              <i class="fa fa-truck"></i>
                              <p>
                                  Manajemen Tonase

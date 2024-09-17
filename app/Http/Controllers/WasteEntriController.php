@@ -44,16 +44,16 @@ class WasteEntriController extends Controller
                 $query->where('user_id', $userId);
             });
         })
-            ->with(['waste_bank', 'waste_bank.waste_bank_users'])
+            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users'])
+            ->orderByDesc('created_at')
             ->get();
-
         return Datatables::of($wasteEntries)
             // for number
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataVillage()" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData()" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="editDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="deleteDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
             ';
             })
             ->addColumn('waste_name', function ($data) {
@@ -123,6 +123,37 @@ class WasteEntriController extends Controller
         }
     }
 
+    public function userTPS3RStore(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'waste_organic' => 'required|numeric',
+            'waste_anorganic' => 'required|numeric',
+            'waste_residue' => 'required|numeric',
+            'date_entri' => 'required',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed added',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $data = new WasteEntry();
+            $data->waste_organic = $request->input('waste_organic');
+            $data->waste_anorganic = $request->input('waste_anorganic');
+            $data->waste_residue = $request->input('waste_residue');
+            $data->created_at = $request->input('date_entri');
+            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+            $data->waste_id = $request->input('waste_bank_id');
+            $data->user_id = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Added Data'
+            ]);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -132,6 +163,12 @@ class WasteEntriController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function userTPS3RShow($id)
+    {
+        $data = WasteEntry::query()->find($id);
+        return response()->json($data);
     }
 
     /**
@@ -157,6 +194,37 @@ class WasteEntriController extends Controller
         //
     }
 
+    public function userTPS3RUpdate(Request $request, $id)
+    {
+        $validated = Validator::make($request->all(), [
+            'waste_organic' => 'required|numeric',
+            'waste_anorganic' => 'required|numeric',
+            'waste_residue' => 'required|numeric',
+            'date_entri' => 'required',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed updated',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $data = WasteEntry::query()->find($id);
+            $data->waste_organic = $request->input('waste_organic');
+            $data->waste_anorganic = $request->input('waste_anorganic');
+            $data->waste_residue = $request->input('waste_residue');
+            $data->created_at = $request->input('date_entri');
+            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+            $data->waste_id = $request->input('waste_bank_id');
+            $data->user_id = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Updated Data'
+            ]);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -166,5 +234,11 @@ class WasteEntriController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function userTPS3RDestroy($id)
+    {
+        $data = WasteEntry::query()->find($id);
+        $data->delete();
     }
 }

@@ -90,8 +90,8 @@
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form').modal('hide');
-                        location.reload();
-                    } else if (response.status = "Failed added") {
+                        table.ajax.reload();
+                    } else if (response.status == "Failed added") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

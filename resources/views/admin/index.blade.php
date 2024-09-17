@@ -83,6 +83,8 @@
 
             // Untuk membuat form isian null
             $("#name").val("")
+            $("#username").val("")
+            $("#password").val("")
 
             // Membersihkan list error
             $('#error_list').html('')
@@ -251,6 +253,9 @@
                         console.log(response)
                     }
                 })
+            } else {
+                $("#waste_name_group_edit").hide(); // Sembunyikan select option
+                $("#waste_name_edit").empty(); // Kosongkan select option
             }
         })
 
@@ -277,6 +282,9 @@
                         console.log(response)
                     }
                 })
+            } else {
+                $("#waste_name_group").hide(); // Sembunyikan select option
+                $("#waste_name").empty(); // Kosongkan select option
             }
         })
 

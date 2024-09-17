@@ -19,21 +19,20 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
+                        {{-- <button onclick="createDataTonaseYRPW()" class="btn btn-success btn-xs"><i
                                 class="fa fa-plus-circle">Tambah</i></button> --}}
-                        <button onclick="createDataVillage()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
+                                    <th scope="col">Nama TPS3R</th>
+                                    <th scope="col">Tanggal</th>
                                     <th scope="col">Sampah Organik(kg)</th>
                                     <th scope="col">Sampah Anorganik(kg)</th>
                                     <th scope="col">Sampah Residu(kg)</th>
                                     <th scope="col">Total Tonase(kg)</th>
-                                    <th scope="col">Nama TPS3R</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
@@ -46,56 +45,55 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('village.form')
+    @includeIf('admin-tonase.form')
 @endsection
-
-@push('styles')
-    <style>
-
-    </style>
-@endpush
 
 @push('script')
     <script>
         let table;
 
-        $("#save-project-btn").click(function(e) {
+        $("#save-project-tonase").click(function(e) {
             e.preventDefault()
-            if ($("#update_id").val() == null || $("#update_id").val() == "") {
-                storeDataVillage()
+            if ($("#waste_entry_id").val() == null || $("#waste_entry_id").val() == "") {
+                storeDataTonaseYRPW()
             } else {
-                updateDataVillage()
+                updateDataTonaseYRPW()
             }
         })
 
 
-        function createDataVillage() {
-            // untuk menampilkan modal dan ganti title
-            $("#modal-form").modal("show")
-            $("#modal-form .modal-title").html("Tambah Data Desa Pendamping")
+        function createDataTonaseYRPW() {
+            $("#modal-form-tonase").modal("show")
+            $("#modal-form-tonase .modal-title").html("Tambah Data Tonase Sampah")
 
-            // Untuk membuat form isian null
-            $("#village_name").val("")
-            $("#village_code").val("")
+            $("#waste_organic").val("")
+            $("#waste_anorganic").val("")
+            $("#waste_residue").val("")
+            $("#date_entri").val("")
 
-            // Membersihkan list error
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
+            $('#error_list_tonase').html('')
+            $('#error_list_tonase').removeClass('alert alert-danger')
         }
 
-        function editDataVillage(id) {
+        function editDataTonaseYRPW(id) {
+            $("#waste_entry_id").val(id)
             $.ajax({
-                url: "{{ route('village.show', '') }}/" + id,
+                url: "{{ route('waste-entri.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
-                    $("#update_id").val(id)
-                    $('#village_name').val(response.village_name)
-                    $('#village_code').val(response.village_code)
+                    $("#waste_organic").val(response.waste_organic)
+                    $("#waste_anorganic").val(response.waste_anorganic)
+                    $("#waste_residue").val(response.waste_residue)
+                    if (response.created_at) {
+                        let dateISO = response.created_at
+                        let formatDate = dateISO.substring(0, 10);
+                        $("#date_entri").val(formatDate);
+                    }
 
-                    $("#modal-form").modal("show")
-                    $("#modal-form .modal-title").html("Edit Data Desa Pendamping")
-                    $('#error_list').html('')
-                    $('#error_list').removeClass('alert alert-danger')
+                    $("#modal-form-tonase").modal("show")
+                    $("#modal-form-tonase .modal-title").html("Edit Data Tonase")
+                    $('#error_list_tonase').html('')
+                    $('#error_list_tonase').removeClass('alert alert-danger')
                 },
                 error: function(response) {
                     console.log(response)
@@ -103,17 +101,21 @@
             })
         }
 
-        function storeDataVillage() {
+        function storeDataTonaseYRPW() {
+            let data = {
+                waste_organic: $("#waste_organic").val(),
+                waste_anorganic: $("#waste_anorganic").val(),
+                waste_residue: $("#waste_residue").val(),
+                date_entri: $("#date_entri").val(),
+                waste_bank_id: $("#waste_bank_id").val()
+            }
             $.ajax({
-                url: "{{ route('village.store') }}",
+                url: "{{ route('waste-entri.store') }}",
                 type: "POST",
-                data: {
-                    village_name: $("#village_name").val(),
-                    village_code: $("#village_code").val(),
-                },
+                data: data,
                 success: function(response) {
                     if (response.status == "Success") {
-                        $('#modal-form').modal('hide');
+                        $('#modal-form-tonase').modal('hide');
                         swal({
                             title: "Success!",
                             text: response.message,
@@ -122,10 +124,10 @@
                         });
                         table.ajax.reload()
                     } else if (response.status = "Failed added") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
+                        $('#error_list_tonase').html('')
+                        $('#error_list_tonase').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
+                            $('#error_list_tonase').append('<li>' + value + '</li>')
                         })
                     }
                 },
@@ -135,18 +137,22 @@
             })
         }
 
-        function updateDataVillage() {
-            const id = $("#update_id").val()
+        function updateDataTonaseYRPW() {
+            let id = $("#waste_entry_id").val()
+            let data = {
+                waste_organic: $("#waste_organic").val(),
+                waste_anorganic: $("#waste_anorganic").val(),
+                waste_residue: $("#waste_residue").val(),
+                date_entri: $("#date_entri").val(),
+                waste_bank_id: $("#waste_bank_id").val()
+            }
             $.ajax({
-                url: "{{ route('village.update', '') }}/" + id,
+                url: "{{ route('waste-entri.update', '') }}/" + id,
                 type: "PUT",
-                data: {
-                    village_name: $("#village_name").val(),
-                    village_code: $("#village_code").val(),
-                },
+                data: data,
                 success: function(response) {
                     if (response.status == "Success") {
-                        $('#modal-form').modal('hide');
+                        $('#modal-form-tonase').modal('hide');
                         swal({
                             title: "Success!",
                             text: response.message,
@@ -154,12 +160,11 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                        $("#update_id").val("")
                     } else if (response.status = "Failed updated") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
+                        $('#error_list_tonase').html('')
+                        $('#error_list_tonase').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
+                            $('#error_list_tonase').append('<li>' + value + '</li>')
                         })
                     }
                 },
@@ -169,7 +174,7 @@
             })
         }
 
-        function deleteData(url) {
+        function deleteDataTonaseYRPW(entry_id) {
             swal({
                     title: "Are you sure?",
                     text: "Once deleted, you will not be able to recover this data!",
@@ -180,7 +185,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                                url: url,
+                                url: "{{ route('waste-entri-user.destroy', '') }}/" + entry_id,
                                 method: 'DELETE',
                             })
                             .done((response) => {
@@ -225,6 +230,12 @@
                         data: 'DT_RowIndex',
                     },
                     {
+                        data: 'waste_name',
+                    },
+                    {
+                        data: 'tanggal_input',
+                    },
+                    {
                         data: 'waste_organic',
                     },
                     {
@@ -237,13 +248,12 @@
                         data: 'waste_total',
                     },
                     {
-                        data: 'waste_name',
-                    },
-                    {
                         data: 'action',
                     },
-                ]
-
+                ],
+                createdRow: function(row, data, dataIndex) {
+                    $("#waste_bank_id").val(data.waste_id)
+                }
             });
         });
     </script>

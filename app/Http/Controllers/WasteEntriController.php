@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WasteBank;
 use App\Models\WasteEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,18 +19,24 @@ class WasteEntriController extends Controller
 
     public function data()
     {
-        $listdata = WasteEntry::with('waste_bank')->get();
+        $listdata = WasteEntry::with('waste_bank')
+            ->orderByDesc('created_at')
+            ->get();
+        // return response()->json($listdata);
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataVillage(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('village.destroy', $data->entry_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
             ';
             })
             ->addColumn('waste_name', function ($data) {
                 return $data->waste_bank->waste_name;
+            })
+            ->addColumn('tanggal_input', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
             })
             ->make();
     }
@@ -68,7 +73,7 @@ class WasteEntriController extends Controller
 
     public function index()
     {
-        return view('tonase.index');
+        return view('admin-tonase.index');
     }
 
     public function userIndexTonase()
@@ -162,7 +167,8 @@ class WasteEntriController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = WasteEntry::query()->find($id);
+        return response()->json($data);
     }
 
     public function userTPS3RShow($id)
@@ -191,7 +197,32 @@ class WasteEntriController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validated = Validator::make($request->all(), [
+            'waste_organic' => 'required|numeric',
+            'waste_anorganic' => 'required|numeric',
+            'waste_residue' => 'required|numeric',
+            'date_entri' => 'required',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed updated',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $data = WasteEntry::query()->find($id);
+            $data->waste_organic = $request->input('waste_organic');
+            $data->waste_anorganic = $request->input('waste_anorganic');
+            $data->waste_residue = $request->input('waste_residue');
+            $data->created_at = $request->input('date_entri');
+            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+            $data->user_id = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Updated Data'
+            ]);
+        }
     }
 
     public function userTPS3RUpdate(Request $request, $id)

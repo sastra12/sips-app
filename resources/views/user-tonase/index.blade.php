@@ -69,7 +69,6 @@
         })
 
         function createDataTonaseByTPS3R() {
-            console.log($("#waste_bank_id").val())
             $("#modal-form-tonase").modal("show")
             $("#modal-form-tonase .modal-title").html("Tambah Data Tonase Sampah")
 
@@ -125,7 +124,6 @@
                 url: "{{ route('waste-entri-user.show', '') }}/" + entry_id,
                 type: "GET",
                 success: function(response) {
-                    console.log(response)
                     $("#waste_organic").val(response.waste_organic)
                     $("#waste_anorganic").val(response.waste_anorganic)
                     $("#waste_residue").val(response.waste_residue)

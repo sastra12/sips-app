@@ -225,7 +225,7 @@
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form-tonase').modal('hide');
-                        location.reload();
+                        window.location.href = "{{ route('waste-entri.index') }}";
                     } else if (response.status = "Failed added") {
                         $('#error_list_tonase').html('')
                         $('#error_list_tonase').addClass('alert alert-danger')

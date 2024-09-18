@@ -13,8 +13,29 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <button onclick="createDataTonaseYRPW()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button> --}}
+                        <div class="row">
+                            <div class="col-sm-3 mb-3">
+                                <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal">
+                            </div>
+                            <div class="col-sm-3 mb-3">
+                                <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
+                            </div>
+                            <div class="col-sm-3 mb-3">
+                                <select class="form-control" id="waste_id" name="waste_id">
+                                    <option value="">Pilih TPS3R</option>
+                                    @foreach ($waste_banks as $item)
+                                        <option value="{{ $item->waste_bank_id }}">{{ $item->waste_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-sm-3 mb-3">
+                                <button type="button" id="filterDataTonase" class="btn btn-primary">Search</button>
+                                <button type="button" id="" class="btn btn-success">Download</button>
+                                <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -214,7 +235,12 @@
                 autowidth: false,
                 ajax: {
                     url: "{{ route('waste-entri.data') }}",
-                    type: 'GET'
+                    type: 'GET',
+                    data: function(d) {
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.waste_id = $('#waste_id').val();
+                    }
                 },
                 columnDefs: [{
                         "targets": 0,
@@ -277,6 +303,19 @@
                     $("#waste_bank_id").val(data.waste_id)
                 }
             });
+
+            $("#filterDataTonase").click(function(e) {
+                e.preventDefault();
+                table.ajax.reload()
+            })
+
+            $("#resetDataTonase").click(function(e) {
+                e.preventDefault();
+                $('#start_date').val("");
+                $('#end_date').val("");
+                $('#waste_id').val("");
+                table.ajax.reload()
+            })
         });
     </script>
 @endpush

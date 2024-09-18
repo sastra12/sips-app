@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WasteBank;
 use App\Models\WasteEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,11 +18,26 @@ class WasteEntriController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function data()
+    public function data(Request $request)
     {
-        $listdata = WasteEntry::with('waste_bank')
-            ->orderByDesc('created_at')
-            ->get();
+        $query = WasteEntry::with('waste_bank');
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $waste_id = $request->input('waste_id');
+
+        if ($start_date) {
+            $query->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $query->where('created_at', '<=', $end_date);
+        }
+        if ($waste_id) {
+            $query->where('waste_id', '=', $waste_id);
+        }
+
+        $listdata = $query->orderByDesc('created_at')->get();
+
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()
@@ -72,7 +88,10 @@ class WasteEntriController extends Controller
 
     public function index()
     {
-        return view('admin-tonase.index');
+        $wasteBankData = WasteBank::query()->get();
+        return view('admin-tonase.index', [
+            'waste_banks' => $wasteBankData
+        ]);
     }
 
     public function userIndexTonase()

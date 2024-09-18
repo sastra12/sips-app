@@ -22,7 +22,6 @@ class WasteEntriController extends Controller
         $listdata = WasteEntry::with('waste_bank')
             ->orderByDesc('created_at')
             ->get();
-        // return response()->json($listdata);
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()

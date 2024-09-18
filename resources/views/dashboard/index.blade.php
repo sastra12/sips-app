@@ -5,12 +5,6 @@
     Dashboard
 @endsection
 
-@section('breadcrumb')
-    @parent
-
-    <li class="breadcrumb-item active">Dashboard</li>
-@endsection
-
 @section('content')
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->

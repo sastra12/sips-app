@@ -215,9 +215,22 @@
                     type: 'GET'
                 },
                 columnDefs: [{
-                    className: "dt-center",
-                    targets: "_all"
-                }],
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    }
+                ],
                 columns: [{
                         data: 'DT_RowIndex',
                     },

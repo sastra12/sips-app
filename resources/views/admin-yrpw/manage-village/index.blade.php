@@ -40,12 +40,6 @@
     @includeIf('admin-yrpw.manage-village.form')
 @endsection
 
-@push('styles')
-    <style>
-
-    </style>
-@endpush
-
 @push('script')
     <script>
         let table;

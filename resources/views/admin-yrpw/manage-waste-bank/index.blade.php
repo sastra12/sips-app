@@ -40,12 +40,6 @@
     @includeIf('admin-yrpw.manage-waste-bank.waste-entries')
 @endsection
 
-@push('styles')
-    <style>
-
-    </style>
-@endpush
-
 @push('script')
     <script>
         let table;

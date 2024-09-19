@@ -43,12 +43,6 @@
     @includeIf('admin-yrpw.manage-admin.form-edit')
 @endsection
 
-@push('styles')
-    <style>
-
-    </style>
-@endpush
-
 @push('script')
     <script>
         let table;

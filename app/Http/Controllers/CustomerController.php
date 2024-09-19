@@ -18,7 +18,9 @@ class CustomerController extends Controller
      */
     public function data()
     {
-        $listdata = Village::has('waste_bank.customers')->get();
+        $listdata = Village::has('waste_bank')
+            ->with('waste_bank')
+            ->get();
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {

@@ -34,14 +34,14 @@ class CustomerController extends Controller
 
     public function index()
     {
-        return view('customer.index',);
+        return view('admin-yrpw.manage-customer.index',);
     }
 
     public function wasteCustomerDetails()
     {
         $waste_banks = WasteBank::query()->get();
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
-        return view('customer.waste-customer-details', [
+        return view('admin-yrpw.manage-customer.waste-customer-details', [
             'customer_status' => $customer_status,
             'waste_banks' => $waste_banks
         ]);

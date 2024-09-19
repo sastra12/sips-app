@@ -35,9 +35,9 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('waste-bank.form')
-    @includeIf('waste-bank.form-edit')
-    @includeIf('waste-bank.waste-entries')
+    @includeIf('admin-yrpw.manage-waste-bank.form')
+    @includeIf('admin-yrpw.manage-waste-bank.form-edit')
+    @includeIf('admin-yrpw.manage-waste-bank.waste-entries')
 @endsection
 
 @push('styles')

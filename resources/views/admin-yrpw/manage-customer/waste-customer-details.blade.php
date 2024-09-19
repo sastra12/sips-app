@@ -5,6 +5,12 @@
     Dashboard
 @endsection
 
+@section('breadcrumb')
+    @parent
+
+    <li class="breadcrumb-item active">Dashboard</li>
+@endsection
+
 @section('content')
     <div class="container-fluid">
         <!-- /.row -->
@@ -13,22 +19,28 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button> --}}
-                        <button onclick="createDataVillage()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
+                        @foreach ($waste_banks as $item)
+                            @if ($item->waste_bank_id == request()->query('bankId'))
+                                <h2>Data Pelanggan {{ $item->waste_name }}</h2>
+                            @endif
+                        @endforeach
+                        <button onclick="createDataCustomer()" class="btn btn-success btn-xs"><i
+                                class="fa fa-plus-circle">Tambah Data Pelanggan</i></button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama Desa</th>
-                                    <th scope="col">Kode Desa</th>
-                                    <th scope="col">Aksi</th>
+                                    <th scope="col">Nama Pelanggan</th>
+                                    <th scope="col">Alamat</th>
+                                    <th scope="col">RT</th>
+                                    <th scope="col">RW</th>
+                                    <th scope="col">Nominal</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
-
                         </table>
                     </div>
                 </div>
@@ -37,51 +49,52 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('village.form')
+    @includeIf('admin-yrpw.manage-customer.form')
 @endsection
-
-@push('styles')
-    <style>
-
-    </style>
-@endpush
 
 @push('script')
     <script>
         let table;
+        let urlParams = new URLSearchParams(window.location.search);
+        let bankId = urlParams.get('bankId');
 
         $("#save-project-btn").click(function(e) {
             e.preventDefault()
             if ($("#update_id").val() == null || $("#update_id").val() == "") {
-                storeDataVillage()
+                storeDataCustomer()
             } else {
-                updateDataVillage()
+                updateDataCustomer()
             }
         })
 
-
-        function createDataVillage() {
+        function createDataCustomer() {
             // untuk menampilkan modal dan ganti title
             $("#modal-form").modal("show")
-            $("#modal-form .modal-title").html("Tambah Data Desa Pendamping")
+            $("#modal-form .modal-title").html("Tambah Data Pelanggan")
 
             // Untuk membuat form isian null
-            $("#village_name").val("")
-            $("#village_code").val("")
+            $("#customer_name").val("")
+            $("#customer_address").val("")
+            $("#customer_neighborhood").val("")
+            $("#customer_community_association").val("")
+            $("#rubbish_fee").val("")
 
             // Membersihkan list error
             $('#error_list').html('')
             $('#error_list').removeClass('alert alert-danger')
         }
 
-        function editDataVillage(id) {
+        function editDataCustomer(id) {
             $.ajax({
-                url: "{{ route('village.show', '') }}/" + id,
+                url: "{{ route('customer.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
-                    $("#update_id").val(id)
-                    $('#village_name').val(response.village_name)
-                    $('#village_code').val(response.village_code)
+                    $("#update_id").val(response.customer_id)
+                    $("#customer_name").val(response.customer_name)
+                    $("#customer_address").val(response.customer_address)
+                    $("#customer_neighborhood").val(response.customer_neighborhood)
+                    $("#customer_community_association").val(response.customer_community_association)
+                    $("#rubbish_fee").val(response.rubbish_fee)
 
                     $("#modal-form").modal("show")
                     $("#modal-form .modal-title").html("Edit Data Desa Pendamping")
@@ -94,13 +107,19 @@
             })
         }
 
-        function storeDataVillage() {
+
+        function storeDataCustomer() {
             $.ajax({
-                url: "{{ route('village.store') }}",
+                url: "{{ route('customer.store') }}",
                 type: "POST",
                 data: {
-                    village_name: $("#village_name").val(),
-                    village_code: $("#village_code").val(),
+                    customer_name: $("#customer_name").val(),
+                    customer_address: $("#customer_address").val(),
+                    customer_neighborhood: $("#customer_neighborhood").val(),
+                    customer_community_association: $("#customer_community_association").val(),
+                    rubbish_fee: $("#rubbish_fee").val(),
+                    customer_status: $("#customer_status").val(),
+                    waste_id: bankId,
                 },
                 success: function(response) {
                     if (response.status == "Success") {
@@ -126,14 +145,18 @@
             })
         }
 
-        function updateDataVillage() {
+        function updateDataCustomer() {
             const id = $("#update_id").val()
             $.ajax({
-                url: "{{ route('village.update', '') }}/" + id,
+                url: "{{ route('customer.update', '') }}/" + id,
                 type: "PUT",
                 data: {
-                    village_name: $("#village_name").val(),
-                    village_code: $("#village_code").val(),
+                    customer_name: $("#customer_name").val(),
+                    customer_address: $("#customer_address").val(),
+                    customer_neighborhood: $("#customer_neighborhood").val(),
+                    customer_community_association: $("#customer_community_association").val(),
+                    rubbish_fee: $("#rubbish_fee").val(),
+                    customer_status: $("#customer_status").val(),
                 },
                 success: function(response) {
                     if (response.status == "Success") {
@@ -205,34 +228,37 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('village.data') }}",
-                    type: 'GET'
+                    url: "{{ route('waste-cust-data') }}",
+                    type: 'GET',
+                    data: {
+                        bankId: bankId
+                    }
                 },
                 columnDefs: [{
-                        "targets": 0,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 1,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 2,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 3,
-                        "className": "text-center"
-                    }
-                ],
+                    className: "dt-center",
+                    targets: "_all"
+                }],
                 columns: [{
+                        // buat penomoran
                         data: 'DT_RowIndex',
                     },
                     {
-                        data: 'village_name',
+                        data: 'customer_name',
                     },
                     {
-                        data: 'village_code',
+                        data: 'customer_address',
+                    },
+                    {
+                        data: 'customer_neighborhood',
+                    },
+                    {
+                        data: 'customer_community_association',
+                    },
+                    {
+                        data: 'rubbish_fee',
+                    },
+                    {
+                        data: 'customer_status',
                     },
                     {
                         data: 'action',

@@ -47,7 +47,7 @@ class ManageCustomerByTPS3RController extends Controller
     public function index()
     {
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
-        return view('user-manage-customer.index', [
+        return view('admin-tps3r.manage-customer.index', [
             'customer_status' => $customer_status,
         ]);
     }

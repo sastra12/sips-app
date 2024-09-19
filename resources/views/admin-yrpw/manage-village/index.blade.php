@@ -13,21 +13,19 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah Data Pelanggan</i></button>
+                        {{-- <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
+                                class="fa fa-plus-circle">Tambah</i></button> --}}
+                        <button onclick="createDataVillage()" class="btn btn-success btn-xs"><i
+                                class="fa fa-plus-circle">Tambah</i></button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Alamat</th>
-                                    <th scope="col">RT</th>
-                                    <th scope="col">RW</th>
-                                    <th scope="col">Nominal</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Nama Desa</th>
+                                    <th scope="col">Kode Desa</th>
+                                    <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
 
@@ -39,49 +37,51 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('user-manage-customer.form')
+    @includeIf('admin-yrpw.manage-village.form')
 @endsection
+
+@push('styles')
+    <style>
+
+    </style>
+@endpush
 
 @push('script')
     <script>
         let table;
+
         $("#save-project-btn").click(function(e) {
             e.preventDefault()
             if ($("#update_id").val() == null || $("#update_id").val() == "") {
-                storeDataCustomerByTPS3R()
+                storeDataVillage()
             } else {
-                updateDataCustomerByTPS3R()
+                updateDataVillage()
             }
         })
 
-        function createDataCustomerByTPS3R() {
+
+        function createDataVillage() {
             // untuk menampilkan modal dan ganti title
             $("#modal-form").modal("show")
-            $("#modal-form .modal-title").html("Tambah Data Pelanggan")
+            $("#modal-form .modal-title").html("Tambah Data Desa Pendamping")
 
             // Untuk membuat form isian null
-            $("#customer_name").val("")
-            $("#customer_address").val("")
-            $("#customer_neighborhood").val("")
-            $("#customer_community_association").val("")
-            $("#rubbish_fee").val("")
+            $("#village_name").val("")
+            $("#village_code").val("")
 
             // Membersihkan list error
             $('#error_list').html('')
             $('#error_list').removeClass('alert alert-danger')
         }
 
-        function editDataCustomerByTPS3R(id) {
+        function editDataVillage(id) {
             $.ajax({
-                url: "{{ route('admin-tps3r-customer.show', '') }}/" + id,
+                url: "{{ route('village.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
-                    $("#update_id").val(response.customer_id)
-                    $("#customer_name").val(response.customer_name)
-                    $("#customer_address").val(response.customer_address)
-                    $("#customer_neighborhood").val(response.customer_neighborhood)
-                    $("#customer_community_association").val(response.customer_community_association)
-                    $("#rubbish_fee").val(response.rubbish_fee)
+                    $("#update_id").val(id)
+                    $('#village_name').val(response.village_name)
+                    $('#village_code').val(response.village_code)
 
                     $("#modal-form").modal("show")
                     $("#modal-form .modal-title").html("Edit Data Desa Pendamping")
@@ -94,18 +94,46 @@
             })
         }
 
-        function updateDataCustomerByTPS3R() {
+        function storeDataVillage() {
+            $.ajax({
+                url: "{{ route('village.store') }}",
+                type: "POST",
+                data: {
+                    village_name: $("#village_name").val(),
+                    village_code: $("#village_code").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                    } else if (response.status = "Failed added") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function updateDataVillage() {
             const id = $("#update_id").val()
             $.ajax({
-                url: "{{ route('admin-tps3r-customer.update', '') }}/" + id,
+                url: "{{ route('village.update', '') }}/" + id,
                 type: "PUT",
                 data: {
-                    customer_name: $("#customer_name").val(),
-                    customer_address: $("#customer_address").val(),
-                    customer_neighborhood: $("#customer_neighborhood").val(),
-                    customer_community_association: $("#customer_community_association").val(),
-                    rubbish_fee: $("#rubbish_fee").val(),
-                    customer_status: $("#customer_status").val(),
+                    village_name: $("#village_name").val(),
+                    village_code: $("#village_code").val(),
                 },
                 success: function(response) {
                     if (response.status == "Success") {
@@ -132,43 +160,7 @@
             })
         }
 
-        function storeDataCustomerByTPS3R() {
-            $.ajax({
-                url: "{{ route('admin-tps3r-customer.store') }}",
-                type: "POST",
-                data: {
-                    customer_name: $("#customer_name").val(),
-                    customer_address: $("#customer_address").val(),
-                    customer_neighborhood: $("#customer_neighborhood").val(),
-                    customer_community_association: $("#customer_community_association").val(),
-                    rubbish_fee: $("#rubbish_fee").val(),
-                    customer_status: $("#customer_status").val(),
-                },
-                success: function(response) {
-                    if (response.status == "Success") {
-                        $('#modal-form').modal('hide');
-                        swal({
-                            title: "Success!",
-                            text: response.message,
-                            icon: "success",
-                            button: "Ok!",
-                        });
-                        table.ajax.reload()
-                    } else if (response.status = "Failed added") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
-                        $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
-                        })
-                    }
-                },
-                error: function(response) {
-                    console.log(response)
-                }
-            })
-        }
-
-        function deleteDataCustomerByTPS3R(entry_id) {
+        function deleteData(url) {
             swal({
                     title: "Are you sure?",
                     text: "Once deleted, you will not be able to recover this data!",
@@ -179,7 +171,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                                url: "{{ route('admin-tps3r-customer.destroy', '') }}/" + entry_id,
+                                url: url,
                                 method: 'DELETE',
                             })
                             .done((response) => {
@@ -213,8 +205,8 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('admin-tps3r-customers.data') }}",
-                    type: 'GET',
+                    url: "{{ route('village.data') }}",
+                    type: 'GET'
                 },
                 columnDefs: [{
                         "targets": 0,
@@ -231,46 +223,21 @@
                     {
                         "targets": 3,
                         "className": "text-center"
-                    },
-                    {
-                        "targets": 4,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 5,
-                        "className": "text-center"
-                    },
-                    {
-                        "targets": 6,
-                        "className": "text-center"
                     }
                 ],
                 columns: [{
-                        // buat penomoran
                         data: 'DT_RowIndex',
                     },
                     {
-                        data: 'customer_name',
+                        data: 'village_name',
                     },
                     {
-                        data: 'customer_address',
-                    },
-                    {
-                        data: 'customer_neighborhood',
-                    },
-                    {
-                        data: 'customer_community_association',
-                    },
-                    {
-                        data: 'rubbish_fee',
-                    },
-                    {
-                        data: 'customer_status',
+                        data: 'village_code',
                     },
                     {
                         data: 'action',
                     },
-                ],
+                ]
 
             });
         });

@@ -42,7 +42,7 @@ class UserController extends Controller
     public function index()
     {
         $roles = Role::query()->get();
-        return view('admin.index', [
+        return view('admin-yrpw.manage-admin.index', [
             'roles' => $roles
         ]);
     }

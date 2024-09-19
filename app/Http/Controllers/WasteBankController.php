@@ -47,7 +47,7 @@ class WasteBankController extends Controller
     public function index()
     {
         $villages = Village::doesntHave('waste_bank')->get();
-        return view('waste-bank.index', [
+        return view('admin-yrpw.manage-waste-bank.index', [
             'villages' => $villages
         ]);
     }

@@ -60,7 +60,7 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('admin-tonase.form')
+    @includeIf('admin-yrpw.manage-tonase.form')
 @endsection
 
 @push('script')

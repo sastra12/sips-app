@@ -39,8 +39,8 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('admin.form')
-    @includeIf('admin.form-edit')
+    @includeIf('admin-yrpw.manage-admin.form')
+    @includeIf('admin-yrpw.manage-admin.form-edit')
 @endsection
 
 @push('styles')

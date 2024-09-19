@@ -5,12 +5,6 @@
     Dashboard
 @endsection
 
-@section('breadcrumb')
-    @parent
-
-    <li class="breadcrumb-item active">Dashboard</li>
-@endsection
-
 @section('content')
     <div class="container-fluid">
         <!-- /.row -->
@@ -19,12 +13,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        @foreach ($waste_banks as $item)
-                            @if ($item->waste_bank_id == request()->query('bankId'))
-                                <h2>Data Pelanggan {{ $item->waste_name }}</h2>
-                            @endif
-                        @endforeach
-                        <button onclick="createDataCustomer()" class="btn btn-success btn-xs"><i
+                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-success btn-xs"><i
                                 class="fa fa-plus-circle">Tambah Data Pelanggan</i></button>
                     </div>
                     <div class="card-body table-responsive">
@@ -32,7 +21,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama Pelanggan</th>
+                                    <th scope="col">Nama</th>
                                     <th scope="col">Alamat</th>
                                     <th scope="col">RT</th>
                                     <th scope="col">RW</th>
@@ -41,6 +30,7 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
+
                         </table>
                     </div>
                 </div>
@@ -49,31 +39,22 @@
         </div>
         <!-- /.row (main row) -->
     </div><!-- /.container-fluid -->
-    @includeIf('customer.form')
+    @includeIf('admin-tps3r.manage-customer.form')
 @endsection
-
-@push('styles')
-    <style>
-
-    </style>
-@endpush
 
 @push('script')
     <script>
         let table;
-        let urlParams = new URLSearchParams(window.location.search);
-        let bankId = urlParams.get('bankId');
-
         $("#save-project-btn").click(function(e) {
             e.preventDefault()
             if ($("#update_id").val() == null || $("#update_id").val() == "") {
-                storeDataCustomer()
+                storeDataCustomerByTPS3R()
             } else {
-                updateDataCustomer()
+                updateDataCustomerByTPS3R()
             }
         })
 
-        function createDataCustomer() {
+        function createDataCustomerByTPS3R() {
             // untuk menampilkan modal dan ganti title
             $("#modal-form").modal("show")
             $("#modal-form .modal-title").html("Tambah Data Pelanggan")
@@ -90,9 +71,9 @@
             $('#error_list').removeClass('alert alert-danger')
         }
 
-        function editDataCustomer(id) {
+        function editDataCustomerByTPS3R(id) {
             $.ajax({
-                url: "{{ route('customer.show', '') }}/" + id,
+                url: "{{ route('admin-tps3r-customer.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
                     $("#update_id").val(response.customer_id)
@@ -113,48 +94,10 @@
             })
         }
 
-
-        function storeDataCustomer() {
-            $.ajax({
-                url: "{{ route('customer.store') }}",
-                type: "POST",
-                data: {
-                    customer_name: $("#customer_name").val(),
-                    customer_address: $("#customer_address").val(),
-                    customer_neighborhood: $("#customer_neighborhood").val(),
-                    customer_community_association: $("#customer_community_association").val(),
-                    rubbish_fee: $("#rubbish_fee").val(),
-                    customer_status: $("#customer_status").val(),
-                    waste_id: bankId,
-                },
-                success: function(response) {
-                    if (response.status == "Success") {
-                        $('#modal-form').modal('hide');
-                        swal({
-                            title: "Success!",
-                            text: response.message,
-                            icon: "success",
-                            button: "Ok!",
-                        });
-                        table.ajax.reload()
-                    } else if (response.status = "Failed added") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
-                        $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
-                        })
-                    }
-                },
-                error: function(response) {
-                    console.log(response)
-                }
-            })
-        }
-
-        function updateDataCustomer() {
+        function updateDataCustomerByTPS3R() {
             const id = $("#update_id").val()
             $.ajax({
-                url: "{{ route('customer.update', '') }}/" + id,
+                url: "{{ route('admin-tps3r-customer.update', '') }}/" + id,
                 type: "PUT",
                 data: {
                     customer_name: $("#customer_name").val(),
@@ -189,7 +132,43 @@
             })
         }
 
-        function deleteData(url) {
+        function storeDataCustomerByTPS3R() {
+            $.ajax({
+                url: "{{ route('admin-tps3r-customer.store') }}",
+                type: "POST",
+                data: {
+                    customer_name: $("#customer_name").val(),
+                    customer_address: $("#customer_address").val(),
+                    customer_neighborhood: $("#customer_neighborhood").val(),
+                    customer_community_association: $("#customer_community_association").val(),
+                    rubbish_fee: $("#rubbish_fee").val(),
+                    customer_status: $("#customer_status").val(),
+                },
+                success: function(response) {
+                    if (response.status == "Success") {
+                        $('#modal-form').modal('hide');
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        table.ajax.reload()
+                    } else if (response.status = "Failed added") {
+                        $('#error_list').html('')
+                        $('#error_list').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
+                    }
+                },
+                error: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+
+        function deleteDataCustomerByTPS3R(entry_id) {
             swal({
                     title: "Are you sure?",
                     text: "Once deleted, you will not be able to recover this data!",
@@ -200,7 +179,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                                url: url,
+                                url: "{{ route('admin-tps3r-customer.destroy', '') }}/" + entry_id,
                                 method: 'DELETE',
                             })
                             .done((response) => {
@@ -234,16 +213,38 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('waste-cust-data') }}",
+                    url: "{{ route('admin-tps3r-customers.data') }}",
                     type: 'GET',
-                    data: {
-                        bankId: bankId
-                    }
                 },
                 columnDefs: [{
-                    className: "dt-center",
-                    targets: "_all"
-                }],
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 4,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center"
+                    }
+                ],
                 columns: [{
                         // buat penomoran
                         data: 'DT_RowIndex',
@@ -269,7 +270,7 @@
                     {
                         data: 'action',
                     },
-                ]
+                ],
 
             });
         });

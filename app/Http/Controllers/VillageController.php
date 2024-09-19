@@ -33,7 +33,7 @@ class VillageController extends Controller
 
     public function index()
     {
-        return view('village.index');
+        return view('admin-yrpw.manage-village.index');
     }
 
     /**

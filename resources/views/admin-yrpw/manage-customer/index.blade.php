@@ -33,12 +33,6 @@
     </div><!-- /.container-fluid -->
 @endsection
 
-@push('styles')
-    <style>
-
-    </style>
-@endpush
-
 @push('script')
     <script>
         let table;

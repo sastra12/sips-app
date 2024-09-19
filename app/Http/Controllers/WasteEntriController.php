@@ -89,14 +89,14 @@ class WasteEntriController extends Controller
     public function index()
     {
         $wasteBankData = WasteBank::query()->get();
-        return view('admin-tonase.index', [
+        return view('admin-yrpw.manage-tonase.index', [
             'waste_banks' => $wasteBankData
         ]);
     }
 
     public function userIndexTonase()
     {
-        return view('user-tonase.index');
+        return view('admin-tps3r.manage-tonase.index');
     }
 
     /**

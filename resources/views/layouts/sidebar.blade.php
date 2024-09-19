@@ -83,6 +83,14 @@
                              </p>
                          </a>
                      </li>
+                     <li class="nav-item">
+                         <a href="{{ route('admin-tps3r-customer.index') }}" class="nav-link">
+                             <i class="fa fa-truck"></i>
+                             <p>
+                                 Manajemen Pelanggan
+                             </p>
+                         </a>
+                     </li>
                  @endif
                  <li class="nav-item">
                      <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">

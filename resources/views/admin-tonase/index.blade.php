@@ -14,15 +14,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-3 mb-2">
                                 <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal">
                             </div>
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-3 mb-2">
                                 <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
                             </div>
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-3 mb-2">
                                 <select class="form-control" id="waste_id" name="waste_id">
                                     <option value="">Pilih TPS3R</option>
                                     @foreach ($waste_banks as $item)
@@ -30,7 +30,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-3 mb-3">
+                            <div class="col-sm-3 mb-2">
                                 <button type="button" id="filterDataTonase" class="btn btn-primary">Search</button>
                                 <button type="button" id="" class="btn btn-success">Download</button>
                                 <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ManageCustomerByTPS3RController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VillageController;
 use App\Http\Controllers\WasteBankController;
@@ -59,4 +60,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RShow'])->name('waste-entri-user.show');
     Route::put('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RUpdate'])->name('waste-entri-user.update');
     Route::delete('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RDestroy'])->name('waste-entri-user.destroy');
+
+    // Manajemen Pelanggan By Admin TPS3R
+    Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
+    Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
 });

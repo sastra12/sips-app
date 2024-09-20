@@ -14,15 +14,15 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
-                            <div class="col-sm-3 mb-2">
+                            <div class="col-sm-2">
                                 <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal">
                             </div>
-                            <div class="col-sm-3 mb-2">
+                            <div class="col-sm-2">
                                 <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
                             </div>
-                            <div class="col-sm-3 mb-2">
+                            <div class="col-sm-3">
                                 <select class="form-control" id="waste_id" name="waste_id">
                                     <option value="">Pilih TPS3R</option>
                                     @foreach ($waste_banks as $item)
@@ -30,9 +30,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-sm-3 mb-2">
+                            <div class="col-sm-4">
                                 <button type="button" id="filterDataTonase" class="btn btn-primary">Search</button>
-                                <button type="button" id="" class="btn btn-success">Download</button>
+                                <button type="button" id="downloadData" class="btn btn-success">Download Excel</button>
                                 <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>
                             </div>
                         </div>
@@ -200,7 +200,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                                url: "{{ route('waste-entri-user.destroy', '') }}/" + entry_id,
+                                url: "{{ route('waste-entri.destroy', '') }}/" + entry_id,
                                 method: 'DELETE',
                             })
                             .done((response) => {
@@ -315,6 +315,24 @@
                 $('#end_date').val("");
                 $('#waste_id').val("");
                 table.ajax.reload()
+            })
+
+            $("#downloadData").click(function(e) {
+                e.preventDefault();
+                // Ambil nilai input
+                let start_date = $('#start_date').val();
+                let end_date = $('#end_date').val();
+                let waste_id = $('#waste_id').val();
+
+                // Validasi inputan tidak boleh kosong
+                if (!start_date || !end_date || !waste_id) {
+                    alert('Semua input harus diisi sebelum mendownload file!');
+                    return;
+                }
+                let downloadUrl = "{{ route('export.data') }}?start_date=" + start_date + "&end_date=" +
+                    end_date + "&waste_id=" + waste_id;
+                // Redirect browser ke URL download
+                window.location.href = downloadUrl;
             })
         });
     </script>

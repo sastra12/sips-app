@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AuthController::class, 'authView'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::view('/export-excel-by-month-view', 'export-excel.export-by-month');
+Route::view('/export-excel-by-year', 'export-excel.export-by-year');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
@@ -51,6 +53,9 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Tonase
         Route::get('/waste-entri/data', [WasteEntriController::class, 'data'])->name('waste-entri.data');
         Route::resource('waste-entri', WasteEntriController::class);
+
+        // Download Excel
+        Route::get("/export-excel-by-month", [WasteEntriController::class, 'exportByMonth'])->name('export.data');
     });
 
     // Manajemen Tonase By Admin TPS3R

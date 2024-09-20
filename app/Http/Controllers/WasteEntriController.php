@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use DataTables;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\WasteEntriesExport;
 
 class WasteEntriController extends Controller
 {
@@ -54,6 +56,40 @@ class WasteEntriController extends Controller
                 return date('d F Y', strtotime($data->created_at));
             })
             ->make();
+    }
+
+    public function exportByMonth(Request $request)
+    {
+        $wasteOrganicTotal = 0;
+        $wasteAnorganicTotal = 0;
+        $wasteResidueTotal = 0;
+        $tonaseTotal = 0;
+        $wasteReductionTotal = 0;
+        $residueDisposeTotal = 0;
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $waste_id = $request->input('waste_id');
+
+        // Lakukan query berdasarkan filter yang diterima
+        $waste_entries = WasteEntry::with(['waste_bank' => function ($query) {
+            $query->select('waste_bank_id', 'waste_name');
+        }])
+            ->where('waste_id', $waste_id)
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->get();
+
+        foreach ($waste_entries as $value) {
+            $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
+            $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
+            $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
+            $wasteReductionTotal = $wasteReductionTotal + round(((($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100) / count($waste_entries));
+            $residueDisposeTotal = $residueDisposeTotal + round((($value->waste_residue / $value->waste_total) * 100) / count($waste_entries));
+        }
+        $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
+
+        // Kembalikan hasil dalam format Excel menggunakan view
+        return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
     }
 
     public function dataTonaseByAdminTPS3R()
@@ -282,7 +318,8 @@ class WasteEntriController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = WasteEntry::query()->find($id);
+        $data->delete();
     }
 
     public function userTPS3RDestroy($id)

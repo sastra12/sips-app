@@ -50,7 +50,11 @@ class CustomerController extends Controller
     public function wasteCustData(Request $request)
     {
         $waste_id = $request->input('bankId');
-        $listdata = Customer::query()->where('waste_id', '=', $waste_id)->get();
+        $listdata = Customer::query()
+            ->where('waste_id', '=', $waste_id)
+            ->orderByDesc('created_at')
+            ->get();
+
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {

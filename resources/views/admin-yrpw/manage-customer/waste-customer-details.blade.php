@@ -235,9 +235,37 @@
                     }
                 },
                 columnDefs: [{
-                    className: "dt-center",
-                    targets: "_all"
-                }],
+                        "targets": 0,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 1,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 2,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 3,
+                        "className": "text-center"
+                    }, {
+                        "targets": 4,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 5,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 6,
+                        "className": "text-center"
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center"
+                    }
+                ],
                 columns: [{
                         // buat penomoran
                         data: 'DT_RowIndex',

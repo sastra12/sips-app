@@ -83,9 +83,11 @@ class WasteEntriController extends Controller
             $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
             $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
             $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
-            $wasteReductionTotal = $wasteReductionTotal + round(((($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100) / count($waste_entries));
-            $residueDisposeTotal = $residueDisposeTotal + round((($value->waste_residue / $value->waste_total) * 100) / count($waste_entries));
+            $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
+            $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
         }
+        $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
+        $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
         $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
 
         // Kembalikan hasil dalam format Excel menggunakan view

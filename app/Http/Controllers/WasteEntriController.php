@@ -14,12 +14,9 @@ use App\Exports\WasteEntriesExport;
 
 class WasteEntriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
+
+    // Admin YRPW
     public function data(Request $request)
     {
         $query = WasteEntry::with('waste_bank');
@@ -58,6 +55,7 @@ class WasteEntriController extends Controller
             ->make();
     }
 
+    // Admin YRPW
     public function exportByMonth(Request $request)
     {
         $wasteOrganicTotal = 0;
@@ -94,6 +92,49 @@ class WasteEntriController extends Controller
         return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
     }
 
+    // Admin TPS3R
+    public function exportTonaseByTPS3R(Request $request)
+    {
+        $wasteOrganicTotal = 0;
+        $wasteAnorganicTotal = 0;
+        $wasteResidueTotal = 0;
+        $tonaseTotal = 0;
+        $wasteReductionTotal = 0;
+        $residueDisposeTotal = 0;
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        // Lakukan query berdasarkan filter yang diterima
+        $userId = Auth::user()->id;
+        $waste_entries = WasteEntry::whereHas('waste_bank', function (Builder $query) use ($userId) {
+            $query->whereHas('waste_bank_users', function (Builder $query) use ($userId) {
+                $query->where('user_id', $userId);
+            });
+        })
+            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users:id,name'])
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->orderByDesc('created_at')
+            ->get();
+
+        // dd($waste_entries);
+
+        foreach ($waste_entries as $value) {
+            $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
+            $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
+            $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
+            $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
+            $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
+        }
+        $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
+        $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
+        $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
+
+        // Kembalikan hasil dalam format Excel menggunakan view
+        return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
+    }
+
+    // Admin TPS3R
     public function dataTonaseByAdminTPS3R(Request $request)
     {
         $userId = Auth::user()->id;
@@ -136,7 +177,7 @@ class WasteEntriController extends Controller
             ->make();
     }
 
-
+    // Admin YRPW
     public function index()
     {
         $wasteBankData = WasteBank::query()->get();
@@ -145,27 +186,17 @@ class WasteEntriController extends Controller
         ]);
     }
 
+    // Admin TPS3R
     public function userIndexTonase()
     {
         return view('admin-tps3r.manage-tonase.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
@@ -197,6 +228,7 @@ class WasteEntriController extends Controller
         }
     }
 
+    // Admin TPS3R
     public function userTPS3RStore(Request $request)
     {
         $validated = Validator::make($request->all(), [
@@ -228,42 +260,26 @@ class WasteEntriController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Admin YRPW
     public function show($id)
     {
         $data = WasteEntry::query()->find($id);
         return response()->json($data);
     }
 
+    // Admin TPS3R
     public function userTPS3RShow($id)
     {
         $data = WasteEntry::query()->find($id);
         return response()->json($data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Admin YRPW
     public function update(Request $request, $id)
     {
         $validated = Validator::make($request->all(), [
@@ -294,6 +310,7 @@ class WasteEntriController extends Controller
         }
     }
 
+    // Admin TPS3R
     public function userTPS3RUpdate(Request $request, $id)
     {
         $validated = Validator::make($request->all(), [
@@ -325,18 +342,14 @@ class WasteEntriController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Admin YRPW
     public function destroy($id)
     {
         $data = WasteEntry::query()->find($id);
         $data->delete();
     }
 
+    // Admin TPS3R
     public function userTPS3RDestroy($id)
     {
         $data = WasteEntry::query()->find($id);

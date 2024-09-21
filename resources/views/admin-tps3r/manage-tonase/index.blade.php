@@ -312,5 +312,22 @@
             $('#end_date').val("");
             table.ajax.reload()
         })
+
+        $("#downloadData").click(function(e) {
+            e.preventDefault();
+            // Ambil nilai input
+            let start_date = $('#start_date').val();
+            let end_date = $('#end_date').val();
+
+            // Validasi inputan tidak boleh kosong
+            if (!start_date || !end_date) {
+                alert('Semua input harus diisi sebelum mendownload file!');
+                return;
+            }
+            let downloadUrl = "{{ route('export-tonase-tps3r.data') }}?start_date=" + start_date + "&end_date=" +
+                end_date;
+            // Redirect browser ke URL download
+            window.location.href = downloadUrl;
+        })
     </script>
 @endpush

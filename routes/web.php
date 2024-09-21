@@ -73,5 +73,8 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Pelanggan By Admin TPS3R
         Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
         Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
+
+        // Download Excel
+        Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');
     });
 });

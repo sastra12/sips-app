@@ -30,6 +30,8 @@ Route::view('/export-excel-by-year', 'export-excel.export-by-year');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
+    // Route Admin YRPW
     Route::middleware(['checkRole:1'])->group(function () {
         // Manajemen Desa
         Route::get('/village/data', [VillageController::class, 'data'])->name('village.data');
@@ -58,15 +60,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get("/export-excel-by-month", [WasteEntriController::class, 'exportByMonth'])->name('export.data');
     });
 
-    // Manajemen Tonase By Admin TPS3R
-    Route::get('/waste-entri-user/data', [WasteEntriController::class, 'dataTonaseByAdminTPS3R'])->name('waste-entri-user.data');
-    Route::get('/waste-entri-user', [WasteEntriController::class, 'userIndexTonase'])->name('waste-entri-user.index');
-    Route::post('/waste-entri-user', [WasteEntriController::class, 'userTPS3RStore'])->name('waste-entri-user.store');
-    Route::get('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RShow'])->name('waste-entri-user.show');
-    Route::put('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RUpdate'])->name('waste-entri-user.update');
-    Route::delete('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RDestroy'])->name('waste-entri-user.destroy');
+    // Route Admin TPS3R
+    Route::middleware(['checkRole:2'])->group(function () {
+        // Manajemen Tonase By Admin TPS3R
+        Route::get('/waste-entri-user/data', [WasteEntriController::class, 'dataTonaseByAdminTPS3R'])->name('waste-entri-user.data');
+        Route::get('/waste-entri-user', [WasteEntriController::class, 'userIndexTonase'])->name('waste-entri-user.index');
+        Route::post('/waste-entri-user', [WasteEntriController::class, 'userTPS3RStore'])->name('waste-entri-user.store');
+        Route::get('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RShow'])->name('waste-entri-user.show');
+        Route::put('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RUpdate'])->name('waste-entri-user.update');
+        Route::delete('/waste-entri-user/{id}', [WasteEntriController::class, 'userTPS3RDestroy'])->name('waste-entri-user.destroy');
 
-    // Manajemen Pelanggan By Admin TPS3R
-    Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
-    Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
+        // Manajemen Pelanggan By Admin TPS3R
+        Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
+        Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
+    });
 });

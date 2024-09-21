@@ -13,8 +13,24 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataTonaseByTPS3R()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal">
+                            </div>
+                            <div class="col-sm-2">
+                                <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="button" id="filterDataTonase" class="btn btn-primary">Search</button>
+                                <button onclick="createDataTonaseByTPS3R()" class="btn btn-info">Tambah Tonase</button>
+                                <button type="button" id="downloadData" class="btn btn-success">Download Excel</button>
+                                <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>
+                            </div>
+                        </div>
+
+
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -215,7 +231,11 @@
                 autowidth: false,
                 ajax: {
                     url: "{{ route('waste-entri-user.data') }}",
-                    type: 'GET'
+                    type: 'GET',
+                    data: function(d) {
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                    }
                 },
                 columnDefs: [{
                         "targets": 0,
@@ -280,5 +300,17 @@
                 }
             });
         });
+
+        $("#filterDataTonase").click(function(e) {
+            e.preventDefault();
+            table.ajax.reload()
+        })
+
+        $("#resetDataTonase").click(function(e) {
+            e.preventDefault();
+            $('#start_date').val("");
+            $('#end_date').val("");
+            table.ajax.reload()
+        })
     </script>
 @endpush

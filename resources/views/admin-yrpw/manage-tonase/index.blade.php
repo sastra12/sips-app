@@ -303,37 +303,37 @@
                     $("#waste_bank_id").val(data.waste_id)
                 }
             });
-
-            $("#filterDataTonase").click(function(e) {
-                e.preventDefault();
-                table.ajax.reload()
-            })
-
-            $("#resetDataTonase").click(function(e) {
-                e.preventDefault();
-                $('#start_date').val("");
-                $('#end_date').val("");
-                $('#waste_id').val("");
-                table.ajax.reload()
-            })
-
-            $("#downloadData").click(function(e) {
-                e.preventDefault();
-                // Ambil nilai input
-                let start_date = $('#start_date').val();
-                let end_date = $('#end_date').val();
-                let waste_id = $('#waste_id').val();
-
-                // Validasi inputan tidak boleh kosong
-                if (!start_date || !end_date || !waste_id) {
-                    alert('Semua input harus diisi sebelum mendownload file!');
-                    return;
-                }
-                let downloadUrl = "{{ route('export.data') }}?start_date=" + start_date + "&end_date=" +
-                    end_date + "&waste_id=" + waste_id;
-                // Redirect browser ke URL download
-                window.location.href = downloadUrl;
-            })
         });
+
+        $("#filterDataTonase").click(function(e) {
+            e.preventDefault();
+            table.ajax.reload()
+        })
+
+        $("#resetDataTonase").click(function(e) {
+            e.preventDefault();
+            $('#start_date').val("");
+            $('#end_date').val("");
+            $('#waste_id').val("");
+            table.ajax.reload()
+        })
+
+        $("#downloadData").click(function(e) {
+            e.preventDefault();
+            // Ambil nilai input
+            let start_date = $('#start_date').val();
+            let end_date = $('#end_date').val();
+            let waste_id = $('#waste_id').val();
+
+            // Validasi inputan tidak boleh kosong
+            if (!start_date || !end_date || !waste_id) {
+                alert('Semua input harus diisi sebelum mendownload file!');
+                return;
+            }
+            let downloadUrl = "{{ route('export.data') }}?start_date=" + start_date + "&end_date=" +
+                end_date + "&waste_id=" + waste_id;
+            // Redirect browser ke URL download
+            window.location.href = downloadUrl;
+        })
     </script>
 @endpush

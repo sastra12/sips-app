@@ -94,7 +94,7 @@ class WasteEntriController extends Controller
         return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
     }
 
-    public function dataTonaseByAdminTPS3R()
+    public function dataTonaseByAdminTPS3R(Request $request)
     {
         $userId = Auth::user()->id;
         $wasteEntries = WasteEntry::whereHas('waste_bank', function (Builder $query) use ($userId) {
@@ -102,10 +102,23 @@ class WasteEntriController extends Controller
                 $query->where('user_id', $userId);
             });
         })
-            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users'])
-            ->orderByDesc('created_at')
-            ->get();
-        return Datatables::of($wasteEntries)
+            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users:id,name'])
+            ->orderByDesc('created_at');
+
+        // Jika ada request tanggal mulai dan tanggal berakhir
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        if ($start_date) {
+            $wasteEntries->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $wasteEntries->where('created_at', '<=', $end_date);
+        }
+
+        $listdata = $wasteEntries->get();
+
+        // return response()->json($listdata);
+        return Datatables::of($listdata)
             // for number
             ->addIndexColumn()
             ->addColumn('action', function ($data) {

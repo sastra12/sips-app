@@ -13,8 +13,6 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <button onclick="addForm('{{ route('user.store') }}')" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button> --}}
                         <button onclick="createDataAdmin()" class="btn btn-success btn-xs"><i
                                 class="fa fa-plus-circle">Tambah</i></button>
 

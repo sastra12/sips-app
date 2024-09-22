@@ -177,6 +177,45 @@ class WasteEntriController extends Controller
             ->make();
     }
 
+
+    public function dataTonaseByAdminFacilitator(Request $request)
+    {
+        $query = WasteEntry::with('waste_bank');
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $waste_id = $request->input('waste_id');
+
+        if ($start_date) {
+            $query->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $query->where('created_at', '<=', $end_date);
+        }
+        if ($waste_id) {
+            $query->where('waste_id', '=', $waste_id);
+        }
+
+        $listdata = $query->orderByDesc('created_at')->get();
+
+        return Datatables::of($listdata)
+            // for number
+            ->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return  '
+                <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
+            ';
+            })
+            ->addColumn('waste_name', function ($data) {
+                return $data->waste_bank->waste_name;
+            })
+            ->addColumn('tanggal_input', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            ->make();
+    }
+
     // Admin YRPW
     public function index()
     {
@@ -190,6 +229,15 @@ class WasteEntriController extends Controller
     public function userIndexTonase()
     {
         return view('admin-tps3r.manage-tonase.index');
+    }
+
+    // Admin Tonase
+    public function viewTonaseFacilitator()
+    {
+        $wasteBankData = WasteBank::query()->get();
+        return view('admin-fasilitator.data-tonase.index', [
+            'waste_banks' => $wasteBankData
+        ]);
     }
 
     public function create()

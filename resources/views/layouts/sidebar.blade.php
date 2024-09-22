@@ -91,6 +91,15 @@
                              </p>
                          </a>
                      </li>
+                 @else
+                     <li class="nav-item">
+                         <a href="{{ route('view-tonase-facilitator') }}" class="nav-link">
+                             <i class="fa fa-truck"></i>
+                             <p>
+                                 Data Tonase
+                             </p>
+                         </a>
+                     </li>
                  @endif
                  <li class="nav-item">
                      <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit()">

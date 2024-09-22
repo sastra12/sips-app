@@ -77,4 +77,9 @@ Route::group(['middleware' => 'auth'], function () {
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');
     });
+
+    Route::middleware(['checkRole:3'])->group(function () {
+        Route::get('/waste-entri--facilitator', [WasteEntriController::class, 'dataTonaseByAdminFacilitator'])->name('waste-entri-facilitator.data');
+        Route::get('/tonase-data-facilitator', [WasteEntriController::class, 'viewTonaseFacilitator'])->name('view-tonase-facilitator');
+    });
 });

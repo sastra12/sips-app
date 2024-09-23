@@ -20,6 +20,7 @@ class CustomerController extends Controller
     {
         $listdata = Village::has('waste_bank')
             ->with('waste_bank')
+            ->orderByDesc('created_at')
             ->get();
         return Datatables::of($listdata)
             ->addIndexColumn()

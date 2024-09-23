@@ -18,8 +18,15 @@ class UserController extends Controller
 
     public function data()
     {
-        $listdata = User::with(['role', 'user_waste_banks'])->get();
-        // return response()->json($listdata);
+        $listdata = User::select('id', 'name', 'username', 'role_id')
+            ->with(['role' => function ($query) {
+                // ambil role id dan role name saja
+                $query->select('role_id', 'role_name');
+            }, 'user_waste_banks' => function ($query) {
+                $query->select('waste_name');
+            }])
+            ->orderByDesc('created_at')
+            ->get();
 
         return Datatables::of($listdata)
             // for number
@@ -154,8 +161,17 @@ class UserController extends Controller
             // Menyimpan ke tabel intermediate
             if ($request->input('role') != 2) {
                 $data->user_waste_banks()->detach($request->input('waste_name'));
-            } else {
-                $data->user_waste_banks()->attach($request->input('waste_name'));
+            } elseif ($request->input('role') == 2) {
+                // apakah sebelumnya data relasinya ada
+                $existingPivot = $data->user_waste_banks()->wherePivot('user_id', $id)->exists();
+                if ($existingPivot) {
+                    // kalo ada update waste_id nya
+                    $data->user_waste_banks()->updateExistingPivot($data->user_waste_banks->first()->pivot->waste_id, [
+                        'waste_id' => $request->input('waste_name')
+                    ]);
+                } else {
+                    $data->user_waste_banks()->attach($request->input('waste_name'));
+                }
             }
 
             return response()->json([

@@ -75,6 +75,45 @@ class WasteEntriController extends Controller
         }])
             ->where('waste_id', $waste_id)
             ->whereBetween('created_at', [$start_date, $end_date])
+            ->orderByDesc('created_at')
+            ->get();
+
+        foreach ($waste_entries as $value) {
+            $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
+            $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
+            $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
+            $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
+            $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
+        }
+        $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
+        $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
+        $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
+
+        // Kembalikan hasil dalam format Excel menggunakan view
+        return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
+    }
+
+    // Admin Facilitator
+    public function exportTonaseByFacilitator(Request $request)
+    {
+        $wasteOrganicTotal = 0;
+        $wasteAnorganicTotal = 0;
+        $wasteResidueTotal = 0;
+        $tonaseTotal = 0;
+        $wasteReductionTotal = 0;
+        $residueDisposeTotal = 0;
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $waste_id = $request->input('waste_id');
+
+        // Lakukan query berdasarkan filter yang diterima
+        $waste_entries = WasteEntry::with(['waste_bank' => function ($query) {
+            $query->select('waste_bank_id', 'waste_name');
+        }])
+            ->where('waste_id', $waste_id)
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->orderByDesc('created_at')
             ->get();
 
         foreach ($waste_entries as $value) {

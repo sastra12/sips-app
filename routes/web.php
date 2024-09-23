@@ -79,7 +79,11 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::middleware(['checkRole:3'])->group(function () {
+        // Lihat Tonase
         Route::get('/waste-entri--facilitator', [WasteEntriController::class, 'dataTonaseByAdminFacilitator'])->name('waste-entri-facilitator.data');
         Route::get('/tonase-data-facilitator', [WasteEntriController::class, 'viewTonaseFacilitator'])->name('view-tonase-facilitator');
+
+        // Download Excel
+        Route::get("/export-excel-tonase-by-facilitator", [WasteEntriController::class, 'exportTonaseByFacilitator'])->name('export-tonase-facilitator.data');
     });
 });

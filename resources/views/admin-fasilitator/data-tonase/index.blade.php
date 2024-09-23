@@ -167,7 +167,8 @@
                 alert('Semua input harus diisi sebelum mendownload file!');
                 return;
             }
-            let downloadUrl = "{{ route('export.data') }}?start_date=" + start_date + "&end_date=" +
+            let downloadUrl = "{{ route('export-tonase-facilitator.data') }}?start_date=" + start_date +
+                "&end_date=" +
                 end_date + "&waste_id=" + waste_id;
             // Redirect browser ke URL download
             window.location.href = downloadUrl;

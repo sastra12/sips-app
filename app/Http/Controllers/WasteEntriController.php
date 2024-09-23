@@ -180,7 +180,10 @@ class WasteEntriController extends Controller
 
     public function dataTonaseByAdminFacilitator(Request $request)
     {
-        $query = WasteEntry::with('waste_bank');
+        $query = WasteEntry::select('entry_id', 'waste_organic', 'waste_anorganic', 'waste_residue', 'waste_total', 'created_at', 'waste_id')
+            ->with(['waste_bank' => function ($query) {
+                $query->select('waste_bank_id', 'waste_name');
+            }]);
 
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
@@ -201,12 +204,6 @@ class WasteEntriController extends Controller
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return  '
-                <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
-            ';
-            })
             ->addColumn('waste_name', function ($data) {
                 return $data->waste_bank->waste_name;
             })

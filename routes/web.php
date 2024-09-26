@@ -82,10 +82,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::middleware(['checkRole:3'])->group(function () {
         // Lihat Tonase
-        Route::get('/waste-entri-facilitator', [WasteEntriController::class, 'dataTonaseByAdminFacilitator'])->name('waste-entri-facilitator.data');
-        Route::get('/waste-entri-on-facilitator', [WasteEntriController::class, 'wasteEntriDataOnFacilitator'])->name('waste-entri-on-facilitator');
-        Route::get('/tonase-data-facilitator', [WasteEntriController::class, 'viewTonaseFacilitator'])->name('view-tonase-facilitator');
-        Route::get('/waste-entri-details-facilitator', [WasteEntriController::class, 'wasteEntriDetailsFacilitator'])->name('waste-entri-details-facilitator');
+        Route::get('/waste-bank-view-facilitator', [WasteEntriController::class, 'viewWasteBankFacilitator'])->name('view-waste-bank-facilitator.view');
+        Route::get('/waste-entri-details-facilitator', [WasteEntriController::class, 'wasteEntriDetailsFacilitator'])->name('waste-entri-details-facilitator.view');
+        Route::get('/waste-bank-facilitator', [WasteEntriController::class, 'wasteBankFacilitator'])->name('waste-bank-facilitator.data');
+        Route::get('/waste-entri-on-facilitator', [WasteEntriController::class, 'wasteEntriDataOnFacilitator'])->name('waste-entri-facilitator.data');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-facilitator", [WasteEntriController::class, 'exportTonaseByFacilitator'])->name('export-tonase-facilitator.data');

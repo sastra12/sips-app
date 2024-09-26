@@ -46,7 +46,7 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('waste-entri-facilitator.data') }}",
+                    url: "{{ route('waste-bank-facilitator.data') }}",
                     type: 'GET',
                 },
                 columnDefs: [{

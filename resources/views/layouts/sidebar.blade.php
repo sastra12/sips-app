@@ -93,7 +93,7 @@
                      </li>
                  @else
                      <li class="nav-item">
-                         <a href="{{ route('view-tonase-facilitator') }}" class="nav-link">
+                         <a href="{{ route('view-waste-bank-facilitator.view') }}" class="nav-link">
                              <i class="fa fa-truck"></i>
                              <p>
                                  Data Tonase

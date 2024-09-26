@@ -84,7 +84,7 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('waste-entri-on-facilitator') }}",
+                    url: "{{ route('waste-entri-facilitator.data') }}",
                     type: 'GET',
                     data: function(d) {
                         d.bankId = bankId;

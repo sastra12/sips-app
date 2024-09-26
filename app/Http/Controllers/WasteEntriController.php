@@ -127,20 +127,22 @@ class WasteEntriController extends Controller
     }
 
 
-    public function dataTonaseByAdminFacilitator()
+    public function wasteBankFacilitator()
     {
         $wasteBankData = WasteBank::query()
             ->select("waste_bank_id", "waste_name", "village_id", "created_at")
             ->with(['village' => function ($query) {
                 $query->select("village_id", "village_name");
-            }])->get();
+            }])
+            ->orderByDesc("created_at")
+            ->get();
 
         return Datatables::of($wasteBankData)
             // for number
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <a href="' . route('waste-entri-details-facilitator', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+                <a href="' . route('waste-entri-details-facilitator.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
             ';
             })
             ->addColumn('village', function ($data) {
@@ -333,12 +335,9 @@ class WasteEntriController extends Controller
     }
 
     // Admin Tonase
-    public function viewTonaseFacilitator()
+    public function viewWasteBankFacilitator()
     {
-        $wasteBankData = WasteBank::query()->get();
-        return view('admin-fasilitator.data-tonase.index', [
-            'waste_banks' => $wasteBankData
-        ]);
+        return view('admin-fasilitator.data-tonase.index');
     }
 
     public function create()

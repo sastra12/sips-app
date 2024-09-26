@@ -228,7 +228,7 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('waste-cust-data') }}",
+                    url: "{{ route('customer-by-waste-bank.data') }}",
                     type: 'GET',
                     data: {
                         bankId: bankId

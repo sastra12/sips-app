@@ -47,10 +47,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('waste-bank', WasteBankController::class);
 
         // Manajemen Customer
-        Route::get('/customer/data', [CustomerController::class, 'data'])->name('customer.data');
+        Route::get('/waste-bank-customer/data', [CustomerController::class, 'wasteBankCustomerData'])->name('waste-bank-customer.data');
         Route::resource('customer', CustomerController::class);
-        Route::get('/waste-customer-details', [CustomerController::class, 'wasteCustomerDetails'])->name('waste-cust-details');
-        Route::get('/waste-customer-data', [CustomerController::class, 'wasteCustData'])->name('waste-cust-data');
+        Route::get('/customer-details-view', [CustomerController::class, 'viewCustomerDetails'])->name('customer-details.view');
+        Route::get('/customer-by-waste-bank/data', [CustomerController::class, 'customerData'])->name('customer-by-waste-bank.data');
 
         // Manajemen Tonase
         Route::get('/waste-entri/data', [WasteEntriController::class, 'data'])->name('waste-entri.data');

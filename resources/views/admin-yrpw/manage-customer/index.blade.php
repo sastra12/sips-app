@@ -49,7 +49,7 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('customer.data') }}",
+                    url: "{{ route('waste-bank-customer.data') }}",
                     type: 'GET'
                 },
                 columnDefs: [{
@@ -85,33 +85,6 @@
                 ]
 
             });
-
-            // Response when success or failed when submit button
-            $('#modal-form form').on('submit', function(e) {
-                e.preventDefault()
-                $.post($('#modal-form form').attr('action'), $('#modal-form form').serialize())
-                    .done((response) => {
-                        if (response.message == 'Success Added Data' || response.message ==
-                            'Success Updated Data') {
-                            $('#modal-form').modal('hide');
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                icon: "success",
-                                button: "Ok!",
-                            });
-                            table.ajax.reload()
-                        } else if (response.status == 'Failed added' || response.status ==
-                            'Failed updated') {
-                            $('#error_list').html('')
-                            $('#error_list').addClass('alert alert-danger')
-                            $.each(response.errors, function(key, value) {
-                                $('#error_list').append('<li>' + value + '</li>')
-                            })
-                        }
-                    })
-            })
-
         });
     </script>
 @endpush

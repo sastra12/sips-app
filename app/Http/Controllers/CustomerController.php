@@ -16,18 +16,20 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function data()
+    public function wasteBankCustomerData()
     {
         $listdata = WasteBank::query()
             ->select("waste_bank_id", "waste_name", "village_id", "created_at")
             ->with(['village' => function ($query) {
                 $query->select("village_id", "village_name");
-            }])->get();
+            }])
+            ->orderByDesc("created_at")
+            ->get();
 
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return '<a href="' . route('waste-cust-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
+                return '<a href="' . route('customer-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
             })
             ->addColumn('village_name', function ($data) {
                 return $data->village->village_name;
@@ -40,7 +42,7 @@ class CustomerController extends Controller
         return view('admin-yrpw.manage-customer.index',);
     }
 
-    public function wasteCustomerDetails()
+    public function viewCustomerDetails()
     {
         $waste_banks = WasteBank::query()->get();
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
@@ -50,14 +52,13 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function wasteCustData(Request $request)
+    public function customerData(Request $request)
     {
         $waste_id = $request->input('bankId');
         $listdata = Customer::query()
             ->where('waste_id', '=', $waste_id)
             ->orderByDesc('created_at')
             ->get();
-
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {

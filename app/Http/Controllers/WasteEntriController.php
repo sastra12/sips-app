@@ -252,20 +252,23 @@ class WasteEntriController extends Controller
             ->whereBetween('created_at', [$start_date, $end_date])
             ->orderByDesc('created_at')
             ->get();
+        if (count($waste_entries) == null) {
+            return redirect()->back()->with('failed', 'Maaf Data Tonase Tidak Ada');
+        } else {
+            foreach ($waste_entries as $value) {
+                $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
+                $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
+                $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
+                $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
+                $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
+            }
+            $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
+            $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
+            $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
 
-        foreach ($waste_entries as $value) {
-            $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
-            $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
-            $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
-            $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
-            $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
+            // Kembalikan hasil dalam format Excel menggunakan view
+            return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
         }
-        $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
-        $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
-        $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
-
-        // Kembalikan hasil dalam format Excel menggunakan view
-        return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
     }
 
     // Admin TPS3R

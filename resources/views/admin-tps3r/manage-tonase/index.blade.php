@@ -12,6 +12,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
+                    @if (session()->has('failed'))
+                        <div class="alert alert-danger text-center mb-2 alert-dismissible fade show" role="alert">
+                            {{ session()->get('failed') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     <div class="card-header">
                         <div class="row">
                             <div class="col-sm-2">

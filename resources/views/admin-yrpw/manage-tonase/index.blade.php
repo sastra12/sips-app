@@ -81,9 +81,6 @@
                         data: 'action',
                     },
                 ],
-                createdRow: function(row, data, dataIndex) {
-                    $("#waste_bank_id").val(data.waste_id)
-                }
             });
         });
     </script>

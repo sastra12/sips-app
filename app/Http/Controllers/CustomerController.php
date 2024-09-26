@@ -18,17 +18,19 @@ class CustomerController extends Controller
      */
     public function data()
     {
-        $listdata = Village::has('waste_bank')
-            ->with('waste_bank')
-            ->orderByDesc('created_at')
-            ->get();
+        $listdata = WasteBank::query()
+            ->select("waste_bank_id", "waste_name", "village_id", "created_at")
+            ->with(['village' => function ($query) {
+                $query->select("village_id", "village_name");
+            }])->get();
+
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return '<a href="' . route('waste-cust-details', ['bankId' => $data->waste_bank->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
+                return '<a href="' . route('waste-cust-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
             })
-            ->addColumn('waste_name', function ($data) {
-                return $data->waste_bank->waste_name;
+            ->addColumn('village_name', function ($data) {
+                return $data->village->village_name;
             })
             ->make();
     }

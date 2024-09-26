@@ -36,8 +36,9 @@
                                 <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <button type="button" id="filterDataTonase" class="btn btn-primary">Search</button>
+                                <button onclick="createDataTonaseYRPW()" class="btn btn-info">Tambah Tonase</button>
                                 <button type="button" id="downloadData" class="btn btn-success">Download Excel</button>
                                 <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>
                             </div>
@@ -129,7 +130,7 @@
                 waste_anorganic: $("#waste_anorganic").val(),
                 waste_residue: $("#waste_residue").val(),
                 date_entri: $("#date_entri").val(),
-                waste_bank_id: $("#waste_bank_id").val()
+                waste_bank_id: bankId
             }
             $.ajax({
                 url: "{{ route('waste-entri.store') }}",

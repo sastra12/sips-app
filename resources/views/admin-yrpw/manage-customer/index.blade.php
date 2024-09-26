@@ -17,8 +17,8 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Desa Pendamping</th>
                                     <th scope="col">Nama TPS3R</th>
+                                    <th scope="col">Desa Pendamping</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -74,10 +74,10 @@
                         data: 'DT_RowIndex',
                     },
                     {
-                        data: 'village_name',
+                        data: 'waste_name',
                     },
                     {
-                        data: 'waste_name',
+                        data: 'village_name',
                     },
                     {
                         data: 'action',

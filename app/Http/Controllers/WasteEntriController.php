@@ -14,8 +14,6 @@ use App\Exports\WasteEntriesExport;
 
 class WasteEntriController extends Controller
 {
-
-
     // Admin YRPW
     public function data()
     {

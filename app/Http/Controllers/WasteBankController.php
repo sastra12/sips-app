@@ -18,8 +18,12 @@ class WasteBankController extends Controller
 
     public function data()
     {
-        $listdata = WasteBank::with('village')->get();
-
+        $listdata = WasteBank::select("waste_bank_id", "waste_name", "village_id", "created_at")
+            ->with(["village" => function ($query) {
+                $query->select("village_id", "village_name");
+            }])
+            ->orderByDesc("created_at")
+            ->get();
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()

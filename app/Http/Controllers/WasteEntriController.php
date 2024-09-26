@@ -28,7 +28,7 @@ class WasteEntriController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <a href="' . route('waste-entri-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+                <a href="' . route('waste-entri-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
             ';
             })
             ->addColumn('village', function ($data) {
@@ -37,7 +37,7 @@ class WasteEntriController extends Controller
             ->make();
     }
 
-    public function wasteEntriDetails()
+    public function viewWasteEntriDetails()
     {
         return view('admin-yrpw.manage-tonase.waste-entri-details');
     }

@@ -38,7 +38,7 @@
                             value="{{ old('customer_community_association') }}">
                     </div>
                     <div class="form-group">
-                        <label for="rubbish_fee">rubbish_fee</label>
+                        <label for="rubbish_fee">Iuran</label>
                         <input autocomplete="off" type="text" class="form-control" id="rubbish_fee"
                             name="rubbish_fee" value="{{ old('rubbish_fee') }}">
                     </div>

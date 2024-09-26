@@ -242,7 +242,7 @@
                 processing: true,
                 autowidth: false,
                 ajax: {
-                    url: "{{ route('waste-entri-data') }}",
+                    url: "{{ route('waste-entri-data-by-waste-bank.data') }}",
                     type: 'GET',
                     data: function(d) {
                         d.bankId = bankId;

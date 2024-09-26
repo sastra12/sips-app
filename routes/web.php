@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('waste-entri', WasteEntriController::class);
 
         // Download Excel
-        Route::get("/export-excel-by-month", [WasteEntriController::class, 'exportByMonth'])->name('export.data');
+        Route::get("/export-excel-tonase-by-yrpw", [WasteEntriController::class, 'exportTonaseByYRPW'])->name('export-tonase-yrpw.data');
     });
 
     // Route Admin TPS3R

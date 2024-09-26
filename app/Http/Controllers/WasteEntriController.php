@@ -188,7 +188,7 @@ class WasteEntriController extends Controller
     }
 
     // Admin YRPW Export Data By Month
-    public function exportByMonth(Request $request)
+    public function exportTonaseByYRPW(Request $request)
     {
         $wasteOrganicTotal = 0;
         $wasteAnorganicTotal = 0;

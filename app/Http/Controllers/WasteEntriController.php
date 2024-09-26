@@ -81,6 +81,112 @@ class WasteEntriController extends Controller
             ->make();
     }
 
+
+
+    // Admin TPS3R
+    public function dataTonaseByAdminTPS3R(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $wasteEntries = WasteEntry::whereHas('waste_bank', function (Builder $query) use ($userId) {
+            $query->whereHas('waste_bank_users', function (Builder $query) use ($userId) {
+                $query->where('user_id', $userId);
+            });
+        })
+            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users:id,name'])
+            ->orderByDesc('created_at');
+
+        // Jika ada request tanggal mulai dan tanggal berakhir
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        if ($start_date) {
+            $wasteEntries->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $wasteEntries->where('created_at', '<=', $end_date);
+        }
+
+        $listdata = $wasteEntries->get();
+
+        // return response()->json($listdata);
+        return Datatables::of($listdata)
+            // for number
+            ->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return  '
+                <button onclick="editDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
+                <button onclick="deleteDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
+            ';
+            })
+            ->addColumn('waste_name', function ($data) {
+                return $data->waste_bank->waste_name;
+            })
+            ->addColumn('tanggal_input', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            ->make();
+    }
+
+
+    public function dataTonaseByAdminFacilitator()
+    {
+        $wasteBankData = WasteBank::query()
+            ->select("waste_bank_id", "waste_name", "village_id", "created_at")
+            ->with(['village' => function ($query) {
+                $query->select("village_id", "village_name");
+            }])->get();
+
+        return Datatables::of($wasteBankData)
+            // for number
+            ->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return  '
+                <a href="' . route('waste-entri-details-facilitator', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+            ';
+            })
+            ->addColumn('village', function ($data) {
+                return $data->village->village_name;
+            })
+            ->make();
+    }
+
+    public function wasteEntriDataOnFacilitator(Request $request)
+    {
+        $waste_id = $request->input('bankId');
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $query = WasteEntry::with(['waste_bank' => function ($query) {
+            $query->select("waste_bank_id", "waste_name");
+        }])
+            ->where('waste_id', '=', $waste_id);
+
+        // Jika ada filter tanggal 
+        if ($start_date) {
+            $query->where('created_at', '>=', $start_date);
+        }
+        if ($end_date) {
+            $query->where('created_at', '<=', $end_date);
+        }
+
+        $listdata = $query->orderByDesc('created_at')->get();
+
+        return Datatables::of($listdata)
+            // for number
+            ->addIndexColumn()
+            ->addColumn('waste_name', function ($data) {
+                return $data->waste_bank->waste_name;
+            })
+            ->addColumn('tanggal_input', function ($data) {
+                return date('d F Y', strtotime($data->created_at));
+            })
+            ->make();
+    }
+
+    public function wasteEntriDetailsFacilitator()
+    {
+        return view('admin-fasilitator.data-tonase.waste-entri-details-facilitator');
+    }
+
     // Admin YRPW Export Data By Month
     public function exportByMonth(Request $request)
     {
@@ -206,85 +312,6 @@ class WasteEntriController extends Controller
             // Kembalikan hasil dalam format Excel menggunakan view
             return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
         }
-    }
-
-    // Admin TPS3R
-    public function dataTonaseByAdminTPS3R(Request $request)
-    {
-        $userId = Auth::user()->id;
-        $wasteEntries = WasteEntry::whereHas('waste_bank', function (Builder $query) use ($userId) {
-            $query->whereHas('waste_bank_users', function (Builder $query) use ($userId) {
-                $query->where('user_id', $userId);
-            });
-        })
-            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users:id,name'])
-            ->orderByDesc('created_at');
-
-        // Jika ada request tanggal mulai dan tanggal berakhir
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
-        if ($start_date) {
-            $wasteEntries->where('created_at', '>=', $start_date);
-        }
-        if ($end_date) {
-            $wasteEntries->where('created_at', '<=', $end_date);
-        }
-
-        $listdata = $wasteEntries->get();
-
-        // return response()->json($listdata);
-        return Datatables::of($listdata)
-            // for number
-            ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return  '
-                <button onclick="editDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
-            ';
-            })
-            ->addColumn('waste_name', function ($data) {
-                return $data->waste_bank->waste_name;
-            })
-            ->addColumn('tanggal_input', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
-            })
-            ->make();
-    }
-
-
-    public function dataTonaseByAdminFacilitator(Request $request)
-    {
-        $query = WasteEntry::select('entry_id', 'waste_organic', 'waste_anorganic', 'waste_residue', 'waste_total', 'created_at', 'waste_id')
-            ->with(['waste_bank' => function ($query) {
-                $query->select('waste_bank_id', 'waste_name');
-            }]);
-
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
-        $waste_id = $request->input('waste_id');
-
-        if ($start_date) {
-            $query->where('created_at', '>=', $start_date);
-        }
-        if ($end_date) {
-            $query->where('created_at', '<=', $end_date);
-        }
-        if ($waste_id) {
-            $query->where('waste_id', '=', $waste_id);
-        }
-
-        $listdata = $query->orderByDesc('created_at')->get();
-
-        return Datatables::of($listdata)
-            // for number
-            ->addIndexColumn()
-            ->addColumn('waste_name', function ($data) {
-                return $data->waste_bank->waste_name;
-            })
-            ->addColumn('tanggal_input', function ($data) {
-                return date('d F Y', strtotime($data->created_at));
-            })
-            ->make();
     }
 
     // Admin YRPW

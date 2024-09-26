@@ -22,7 +22,6 @@
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
-
                         </table>
                     </div>
                 </div>

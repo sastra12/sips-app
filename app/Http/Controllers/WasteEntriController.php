@@ -19,20 +19,48 @@ class WasteEntriController extends Controller
     // Admin YRPW
     public function data(Request $request)
     {
-        $query = WasteEntry::with('waste_bank');
+        $wasteBankData = WasteBank::query()
+            ->select("waste_bank_id", "waste_name", "village_id", "created_at")
+            ->with(['village' => function ($query) {
+                $query->select("village_id", "village_name");
+            }])->get();
 
+        return Datatables::of($wasteBankData)
+            // for number
+            ->addIndexColumn()
+            ->addColumn('action', function ($data) {
+                return  '
+                <a href="' . route('waste-entri-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+            ';
+            })
+            ->addColumn('village', function ($data) {
+                return $data->village->village_name;
+            })
+            ->make();
+    }
+
+    public function wasteEntriDetails()
+    {
+        return view('admin-yrpw.manage-tonase.waste-entri-details');
+    }
+
+    public function wasteEntriData(Request $request)
+    {
+        $waste_id = $request->input('bankId');
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
-        $waste_id = $request->input('waste_id');
 
+        $query = WasteEntry::with(['waste_bank' => function ($query) {
+            $query->select("waste_bank_id", "waste_name");
+        }])
+            ->where('waste_id', '=', $waste_id);
+
+        // Jika ada filter tanggal 
         if ($start_date) {
             $query->where('created_at', '>=', $start_date);
         }
         if ($end_date) {
             $query->where('created_at', '<=', $end_date);
-        }
-        if ($waste_id) {
-            $query->where('waste_id', '=', $waste_id);
         }
 
         $listdata = $query->orderByDesc('created_at')->get();
@@ -40,17 +68,17 @@ class WasteEntriController extends Controller
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()
-            ->addColumn('action', function ($data) {
-                return  '
-                <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
-            ';
-            })
             ->addColumn('waste_name', function ($data) {
                 return $data->waste_bank->waste_name;
             })
             ->addColumn('tanggal_input', function ($data) {
                 return date('d F Y', strtotime($data->created_at));
+            })
+            ->addColumn('action', function ($data) {
+                return  '
+                    <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
+                    <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
+                ';
             })
             ->make();
     }
@@ -78,19 +106,24 @@ class WasteEntriController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        foreach ($waste_entries as $value) {
-            $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
-            $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
-            $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
-            $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
-            $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
-        }
-        $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
-        $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
-        $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
+        // Cek apakah datanya null atau tidak
+        if (count($waste_entries) == null) {
+            return redirect()->back()->with('failed', 'Maaf Data Tonase Tidak Ada');
+        } else {
+            foreach ($waste_entries as $value) {
+                $wasteOrganicTotal = $wasteOrganicTotal + $value->waste_organic;
+                $wasteAnorganicTotal = $wasteAnorganicTotal + $value->waste_anorganic;
+                $wasteResidueTotal = $wasteResidueTotal + $value->waste_residue;
+                $wasteReductionTotal = $wasteReductionTotal + (($value->waste_organic + $value->waste_anorganic) / $value->waste_total) * 100;
+                $residueDisposeTotal = $residueDisposeTotal + ($value->waste_residue / $value->waste_total) * 100;
+            }
+            $wasteReductionTotal = round($wasteReductionTotal / count($waste_entries));
+            $residueDisposeTotal = round($residueDisposeTotal / count($waste_entries));
+            $tonaseTotal = $tonaseTotal + $wasteOrganicTotal + $wasteAnorganicTotal + $wasteResidueTotal;
 
-        // Kembalikan hasil dalam format Excel menggunakan view
-        return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
+            // Kembalikan hasil dalam format Excel menggunakan view
+            return Excel::download(new WasteEntriesExport($waste_entries, $wasteOrganicTotal, $wasteAnorganicTotal, $wasteResidueTotal, $tonaseTotal, $wasteReductionTotal, $residueDisposeTotal), 'Data Sampah ' . $waste_entries[0]->waste_bank->waste_name . '.xlsx');
+        }
     }
 
     // Admin Facilitator
@@ -255,10 +288,10 @@ class WasteEntriController extends Controller
     // Admin YRPW
     public function index()
     {
-        $wasteBankData = WasteBank::query()->get();
-        return view('admin-yrpw.manage-tonase.index', [
-            'waste_banks' => $wasteBankData
-        ]);
+        // return view('admin-yrpw.manage-tonase.index', [
+        //     'waste_banks' => $wasteBankData
+        // ]);
+        return view('admin-yrpw.manage-tonase.index');
     }
 
     // Admin TPS3R

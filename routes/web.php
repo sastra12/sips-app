@@ -54,6 +54,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Manajemen Tonase
         Route::get('/waste-entri/data', [WasteEntriController::class, 'data'])->name('waste-entri.data');
+        Route::get('waste-entri-details', [WasteEntriController::class, 'wasteEntriDetails'])->name('waste-entri-details');
+        Route::get('waste-entri-data', [WasteEntriController::class, 'wasteEntriData'])->name('waste-entri-data');
         Route::resource('waste-entri', WasteEntriController::class);
 
         // Download Excel

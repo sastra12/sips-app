@@ -13,8 +13,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah Data Pelanggan</i></button>
+                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-success">Tambah Data
+                            Pelanggan</button>
+                        <button id="downloadDataCustomer" class="btn btn-info">Download Data
+                            Pelanggan</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -200,6 +202,14 @@
                     }
                 });
         }
+
+        $("#downloadDataCustomer").click(function(e) {
+            e.preventDefault();
+
+            let downloadUrl = "{{ route('export-customer-tps3r') }}";
+            // Redirect browser ke URL download
+            window.location.href = downloadUrl;
+        })
 
         $(document).ready(function() {
             $.ajaxSetup({

@@ -91,6 +91,14 @@
                              </p>
                          </a>
                      </li>
+                     <li class="nav-item">
+                         <a href="{{ route('monthly-bill.view') }}" class="nav-link">
+                             <i class="fa fa-truck"></i>
+                             <p>
+                                 Tagihan Bulanan
+                             </p>
+                         </a>
+                     </li>
                  @else
                      <li class="nav-item">
                          <a href="{{ route('view-waste-bank-facilitator.view') }}" class="nav-link">

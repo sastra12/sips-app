@@ -37,8 +37,6 @@
                                 <button type="button" id="resetDataTonase" class="btn btn-danger">Reset</button>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">

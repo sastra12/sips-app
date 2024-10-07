@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GarbageCollectionFeeController;
 use App\Http\Controllers\ManageCustomerByTPS3RController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VillageController;
@@ -75,6 +76,13 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Pelanggan By Admin TPS3R
         Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
         Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
+        // Download Excel Customer
+        Route::get("/export-excel-customer-by-tps3r", [ManageCustomerByTPS3RController::class, 'exportCustomer'])->name('export-customer-tps3r');
+
+        // Manajemen Iuran
+        Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'monthlyBillData'])->name('monthly-bill.data');
+        Route::get('/monthly-bill-view', [GarbageCollectionFeeController::class, 'monthlyBill'])->name('monthly-bill.view');
+        Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('monthly-bill.store');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');

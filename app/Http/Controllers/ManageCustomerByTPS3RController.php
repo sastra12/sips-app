@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CustomersExport;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,14 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ManageCustomerByTPS3RController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
 
     public function data()
     {
@@ -52,22 +49,12 @@ class ManageCustomerByTPS3RController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // Dapatkan id waste_bank berdasarkan user yang login
@@ -108,36 +95,17 @@ class ManageCustomerByTPS3RController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $customer = Customer::query()->find($id);
         return response()->json($customer);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $validated = Validator::make($request->all(), [
@@ -169,15 +137,45 @@ class ManageCustomerByTPS3RController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $data = Customer::query()->find($id);
         $data->delete();
+    }
+
+    public function exportCustomer()
+    {
+        return Excel::download(new CustomersExport($this->getCustomer()), 'Data Pelanggan.xlsx');
+    }
+
+    protected function getCustomer()
+    {
+        $customersData = [];
+        $user_id = Auth::user()->id;
+        Customer::whereHas('waste_bank', function (Builder $query) use ($user_id) {
+            $query->whereHas('waste_bank_users', function (Builder $query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
+        })
+            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users' => function ($query) {
+                $query->select('id', 'name');
+            }])
+            ->orderByDesc('created_at')
+            ->chunk(500, function ($customers) use (&$customersData) {
+                foreach ($customers as $customer) {
+                    $customersData[] = [
+                        'customer_name' => $customer->customer_name,
+                        'waste_name' => $customer->waste_bank->waste_name,
+                        'customer_address' => $customer->customer_address,
+                        'customer_neighborhood' => $customer->customer_neighborhood,
+                        'customer_community_association' => $customer->customer_community_association,
+                        'rubbish_fee' => $customer->rubbish_fee,
+                        'customer_status' => $customer->customer_status,
+                        'created_at' => $customer->created_at,
+                    ];
+                }
+            });
+
+        return $customersData;
     }
 }

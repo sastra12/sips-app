@@ -23,4 +23,9 @@ class Customer extends Model
     {
         return $this->belongsTo(WasteBank::class, 'waste_id', 'waste_bank_id');
     }
+
+    public function waste_payments()
+    {
+        return $this->hasMany(WastePayment::class, 'customer_id', 'customer_id');
+    }
 }

@@ -91,13 +91,28 @@
                              </p>
                          </a>
                      </li>
-                     <li class="nav-item">
-                         <a href="{{ route('monthly-bill.view') }}" class="nav-link">
+                     <li class="nav-item has-treeview">
+                         <a href="#" class="nav-link">
                              <i class="fa fa-truck"></i>
                              <p>
-                                 Tagihan Bulanan
+                                 Pembayaran
+                                 <i class="fas fa-angle-left right"></i>
                              </p>
                          </a>
+                         <ul class="nav nav-treeview">
+                             <li class="nav-item">
+                                 <a href="{{ route('monthly-bill.view') }}" class="nav-link">
+                                     <i class="far fa-circle nav-icon"></i>
+                                     <p>Tagihan Bulanan</p>
+                                 </a>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="{{ route('checkMonthlyBill') }}" class="nav-link">
+                                     <i class="far fa-circle nav-icon"></i>
+                                     <p>Cek Data Tagihan</p>
+                                 </a>
+                             </li>
+                         </ul>
                      </li>
                  @else
                      <li class="nav-item">

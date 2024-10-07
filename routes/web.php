@@ -82,7 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Iuran
         Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'monthlyBillData'])->name('monthly-bill.data');
         Route::get('/monthly-bill-view', [GarbageCollectionFeeController::class, 'monthlyBill'])->name('monthly-bill.view');
-        Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('monthly-bill.store');
+        Route::get('/monthly-bill', [GarbageCollectionFeeController::class, 'checkMonthlyBill'])->name('checkMonthlyBill');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');

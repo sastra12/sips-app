@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
-use App\Models\Village;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
 use DataTables;

@@ -80,9 +80,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get("/export-excel-customer-by-tps3r", [ManageCustomerByTPS3RController::class, 'exportCustomer'])->name('export-customer-tps3r');
 
         // Manajemen Iuran
-        Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'monthlyBillData'])->name('monthly-bill.data');
+        Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'customerData'])->name('monthly-bill.data');
         Route::get('/monthly-bill-view', [GarbageCollectionFeeController::class, 'monthlyBill'])->name('monthly-bill.view');
         Route::get('/monthly-bill', [GarbageCollectionFeeController::class, 'checkMonthlyBill'])->name('checkMonthlyBill');
+        Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('store-payment');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');

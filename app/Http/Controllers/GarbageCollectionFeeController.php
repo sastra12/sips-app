@@ -17,7 +17,7 @@ class GarbageCollectionFeeController extends Controller
     {
     }
 
-    public function monthlyBillData()
+    public function customerData()
     {
         $user_id = Auth::user()->id;
         $customers = Customer::whereHas('waste_bank', function (Builder $query) use ($user_id) {
@@ -27,8 +27,12 @@ class GarbageCollectionFeeController extends Controller
         })
             ->orderByDesc('created_at')
             ->get();
+
         return Datatables::of($customers)
             ->addIndexColumn()
+            ->addColumn('action', function ($customer) {
+                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-xs btn-info">Tambah Pembayaran</button>';
+            })
             ->make();
     }
 
@@ -49,6 +53,39 @@ class GarbageCollectionFeeController extends Controller
 
     public function store(Request $request)
     {
+        $validated = Validator::make($request->all(), [
+            'month' => 'required',
+            'year' => 'required|numeric|min:4',
+        ]);
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed added',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            // cek apakah sudah melakukan pembayaran pada bulan yang sama
+            $dataExists = WastePayment::where('customer_id', $request->input('customerId'))
+                ->where('month_payment', $request->input('month'))
+                ->where('year_payment', $request->input('year'))
+                ->exists();
+            if ($dataExists) {
+                return response()->json([
+                    'status' => 'Error',
+                    'message' => 'Pembayaran sudah dilakukan pada bulan ini.'
+                ]);
+            } else {
+                $data = new WastePayment();
+                $data->customer_id = $request->input('customerId');
+                $data->month_payment = $request->input('month');
+                $data->year_payment = $request->input('year');
+                $data->amount_due = $request->input('amount_due');
+                $data->save();
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Success Added Data'
+                ]);
+            }
+        }
     }
 
 

@@ -20,7 +20,6 @@ class CreateWastePaymentsTable extends Migration
             $table->string('month_payment', 10)->nullable(false);
             $table->string('year_payment', 10)->nullable(false);
             $table->integer('amount_due')->nullable(false);
-            $table->enum('status', ['LUNAS', 'BELUM DIBAYAR']);
             $table->timestamps();
 
             $table->foreign('customer_id')->references('customer_id')->on('customers');

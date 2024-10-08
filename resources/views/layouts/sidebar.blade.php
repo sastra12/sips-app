@@ -107,9 +107,15 @@
                                  </a>
                              </li>
                              <li class="nav-item">
-                                 <a href="{{ route('checkMonthlyBill') }}" class="nav-link">
+                                 <a href="{{ route('viewMonthlyBillPaid') }}" class="nav-link">
                                      <i class="far fa-circle nav-icon"></i>
-                                     <p>Cek Data Tagihan</p>
+                                     <p>Data Tagihan Lunas</p>
+                                 </a>
+                             </li>
+                             <li class="nav-item">
+                                 <a href="{{ route('viewMonthlyBillUnpaid') }}" class="nav-link">
+                                     <i class="far fa-circle nav-icon"></i>
+                                     <p>Data Tagihan Belum Lunas</p>
                                  </a>
                              </li>
                          </ul>

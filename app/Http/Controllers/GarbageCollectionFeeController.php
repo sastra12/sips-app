@@ -41,9 +41,112 @@ class GarbageCollectionFeeController extends Controller
         return view('admin-tps3r.manage-garbage-collection-fee.monthly-bill');
     }
 
-    public function checkMonthlyBill()
+    public function checkMonthlyBillPaidView()
     {
-        return view('admin-tps3r.manage-garbage-collection-fee.check-monthly-bill');
+        return view('admin-tps3r.manage-garbage-collection-fee.check-monthly-bill-paid');
+    }
+
+    public function checkMonthlyBillUnpaidView()
+    {
+        return view('admin-tps3r.manage-garbage-collection-fee.check-monthly-bill-unpaid');
+    }
+
+    public function checkMonthlyBillPaid(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'month_payment' => 'required',
+            'year_payment' => 'required|numeric|min:4',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $month_payment = $request->input('month_payment');
+            $year_payment = $request->input('year_payment');
+            $user_id = Auth::user()->id;
+            $customers = Customer::whereHas('waste_bank', function (Builder $query) use ($user_id) {
+                $query->whereHas('waste_bank_users', function (Builder $query) use ($user_id) {
+                    $query->where('user_id', $user_id);
+                });
+            })
+                ->whereHas('waste_payments', function (Builder $query) use ($month_payment, $year_payment) {
+                    $query->where('month_payment', $month_payment)
+                        ->where('year_payment', $year_payment);
+                })
+                ->with(['waste_payments' => function ($query) {
+                    $query->select("customer_id", "created_at");
+                }])
+                ->orderByDesc('created_at')
+                ->get();
+
+            if ($customers->isEmpty()) {
+                return response()->json([
+                    'status' => 'Not Found',
+                    'message' => 'Tidak ada data untuk bulan dan tahun yang dipilih.'
+                ]);
+            }
+            // return response()->json($customers);
+            return Datatables::of($customers)
+                ->addIndexColumn()
+                ->addColumn('action', function ($customer) {
+                    return '<button onclick="downloadProofOfPyament(' . $customer->customer_id . ')" class="btn btn-xs btn-info">Download Bukti Pembayaran</button>';
+                })
+                ->addColumn('badge_success', function ($customer) {
+                    return '<span class="badge badge-success">Lunas</span>';
+                })
+                ->addColumn('paid_date', function ($customer) {
+                    return date('d F Y', strtotime($customer->waste_payments[0]->created_at));
+                })
+                ->rawColumns(['badge_success', 'action'])
+                ->make();
+        }
+    }
+
+    public function checkMonthlyBillUnpaid(Request $request)
+    {
+        $validated = Validator::make($request->all(), [
+            'month_payment' => 'required',
+            'year_payment' => 'required|numeric|min:4',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Failed',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $month_payment = $request->input('month_payment');
+            $year_payment = $request->input('year_payment');
+            $user_id = Auth::user()->id;
+            $customers = Customer::whereHas('waste_bank', function (Builder $query) use ($user_id) {
+                $query->whereHas('waste_bank_users', function (Builder $query) use ($user_id) {
+                    $query->where('user_id', $user_id);
+                });
+            })
+                ->whereDoesntHave('waste_payments', function (Builder $query) use ($month_payment, $year_payment) {
+                    $query->where('month_payment', $month_payment)
+                        ->where('year_payment', $year_payment);
+                })
+                ->orderByDesc('created_at')
+                ->get();
+
+            if ($customers->isEmpty()) {
+                return response()->json([
+                    'status' => 'Not Found',
+                    'message' => 'Tidak ada data untuk bulan dan tahun yang dipilih.'
+                ]);
+            }
+            return Datatables::of($customers)
+                ->addIndexColumn()
+                ->addColumn('badge_danger', function ($customer) {
+                    return '<span class="badge badge-danger">Belum Lunas</span>';
+                })
+                ->rawColumns(['badge_danger'])
+                ->make();
+        }
     }
 
     public function create()

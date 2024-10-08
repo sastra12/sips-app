@@ -82,7 +82,10 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Iuran
         Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'customerData'])->name('monthly-bill.data');
         Route::get('/monthly-bill-view', [GarbageCollectionFeeController::class, 'monthlyBill'])->name('monthly-bill.view');
-        Route::get('/monthly-bill', [GarbageCollectionFeeController::class, 'checkMonthlyBill'])->name('checkMonthlyBill');
+        Route::get('/monthly-bill-paid-view', [GarbageCollectionFeeController::class, 'checkMonthlyBillPaidView'])->name('viewMonthlyBillPaid');
+        Route::get('/monthly-bill-unpaid-view', [GarbageCollectionFeeController::class, 'checkMonthlyBillUnpaidView'])->name('viewMonthlyBillUnpaid');
+        Route::get('/monthly-bill-paid', [GarbageCollectionFeeController::class, 'checkMonthlyBillPaid'])->name('monthlyBillPaid');
+        Route::get('/monthly-bill-unpaid', [GarbageCollectionFeeController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaid');
         Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('store-payment');
 
         // Download Excel

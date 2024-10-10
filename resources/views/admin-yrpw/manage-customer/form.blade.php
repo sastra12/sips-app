@@ -44,7 +44,8 @@
                     </div>
                     <div class="form-group">
                         <label for="customer_status">Status</label>
-                        <select id='customer_status' class="form-control" name='customer_status' required>
+                        <select id='customer_status' class="form-control" name='customer_status'>
+                            <option value="">Pilih Status</option>
                             @foreach ($customer_status as $status)
                                 <option value="{{ $status }}">{{ $status }}</option>
                             @endforeach
@@ -52,7 +53,7 @@
                     </div>
                     <div class="form-group">
                         <label for="waste_id">Bank Sampah</label>
-                        <select id='waste_id' class="form-control" name='waste_id' required>
+                        <select id='waste_id' class="form-control" name='waste_id'>
                             @foreach ($waste_banks as $waste_bank)
                                 <option value="{{ $waste_bank->waste_bank_id }}"
                                     {{ $waste_bank->waste_bank_id == request()->query('bankId') ? 'selected' : '' }}

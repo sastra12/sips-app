@@ -5,12 +5,6 @@
     Dashboard
 @endsection
 
-@section('breadcrumb')
-    @parent
-
-    <li class="breadcrumb-item active">Dashboard</li>
-@endsection
-
 @section('content')
     <div class="container-fluid">
         <!-- /.row -->
@@ -24,8 +18,7 @@
                                 <h2>Data Pelanggan {{ $item->waste_name }}</h2>
                             @endif
                         @endforeach
-                        <button onclick="createDataCustomer()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah Data Pelanggan</i></button>
+                        <button onclick="createDataCustomer()" class="btn btn-success">Tambah Data Pelanggan</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -89,15 +82,17 @@
                 url: "{{ route('customer.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
+                    console.log(response)
                     $("#update_id").val(response.customer_id)
                     $("#customer_name").val(response.customer_name)
                     $("#customer_address").val(response.customer_address)
                     $("#customer_neighborhood").val(response.customer_neighborhood)
                     $("#customer_community_association").val(response.customer_community_association)
                     $("#rubbish_fee").val(response.rubbish_fee)
+                    $("#customer_status").val(response.customer_status)
 
                     $("#modal-form").modal("show")
-                    $("#modal-form .modal-title").html("Edit Data Desa Pendamping")
+                    $("#modal-form .modal-title").html("Edit Data Pelanggan")
                     $('#error_list').html('')
                     $('#error_list').removeClass('alert alert-danger')
                 },
@@ -211,7 +206,9 @@
                             });
 
                     } else {
-                        swal("Data is safe!");
+                        swal("Data is safe!", {
+                            icon: "success"
+                        });
                     }
                 });
         }

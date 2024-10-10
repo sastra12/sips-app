@@ -21,7 +21,9 @@ class WasteEntriController extends Controller
             ->select("waste_bank_id", "waste_name", "village_id", "created_at")
             ->with(['village' => function ($query) {
                 $query->select("village_id", "village_name");
-            }])->get();
+            }])
+            ->orderByDesc('created_at')
+            ->get();
 
         return Datatables::of($wasteBankData)
             // for number
@@ -322,9 +324,6 @@ class WasteEntriController extends Controller
     // Admin YRPW
     public function index()
     {
-        // return view('admin-yrpw.manage-tonase.index', [
-        //     'waste_banks' => $wasteBankData
-        // ]);
         return view('admin-yrpw.manage-tonase.index');
     }
 
@@ -403,17 +402,17 @@ class WasteEntriController extends Controller
                 'errors' => $validated->messages()
             ]);
         } else {
-            $data = new WasteEntry();
-            // Cek apakah data tonase dengan tanggal sekian sudah di input
-            $data->where('created_at', '=', $request->input('date_entri'))
+            $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
                 ->where('waste_id', '=', $request->input('waste_bank_id'))
                 ->exists();
+            // Cek apakah data tonase dengan tanggal sekian sudah di input
             if ($data) {
                 return response()->json([
                     'status' => 'Failed',
                     'message' => 'Data tonase pada tanggal ini sudah di inputkan'
                 ]);
             } else {
+                $data = new WasteEntry();
                 $data->waste_organic = $request->input('waste_organic');
                 $data->waste_anorganic = $request->input('waste_anorganic');
                 $data->waste_residue = $request->input('waste_residue');

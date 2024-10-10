@@ -13,10 +13,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        {{-- <button onclick="addForm('{{ route('village.store') }}')" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button> --}}
-                        <button onclick="createDataVillage()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
+                        <button onclick="createDataVillage()" class="btn btn-success">Tambah</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -106,7 +103,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -140,7 +137,7 @@
                         });
                         table.ajax.reload()
                         $("#update_id").val("")
-                    } else if (response.status = "Failed updated") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

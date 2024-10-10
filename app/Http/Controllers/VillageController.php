@@ -63,7 +63,7 @@ class VillageController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -116,7 +116,7 @@ class VillageController extends Controller
         ]);
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed updated',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {

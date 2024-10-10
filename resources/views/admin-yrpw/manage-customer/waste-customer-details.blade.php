@@ -71,6 +71,7 @@
             $("#customer_neighborhood").val("")
             $("#customer_community_association").val("")
             $("#rubbish_fee").val("")
+            $("#customer_status").val("")
 
             // Membersihkan list error
             $('#error_list').html('')

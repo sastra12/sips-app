@@ -215,12 +215,19 @@
                     if (response.status == "Success") {
                         $('#modal-form-tonase').modal('hide');
                         window.location.href = "{{ route('waste-entri.index') }}";
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status == "Error") {
                         $('#error_list_tonase').html('')
                         $('#error_list_tonase').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
                             $('#error_list_tonase').append('<li>' + value + '</li>')
                         })
+                    } else if (response.status == "Failed") {
+                        swal({
+                            title: "Danger!",
+                            text: response.message,
+                            icon: "warning",
+                            button: "Ok!",
+                        });
                     }
                 },
                 error: function(response) {

@@ -131,7 +131,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -169,7 +169,7 @@
                         });
                         table.ajax.reload()
                         $("#update_id").val("")
-                    } else if (response.status = "Failed updated") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

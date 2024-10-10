@@ -13,8 +13,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataTPS3R()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
+                        <button onclick="createDataTPS3R()" class="btn btn-success">Tambah</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -79,7 +78,7 @@
                     if (response.status == "Success") {
                         $('#modal-form').modal('hide');
                         location.reload();
-                    } else if (response.status == "Failed added") {
+                    } else if (response.status == "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -103,8 +102,10 @@
 
                     $("#modal-form-edit").modal("show")
                     $("#modal-form-edit .modal-title").html("Edit Data TPS3R")
-                    $('#error_list').html('')
-                    $('#error_list').removeClass('alert alert-danger')
+
+                    // Hapus Error Listnya
+                    $('#error_list_edit').html('')
+                    $('#error_list_edit').removeClass('alert alert-danger')
                 },
                 error: function(response) {
                     console.log(response)
@@ -131,11 +132,11 @@
                         });
                         table.ajax.reload()
                         $("#update_id").val("")
-                    } else if (response.status = "Failed updated") {
-                        $('#error_list').html('')
-                        $('#error_list').addClass('alert alert-danger')
+                    } else if (response.status == "Error") {
+                        $('#error_list_edit').html('')
+                        $('#error_list_edit').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
-                            $('#error_list').append('<li>' + value + '</li>')
+                            $('#error_list_edit').append('<li>' + value + '</li>')
                         })
                     }
                 },

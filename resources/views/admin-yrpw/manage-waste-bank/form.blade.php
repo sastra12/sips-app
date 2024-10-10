@@ -23,7 +23,8 @@
                     <input type="hidden" id="update_id">
                     <div class="form-group">
                         <label for="village">Desa</label>
-                        <select id='village_id' class="form-control" name='village_id' required>
+                        <select id='village_id' class="form-control" name='village_id'>
+                            <option value="">Pilih Desa</option>
                             @foreach ($villages as $village)
                                 <option value="{{ $village->village_id }}">{{ $village->village_name }}</option>
                             @endforeach

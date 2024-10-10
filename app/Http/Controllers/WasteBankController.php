@@ -40,6 +40,7 @@ class WasteBankController extends Controller
             ->make();
     }
 
+    // data bank sampah yang belum di pegang admin user
     public function unassignedWasteBank()
     {
         $listdata = WasteBank::doesntHave('waste_bank_users')->get();
@@ -81,7 +82,7 @@ class WasteBankController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -133,7 +134,7 @@ class WasteBankController extends Controller
         ]);
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed Updated Data',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {

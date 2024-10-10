@@ -84,7 +84,7 @@
                             button: "Ok!",
                             dangerMode: true,
                         });
-                    } else if (response.status == "Failed added") {
+                    } else if (response.status == "Failed") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

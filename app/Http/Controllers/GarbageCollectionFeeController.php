@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CustomerUnpaidMonthlyBillExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
@@ -9,6 +10,7 @@ use App\Models\Customer;
 use App\Models\WastePayment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GarbageCollectionFeeController extends Controller
 {
@@ -130,6 +132,9 @@ class GarbageCollectionFeeController extends Controller
                     $query->where('month_payment', $month_payment)
                         ->where('year_payment', $year_payment);
                 })
+                ->with(['waste_bank' => function ($query) {
+                    $query->select('waste_bank_id', 'waste_name');
+                }])
                 ->orderByDesc('created_at')
                 ->get();
 
@@ -149,6 +154,42 @@ class GarbageCollectionFeeController extends Controller
         }
     }
 
+    public function exportCustomerUnpaidMonthlyBill(Request $request)
+    {
+        $customersData = [];
+        $month_payment = $request->input('month_payment');
+        $year_payment = $request->input('year_payment');
+        $user_id = Auth::user()->id;
+        Customer::whereHas('waste_bank', function (Builder $query) use ($user_id) {
+            $query->whereHas('waste_bank_users', function (Builder $query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
+        })
+            ->whereDoesntHave('waste_payments', function (Builder $query) use ($month_payment, $year_payment) {
+                $query->where('month_payment', $month_payment)
+                    ->where('year_payment', $year_payment);
+            })
+            ->with(['waste_bank' => function ($query) {
+                $query->select('waste_bank_id', 'waste_name');
+            }])
+            ->orderByDesc('created_at')
+            ->chunk(500, function ($customers) use (&$customersData) {
+                foreach ($customers as $customer) {
+                    $customersData[] = [
+                        'waste_name' => $customer->waste_bank->waste_name,
+                        'customer_name' => $customer->customer_name,
+                        'customer_address' => $customer->customer_address,
+                        'customer_neighborhood' => $customer->customer_neighborhood,
+                        'customer_community_association' => $customer->customer_community_association,
+                        'rubbish_fee' => $customer->rubbish_fee,
+                        'monthly_bill_status' => "Belum Lunas",
+                        'created_at' => $customer->created_at,
+                    ];
+                }
+            });
+        return Excel::download(new CustomerUnpaidMonthlyBillExport($customersData), 'Data Pelanggan Yang Belum Lunas Bulan ' . $month_payment . ' Tahun ' . $year_payment . '.xlsx');
+    }
+
     public function create()
     {
         //
@@ -162,7 +203,7 @@ class GarbageCollectionFeeController extends Controller
         ]);
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Failed',
                 'errors' => $validated->messages()
             ]);
         } else {

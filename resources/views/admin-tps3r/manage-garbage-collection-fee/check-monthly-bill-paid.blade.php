@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <button onclick="checkMonthlyBillPaid()" class="btn btn-success">Cek Tagihan
+                                <button onclick="checkMonthlyBillPaid()" class="btn btn-info">Cek Tagihan
                                     Lunas</button>
                                 <button type="button" id="resetData" class="btn btn-danger">Reset</button>
                             </div>

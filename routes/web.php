@@ -76,8 +76,7 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Pelanggan By Admin TPS3R
         Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
         Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
-        // Download Excel Customer
-        Route::get("/export-excel-customer-by-tps3r", [ManageCustomerByTPS3RController::class, 'exportCustomer'])->name('export-customer-tps3r');
+
 
         // Manajemen Iuran
         Route::get('/monthly-bill-data', [GarbageCollectionFeeController::class, 'customerData'])->name('monthly-bill.data');
@@ -90,6 +89,9 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');
+        // Download Excel Customer
+        Route::get("/export-excel-customer-by-tps3r", [ManageCustomerByTPS3RController::class, 'exportCustomer'])->name('export-customer-tps3r');
+        Route::get('/export-excel-customer-unpaid-monthly-bill-tps3r', [GarbageCollectionFeeController::class, 'exportCustomerUnpaidMonthlyBill'])->name('export-customer-unpaid');
     });
 
     Route::middleware(['checkRole:3'])->group(function () {

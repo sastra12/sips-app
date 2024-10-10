@@ -157,9 +157,7 @@ class ManageCustomerByTPS3RController extends Controller
                 $query->where('user_id', $user_id);
             });
         })
-            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users' => function ($query) {
-                $query->select('id', 'name');
-            }])
+            ->with(['waste_bank:waste_bank_id,waste_name'])
             ->orderByDesc('created_at')
             ->chunk(500, function ($customers) use (&$customersData) {
                 foreach ($customers as $customer) {
@@ -175,7 +173,6 @@ class ManageCustomerByTPS3RController extends Controller
                     ];
                 }
             });
-
         return $customersData;
     }
 }

@@ -36,8 +36,9 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <button onclick="checkMonthlyBillUnpaid()" class="btn btn-success">Cek Tagihan
+                                <button onclick="checkMonthlyBillUnpaid()" class="btn btn-info">Cek Tagihan
                                     Belum Lunas</button>
+                                <button id="downloadData" class="btn btn-success">Download Data</button>
                                 <button type="button" id="resetData" class="btn btn-danger">Reset</button>
                             </div>
                         </div>
@@ -169,5 +170,23 @@
             $("#year_payment").val("")
             table.clear().draw(); // Mengosongkan DataTable
         });
+
+        $("#downloadData").click(function(e) {
+            e.preventDefault();
+            // Ambil nilai input
+            let month_payment = $('#month_payment').val();
+            let year_payment = $('#year_payment').val();
+
+            // Validasi inputan tidak boleh kosong
+            if (!month_payment || !year_payment) {
+                alert('Semua input harus diisi sebelum mendownload file!');
+                return;
+            }
+            let downloadUrl = "{{ route('export-customer-unpaid') }}?month_payment=" + month_payment +
+                "&year_payment=" +
+                year_payment;
+            // Redirect browser ke URL download
+            window.location.href = downloadUrl;
+        })
     </script>
 @endpush

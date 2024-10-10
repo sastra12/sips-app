@@ -44,7 +44,8 @@
                     </div>
                     <div class="form-group">
                         <label for="customer_status">Status</label>
-                        <select id='customer_status' class="form-control" name='customer_status' required>
+                        <select id='customer_status' class="form-control" name='customer_status'>
+                            <option value="">Pilih Status</option>
                             @foreach ($customer_status as $status)
                                 <option value="{{ $status }}">{{ $status }}</option>
                             @endforeach

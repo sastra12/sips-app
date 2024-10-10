@@ -85,6 +85,7 @@
                     $("#customer_neighborhood").val(response.customer_neighborhood)
                     $("#customer_community_association").val(response.customer_community_association)
                     $("#rubbish_fee").val(response.rubbish_fee)
+                    $("#customer_status").val(response.customer_status)
 
                     $("#modal-form").modal("show")
                     $("#modal-form .modal-title").html("Edit Data Desa Pendamping")

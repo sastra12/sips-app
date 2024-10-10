@@ -7,6 +7,9 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
+                <ul id="error_list">
+
+                </ul>
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -157,14 +160,12 @@
                     year_payment: $("#year_payment").val()
                 },
                 success: function(response) {
-                    if (response.status == "Failed") {
-                        swal({
-                            title: "Danger!",
-                            text: response.message,
-                            icon: "warning",
-                            button: "Ok!",
-                            dangerMode: true,
-                        });
+                    if (response.status == "Error") {
+                        $('#error_list').empty()
+                        $("#error_list").addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list').append('<li>' + value + '</li>')
+                        })
                     } else if (response.status == "Not Found") {
                         swal({
                             title: "Danger!",
@@ -174,6 +175,10 @@
                             dangerMode: true,
                         });
                     } else {
+                        // Hapus list errornya
+                        $('#error_list').empty()
+                        $('#error_list').removeClass('alert alert-danger')
+
                         table.clear().draw();
                         table.rows.add(response.data).draw();
                     }
@@ -185,6 +190,8 @@
         }
 
         $('#resetData').click(function() {
+            $('#error_list').empty()
+            $('#error_list').removeClass('alert alert-danger')
             $("#month_payment").val("")
             $("#year_payment").val("")
             table.clear().draw(); // Mengosongkan DataTable

@@ -62,7 +62,7 @@ class GarbageCollectionFeeController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -116,7 +116,7 @@ class GarbageCollectionFeeController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {

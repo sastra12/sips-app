@@ -157,7 +157,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Error") {
+                    } else if (response.status == "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

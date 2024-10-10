@@ -185,7 +185,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed updated") {
+                    } else if (response.status == "Error") {
                         $('#error_list_tonase').html('')
                         $('#error_list_tonase').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

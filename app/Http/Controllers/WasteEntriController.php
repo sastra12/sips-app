@@ -491,7 +491,7 @@ class WasteEntriController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed updated',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {

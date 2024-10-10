@@ -74,7 +74,8 @@ class UserController extends Controller
     {
         $role_user = $request->input('role_user');
         $rules = [
-            'name' => 'required'
+            'name' => 'required',
+            'role_user' => 'required'
         ];
 
         if ($role_user == 2) {
@@ -85,7 +86,7 @@ class UserController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -151,7 +152,7 @@ class UserController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed updated',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -173,7 +174,6 @@ class UserController extends Controller
                     $data->user_waste_banks()->attach($request->input('waste_name'));
                 }
             }
-
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success Updated Data'

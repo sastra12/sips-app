@@ -13,9 +13,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataAdmin()" class="btn btn-success btn-xs"><i
-                                class="fa fa-plus-circle">Tambah</i></button>
-
+                        <button onclick="createDataAdmin()" class="btn btn-success">Tambah</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -71,6 +69,7 @@
             $("#name").val("")
             $("#username").val("")
             $("#password").val("")
+            $("#role_user").val("")
 
             // Membersihkan list error
             $('#error_list').html('')
@@ -132,7 +131,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -169,7 +168,7 @@
                         });
                         table.ajax.reload()
                         $("#update_id").val("")
-                    } else if (response.status = "Failed updated") {
+                    } else if (response.status = "Error") {
                         $('#error_list_edit').html('')
                         $('#error_list_edit').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -225,7 +224,7 @@
                     type: 'GET',
                     success: function(response) {
                         $("#waste_name_group_edit").show()
-                        $("#waste_name_edit").empty(); // Kosongkan select sebelum menambahkan opsi baru
+                        $("#waste_name_edit").empty();
                         $("#waste_name_edit").append('<option value="">Pilih TPS3R</option>');
 
                         response.data.map(function(value) {
@@ -240,8 +239,8 @@
                     }
                 })
             } else {
-                $("#waste_name_group_edit").hide(); // Sembunyikan select option
-                $("#waste_name_edit").empty(); // Kosongkan select option
+                $("#waste_name_group_edit").hide();
+                $("#waste_name_edit").empty();
             }
         })
 

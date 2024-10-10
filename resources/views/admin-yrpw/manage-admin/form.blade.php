@@ -36,6 +36,7 @@
                     <div class="form-group">
                         <label for="role_user">Role User</label>
                         <select id='role_user' class="form-control" name='role_user' required>
+                            <option value="">Pilih Role User</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->role_id }}">{{ $role->role_name }}</option>
                             @endforeach

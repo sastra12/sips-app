@@ -75,8 +75,7 @@
                             icon: "success",
                             button: "Ok!",
                         });
-                    } else if (response.status == "Error") {
-                        $('#modal-form-monthly-bill').modal('hide');
+                    } else if (response.status == "Failed") {
                         swal({
                             title: "Danger!",
                             text: response.message,
@@ -84,7 +83,7 @@
                             button: "Ok!",
                             dangerMode: true,
                         });
-                    } else if (response.status == "Failed") {
+                    } else if (response.status == "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

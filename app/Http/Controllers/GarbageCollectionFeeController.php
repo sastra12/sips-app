@@ -203,7 +203,7 @@ class GarbageCollectionFeeController extends Controller
         ]);
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -214,7 +214,7 @@ class GarbageCollectionFeeController extends Controller
                 ->exists();
             if ($dataExists) {
                 return response()->json([
-                    'status' => 'Error',
+                    'status' => 'Failed',
                     'message' => 'Pembayaran sudah dilakukan pada bulan ini.'
                 ]);
             } else {

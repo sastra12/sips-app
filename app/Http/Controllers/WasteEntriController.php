@@ -356,23 +356,34 @@ class WasteEntriController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
             $data = new WasteEntry();
-            $data->waste_organic = $request->input('waste_organic');
-            $data->waste_anorganic = $request->input('waste_anorganic');
-            $data->waste_residue = $request->input('waste_residue');
-            $data->created_at = $request->input('date_entri');
-            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-            $data->waste_id = $request->input('waste_bank_id');
-            $data->user_id = Auth::user()->id;
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Added Data'
-            ]);
+            // Cek apakah data tonase dengan tanggal sekian sudah di input
+            $data->where('created_at', '=', $request->input('date_entri'))
+                ->where('waste_id', '=', $request->input('waste_bank_id'))
+                ->exists();
+            if ($data) {
+                return response()->json([
+                    'status' => 'Failed',
+                    'message' => 'Data tonase pada tanggal ini sudah di inputkan'
+                ]);
+            } else {
+                $data->waste_organic = $request->input('waste_organic');
+                $data->waste_anorganic = $request->input('waste_anorganic');
+                $data->waste_residue = $request->input('waste_residue');
+                $data->created_at = $request->input('date_entri');
+                $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+                $data->waste_id = $request->input('waste_bank_id');
+                $data->user_id = Auth::user()->id;
+                $data->save();
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Success Added Data'
+                ]);
+            }
         }
     }
 

@@ -18,14 +18,6 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    @if (session()->has('failed'))
-                        <div class="alert alert-danger text-center mb-2 alert-dismissible fade show" role="alert">
-                            {{ session()->get('failed') }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
                     <div class="card-header">
                         <div class="row">
                             <div class="col-sm-2">
@@ -146,12 +138,19 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status == "Error") {
                         $('#error_list_tonase').html('')
                         $('#error_list_tonase').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
                             $('#error_list_tonase').append('<li>' + value + '</li>')
                         })
+                    } else if (response.status == "Failed") {
+                        swal({
+                            title: "Danger!",
+                            text: response.message,
+                            icon: "warning",
+                            button: "Ok!",
+                        });
                     }
                 },
                 error: function(response) {

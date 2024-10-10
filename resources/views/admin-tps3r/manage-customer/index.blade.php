@@ -23,6 +23,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
+                                    <th scope="col">Nama TPS3R</th>
                                     <th scope="col">Nama</th>
                                     <th scope="col">Alamat</th>
                                     <th scope="col">RT</th>
@@ -120,7 +121,7 @@
                         });
                         table.ajax.reload()
                         $("#update_id").val("")
-                    } else if (response.status = "Failed updated") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -156,7 +157,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Failed added") {
+                    } else if (response.status = "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
@@ -253,11 +254,19 @@
                     {
                         "targets": 6,
                         "className": "text-center"
+                    },
+                    {
+                        "targets": 7,
+                        "className": "text-center"
                     }
                 ],
                 columns: [{
                         // buat penomoran
                         data: 'DT_RowIndex',
+                    },
+                    {
+                        // buat penomoran
+                        data: 'waste_name',
                     },
                     {
                         data: 'customer_name',

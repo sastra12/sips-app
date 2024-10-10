@@ -23,9 +23,7 @@ class ManageCustomerByTPS3RController extends Controller
                 $query->where('user_id', $user_id);
             });
         })
-            ->with(['waste_bank:waste_bank_id,waste_name', 'waste_bank.waste_bank_users' => function ($query) {
-                $query->select('id', 'name');
-            }])
+            ->with(['waste_bank:waste_bank_id,waste_name'])
             ->orderByDesc('created_at')
             ->get();
         // return response()->json($customers);
@@ -37,6 +35,9 @@ class ManageCustomerByTPS3RController extends Controller
                 <button onclick="editDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-xs btn-info">Edit</button>
                 <button onclick="deleteDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-xs btn-danger">Hapus</button>  
             ';
+            })
+            ->addColumn('waste_name', function ($data) {
+                return $data->waste_bank->waste_name;
             })
             ->make();
     }
@@ -75,7 +76,7 @@ class ManageCustomerByTPS3RController extends Controller
 
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed added',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {
@@ -118,7 +119,7 @@ class ManageCustomerByTPS3RController extends Controller
         ]);
         if ($validated->fails()) {
             return response()->json([
-                'status' => 'Failed updated',
+                'status' => 'Error',
                 'errors' => $validated->messages()
             ]);
         } else {

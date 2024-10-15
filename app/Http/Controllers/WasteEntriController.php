@@ -30,7 +30,7 @@ class WasteEntriController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <a href="' . route('waste-entri-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+                <a href="' . route('waste-entri-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm btn-info custom-btn-sm">Tonase Details</a>
             ';
             })
             ->addColumn('village', function ($data) {
@@ -41,7 +41,7 @@ class WasteEntriController extends Controller
 
     public function viewWasteEntriDetails()
     {
-        return view('admin-yrpw.manage-tonase.waste-entri-details');
+        return view('admin-yrpw-new.manage-tonase.waste-entri-details');
     }
 
     public function wasteEntriData(Request $request)
@@ -76,8 +76,8 @@ class WasteEntriController extends Controller
             })
             ->addColumn('action', function ($data) {
                 return  '
-                    <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                    <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
+                    <button onclick="editDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-sm btn-info custom-btn-sm custom-btn-sm">Edit</button>
+                    <button onclick="deleteDataTonaseYRPW(' . $data->entry_id . ')" class="btn btn-sm btn-danger custom-btn-sm custom-btn-sm">Hapus</button>
                 ';
             })
             ->make();
@@ -115,8 +115,8 @@ class WasteEntriController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="editDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-sm custom-btn-sm btn-info">Edit</button>
+                <button onclick="deleteDataTonaseByTPS3R(' . $data->entry_id . ')" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>
             ';
             })
             ->addColumn('waste_name', function ($data) {
@@ -144,7 +144,7 @@ class WasteEntriController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <a href="' . route('waste-entri-details-facilitator.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Tonase Details</a>
+                <a href="' . route('waste-entri-details-facilitator.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Tonase Details</a>
             ';
             })
             ->addColumn('village', function ($data) {
@@ -188,7 +188,7 @@ class WasteEntriController extends Controller
 
     public function wasteEntriDetailsFacilitator()
     {
-        return view('admin-fasilitator.data-tonase.waste-entri-details-facilitator');
+        return view('admin-fasilitator-new.waste-entri-details-facilitator');
     }
 
     // Admin YRPW Export Data By Month
@@ -324,19 +324,19 @@ class WasteEntriController extends Controller
     // Admin YRPW
     public function index()
     {
-        return view('admin-yrpw.manage-tonase.index');
+        return view('admin-yrpw-new.manage-tonase.index');
     }
 
     // Admin TPS3R
     public function userIndexTonase()
     {
-        return view('admin-tps3r.manage-tonase.index');
+        return view('admin-tps3r-new.manage-tonase.index');
     }
 
     // Admin Tonase
     public function viewWasteBankFacilitator()
     {
-        return view('admin-fasilitator.data-tonase.index');
+        return view('admin-fasilitator-new.index');
     }
 
     public function create()

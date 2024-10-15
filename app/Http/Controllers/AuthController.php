@@ -21,7 +21,7 @@ class AuthController extends Controller
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
             // acces route dashboard
-            return redirect()->intended('dashboard');
+            return redirect()->intended('dashboard-new');
         }
         return redirect()->route('login')->with('status', 'Login Gagal, Username/Password keliru');
     }

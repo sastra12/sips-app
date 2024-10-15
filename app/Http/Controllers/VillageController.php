@@ -20,8 +20,8 @@ class VillageController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataVillage(' . $data->village_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('village.destroy', $data->village_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="editDataVillage(' . $data->village_id . ')" class="btn btn-sm btn-info custom-btn-sm">Edit</button>
+                <button onclick="deleteData(`' . route('village.destroy', $data->village_id) . '`)" class="btn btn-sm btn-danger custom-btn-sm">Hapus</button>
             ';
             })
             ->make();
@@ -29,7 +29,7 @@ class VillageController extends Controller
 
     public function index()
     {
-        return view('admin-yrpw.manage-village.index');
+        return view('admin-yrpw-new.manage-village.index');
     }
 
     public function create()

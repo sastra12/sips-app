@@ -27,8 +27,8 @@ class UserController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataAdmin(' . $data->id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('user.destroy', $data->id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
+                <button onclick="editDataAdmin(' . $data->id . ')" class="btn btn-sm btn-info custom-btn-sm">Edit</button>
+                <button onclick="deleteData(`' . route('user.destroy', $data->id) . '`)" class="btn btn-sm btn-danger custom-btn-sm">Hapus</button>
             ';
             })
             ->addColumn('role_name', function ($data) {
@@ -43,7 +43,7 @@ class UserController extends Controller
     public function index()
     {
         $roles = Role::query()->get();
-        return view('admin-yrpw.manage-admin.index', [
+        return view('admin-yrpw-new.manage-admin.index', [
             'roles' => $roles
         ]);
     }

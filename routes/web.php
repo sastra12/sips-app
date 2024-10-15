@@ -30,7 +30,7 @@ Route::view('/export-excel-by-month-view', 'export-excel.export-by-month');
 Route::view('/export-excel-by-year', 'export-excel.export-by-year');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard-new', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // Route Admin YRPW
     Route::middleware(['checkRole:1'])->group(function () {

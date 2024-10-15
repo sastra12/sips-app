@@ -23,9 +23,9 @@ class WasteBankController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataTPS3R(' . $data->waste_bank_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
-                <button onclick="createDataTonase(' . $data->waste_bank_id . ')" class="btn btn-xs btn-warning">Tambah Tonase</button>
+                <button onclick="editDataTPS3R(' . $data->waste_bank_id . ')" class="btn btn-sm custom-btn-sm btn-info">Edit</button>
+                <button onclick="deleteData(`' . route('waste-bank.destroy', $data->waste_bank_id) . '`)" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>
+                <button onclick="createDataTonase(' . $data->waste_bank_id . ')" class="btn btn-sm custom-btn-sm btn-warning">Tambah Tonase</button>
             ';
             })
             ->addColumn('waste_bank_village', function ($data) {
@@ -46,7 +46,7 @@ class WasteBankController extends Controller
     public function index()
     {
         $villages = Village::doesntHave('waste_bank')->get();
-        return view('admin-yrpw.manage-waste-bank.index', [
+        return view('admin-yrpw-new.manage-waste-bank.index', [
             'villages' => $villages
         ]);
     }

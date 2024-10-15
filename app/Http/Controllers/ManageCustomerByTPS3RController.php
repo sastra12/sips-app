@@ -32,8 +32,8 @@ class ManageCustomerByTPS3RController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                <button onclick="editDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-xs btn-info">Edit</button>
-                <button onclick="deleteDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-xs btn-danger">Hapus</button>  
+                <button onclick="editDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-sm custom-btn-sm btn-info">Edit</button>
+                <button onclick="deleteDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>  
             ';
             })
             ->addColumn('waste_name', function ($data) {
@@ -45,7 +45,7 @@ class ManageCustomerByTPS3RController extends Controller
     public function index()
     {
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
-        return view('admin-tps3r.manage-customer.index', [
+        return view('admin-tps3r-new.manage-customer.index', [
             'customer_status' => $customer_status,
         ]);
     }

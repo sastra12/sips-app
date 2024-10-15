@@ -1,0 +1,263 @@
+/* Font Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: #1d2634;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #8576ff;
+    --panel-color: #fff;
+    --text-color: #001f3f;
+    --text-secondary: #f0f3ff;
+    --border-color: #e6e5e5;
+}
+
+.material-icons-outlined {
+    vertical-align: middle;
+    line-height: 1px;
+    font-size: 35px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 300px 1fr 1fr 1fr;
+    grid-template-rows: 0.2fr 3fr;
+    grid-template-areas:
+        "sidebar header header header"
+        "sidebar main main main";
+    min-height: 100vh;
+}
+
+/* Header */
+.header {
+    grid-area: header;
+    background-color: var(--panel-color);
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 26px 20px 26px 20px;
+}
+
+.menu-icon {
+    display: none;
+}
+
+/* Sidebar */
+#sidebar {
+    grid-area: sidebar;
+    background-color: var(--panel-color);
+    height: 100%;
+    overflow-y: auto;
+    border-right: 2px solid var(--border-color);
+    transition: all 0.7s ease;
+}
+
+.brand-image {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-image img {
+    width: 138px;
+}
+
+.sidebar-responsive {
+    display: block !important;
+    /* ini berati realtive terhadap viewportnya, karena tidak mempunyai elemen induk yang positionya non-static juga */
+    position: absolute;
+    z-index: 12 !important;
+    width: 295px;
+}
+
+.sidebar-title {
+    padding: 10px 20px 10px 20px;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+    /* background-color: green; */
+}
+
+.sidebar-title > span {
+    display: none;
+}
+
+.sidebar-list {
+    /* background-color: red; */
+    list-style-type: none;
+    margin-top: 32px;
+}
+
+.sidebar-list-item {
+    padding: 16px 0 16px 15px;
+    /* background-color: red; */
+}
+
+.sidebar-list-item a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-list-item a:hover {
+    color: var(--primary-color);
+}
+
+/* Main */
+.main-container {
+    grid-area: main;
+    overflow-y: auto;
+    padding: 20px 20px;
+    /* color: var(--text-color); */
+    background-color: var(--panel-color);
+}
+
+.main-title {
+    display: flex;
+    align-items: center;
+}
+
+.main-title .title {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.main-title span {
+    color: var(--primary-color);
+}
+
+.main-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.card-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.card-box-title {
+    color: var(--text-secondary);
+    font-size: 20px;
+    font-weight: 700;
+}
+.card-box-subtitle {
+    color: var(--text-secondary);
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.card-box:first-child {
+    background-color: #f6995c;
+}
+
+.card-box:nth-child(2) {
+    background-color: #51829b;
+}
+
+.card-box:nth-child(3) {
+    background-color: #9bb0c1;
+}
+
+.card-box:nth-child(4) {
+    background-color: #eadfb4;
+}
+
+.card-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-inner .material-icons-outlined {
+    color: var(--text-secondary);
+}
+
+.content {
+    margin-top: 20px;
+}
+
+.table th {
+    font-size: 14px !important; /* Tambahkan !important untuk memastikan overriding */
+    color: var(--text-color) !important;
+}
+
+.table td {
+    font-size: 14px !important; /* Ganti 14px dengan ukuran yang diinginkan */
+    color: var(--text-color); /* Ganti dengan warna yang diinginkan */
+    font-weight: 600 !important;
+}
+
+.custom-btn-sm {
+    padding: 2px 4px !important;
+    font-size: 12px !important;
+}
+
+/* Responsive Media Query*/
+/* Large <= 992px */
+@media only screen and (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 0.2fr 3fr;
+        grid-template-areas:
+            "header"
+            "main";
+    }
+
+    .sidebar-title > span,
+    .menu-icon {
+        display: inline;
+        cursor: pointer;
+    }
+
+    .sidebar-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #sidebar {
+        display: none;
+    }
+
+    .header {
+        padding: 15px 20px 15px 20px;
+    }
+
+    .content {
+        overflow-x: auto;
+    }
+}
+
+/* Medium <= 768px */
+@media only screen and (max-width: 768px) {
+    .main-cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 0;
+    }
+}
+
+/* Small <= 576px */
+@media only screen and (max-width: 576px) {
+    body {
+        background-color: lightblue;
+    }
+}

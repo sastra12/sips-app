@@ -23,7 +23,7 @@ class CustomerController extends Controller
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return '<a href="' . route('customer-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-xs btn-info">Customer Details</a>';
+                return '<a href="' . route('customer-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Customer Details</a>';
             })
             ->addColumn('village_name', function ($data) {
                 return $data->village->village_name;
@@ -33,14 +33,14 @@ class CustomerController extends Controller
 
     public function index()
     {
-        return view('admin-yrpw.manage-customer.index',);
+        return view('admin-yrpw-new.manage-customer.index',);
     }
 
     public function viewCustomerDetails()
     {
         $waste_banks = WasteBank::query()->get();
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
-        return view('admin-yrpw.manage-customer.waste-customer-details', [
+        return view('admin-yrpw-new.manage-customer.waste-customer-details', [
             'customer_status' => $customer_status,
             'waste_banks' => $waste_banks
         ]);
@@ -57,8 +57,8 @@ class CustomerController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return  '
-                    <button onclick="editDataCustomer(' . $data->customer_id . ')" class="btn btn-xs btn-info">Edit</button>
-                    <button onclick="deleteData(`' . route('customer.destroy', $data->customer_id) . '`)" class="btn btn-xs btn-danger">Hapus</button>
+                    <button onclick="editDataCustomer(' . $data->customer_id . ')" class="btn btn-sm custom-btn-sm btn-info">Edit</button>
+                    <button onclick="deleteData(`' . route('customer.destroy', $data->customer_id) . '`)" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>
                 ';
             })
             ->make();

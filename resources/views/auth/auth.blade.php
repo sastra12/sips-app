@@ -33,7 +33,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" autocomplete="off"
+                        <input type="text" autocomplete="off" value="{{ old('username') }}"
                             class="form-control @error('username') is-invalid @enderror" id="username" name="username">
                         @error('username')
                             <span class="text-danger">{{ $message }}</span>

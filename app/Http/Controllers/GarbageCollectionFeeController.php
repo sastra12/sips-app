@@ -33,24 +33,24 @@ class GarbageCollectionFeeController extends Controller
         return Datatables::of($customers)
             ->addIndexColumn()
             ->addColumn('action', function ($customer) {
-                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-xs btn-info">Tambah Pembayaran</button>';
+                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-sm btn-info">Tambah Pembayaran</button>';
             })
             ->make();
     }
 
     public function monthlyBill()
     {
-        return view('admin-tps3r.manage-garbage-collection-fee.monthly-bill');
+        return view('admin-tps3r-new.manage-garbage-collection-fee.monthly-bill');
     }
 
     public function checkMonthlyBillPaidView()
     {
-        return view('admin-tps3r.manage-garbage-collection-fee.check-monthly-bill-paid');
+        return view('admin-tps3r-new.manage-garbage-collection-fee.check-monthly-bill-paid');
     }
 
     public function checkMonthlyBillUnpaidView()
     {
-        return view('admin-tps3r.manage-garbage-collection-fee.check-monthly-bill-unpaid');
+        return view('admin-tps3r-new.manage-garbage-collection-fee.check-monthly-bill-unpaid');
     }
 
     public function checkMonthlyBillPaid(Request $request)
@@ -94,7 +94,7 @@ class GarbageCollectionFeeController extends Controller
             return Datatables::of($customers)
                 ->addIndexColumn()
                 ->addColumn('action', function ($customer) {
-                    return '<button onclick="downloadProofOfPyament(' . $customer->customer_id . ')" class="btn btn-xs btn-info">Download Bukti Pembayaran</button>';
+                    return '<button onclick="downloadProofOfPyament(' . $customer->customer_id . ')" class="btn btn-sm custom-btn-sm btn-info">Nota Pembayaran</button>';
                 })
                 ->addColumn('badge_success', function ($customer) {
                     return '<span class="badge badge-success">Lunas</span>';

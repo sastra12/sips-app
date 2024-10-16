@@ -3,15 +3,15 @@ let sidebarOpen = false;
 let sidebarMenu = document.getElementById("sidebar");
 
 function openSidebar() {
-  if (!sidebarOpen) {
-    sidebarMenu.classList.add("sidebar-responsive");
-    sidebarOpen = true;
-  }
+    if (!sidebarOpen) {
+        sidebarMenu.classList.add("sidebar-responsive");
+        sidebarOpen = true;
+    }
 }
 
 function closeSidebar() {
-  if (sidebarOpen) {
-    sidebarMenu.classList.remove("sidebar-responsive");
-    sidebarOpen = false;
-  }
+    if (sidebarOpen) {
+        sidebarMenu.classList.remove("sidebar-responsive");
+        sidebarOpen = false;
+    }
 }

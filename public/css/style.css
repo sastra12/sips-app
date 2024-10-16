@@ -66,6 +66,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .brand-image img {
@@ -145,6 +146,13 @@ body {
     margin: 20px 0;
 }
 
+.main-cards-second {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+}
+
 .card-box {
     display: flex;
     flex-direction: column;
@@ -195,13 +203,13 @@ body {
 }
 
 .table th {
-    font-size: 14px !important; /* Tambahkan !important untuk memastikan overriding */
+    font-size: 14px !important;
     color: var(--text-color) !important;
 }
 
 .table td {
-    font-size: 14px !important; /* Ganti 14px dengan ukuran yang diinginkan */
-    color: var(--text-color); /* Ganti dengan warna yang diinginkan */
+    font-size: 14px !important;
+    color: var(--text-color);
     font-weight: 600 !important;
 }
 

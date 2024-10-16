@@ -106,3 +106,12 @@
         @csrf
     </form>
 </aside>
+
+@push('script')
+    <script>
+        let sidebarBrand = document.querySelector(".sidebar-brand");
+        sidebarBrand.addEventListener("click", function() {
+            window.location.href = "{{ route('dashboard') }}";
+        })
+    </script>
+@endpush

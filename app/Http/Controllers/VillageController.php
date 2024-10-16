@@ -40,7 +40,7 @@ class VillageController extends Controller
     public function store(Request $request)
     {
         $validated = Validator::make($request->all(), [
-            'village_name' => 'required',
+            'village_name' => 'required|unique:villages,village_name',
             'village_code' => 'required|numeric'
         ]);
 

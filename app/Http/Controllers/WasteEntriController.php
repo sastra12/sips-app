@@ -401,12 +401,24 @@ class WasteEntriController extends Controller
     // Admin TPS3R
     public function userTPS3RStore(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'waste_organic' => 'required|numeric',
-            'waste_anorganic' => 'required|numeric',
-            'waste_residue' => 'required|numeric',
-            'date_entri' => 'required',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'waste_organic' => 'required|numeric',
+                'waste_anorganic' => 'required|numeric',
+                'waste_residue' => 'required|numeric',
+                'date_entri' => 'required',
+            ],
+            [
+                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
+                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
+                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
+                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
+                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
+                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
+                'date_entri.required' => 'Tanggal boleh kosong',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([
@@ -506,12 +518,26 @@ class WasteEntriController extends Controller
     // Admin TPS3R
     public function userTPS3RUpdate(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'waste_organic' => 'required|numeric',
-            'waste_anorganic' => 'required|numeric',
-            'waste_residue' => 'required|numeric',
-            'date_entri' => 'required',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'waste_organic' => 'required|numeric',
+                'waste_anorganic' => 'required|numeric',
+                'waste_residue' => 'required|numeric',
+                'date_entri' => 'required',
+            ],
+            // Custom Error Validation Messages
+            [
+                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
+                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
+                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
+                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
+                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
+                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
+                'date_entri.required' => 'Tanggal boleh kosong',
+            ]
+
+        );
 
         if ($validated->fails()) {
             return response()->json([

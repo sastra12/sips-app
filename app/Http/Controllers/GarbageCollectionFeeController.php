@@ -33,7 +33,7 @@ class GarbageCollectionFeeController extends Controller
         return Datatables::of($customers)
             ->addIndexColumn()
             ->addColumn('action', function ($customer) {
-                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-sm btn-info">Tambah Pembayaran</button>';
+                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-sm custom-btn-sm btn-info">Tambah Pembayaran</button>';
             })
             ->make();
     }
@@ -55,10 +55,18 @@ class GarbageCollectionFeeController extends Controller
 
     public function checkMonthlyBillPaid(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'month_payment' => 'required',
-            'year_payment' => 'required|numeric|min:4',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'month_payment' => 'required',
+                'year_payment' => 'required|digits:4',
+            ],
+            [
+                'month_payment.required' => 'Data bulan tidak boleh kosong',
+                'year_payment.required' => 'Data tahun tidak boleh kosong',
+                'year_payment.digits' => 'Data tahun harus terdiri dari :digits angka',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([
@@ -109,10 +117,18 @@ class GarbageCollectionFeeController extends Controller
 
     public function checkMonthlyBillUnpaid(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'month_payment' => 'required',
-            'year_payment' => 'required|numeric|min:4',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'month_payment' => 'required',
+                'year_payment' => 'required|digits:4',
+            ],
+            [
+                'month_payment.required' => 'Data bulan tidak boleh kosong',
+                'year_payment.required' => 'Data tahun tidak boleh kosong',
+                'year_payment.digits' => 'Data tahun harus terdiri dari :digits angka',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([
@@ -197,10 +213,19 @@ class GarbageCollectionFeeController extends Controller
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'month' => 'required',
-            'year' => 'required|numeric|min:4',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'month' => 'required',
+                'year' => 'required|digits:4'
+            ],
+            // Custom Error Messages Validation
+            [
+                'month.required' => 'Data bulan tidak boleh kosong',
+                'year.required' => 'Data tahun tidak boleh kosong',
+                'year.digits' => 'Data tahun harus terdiri dari :digits angka',
+            ]
+        );
         if ($validated->fails()) {
             return response()->json([
                 'status' => 'Error',

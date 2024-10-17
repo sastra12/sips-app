@@ -210,8 +210,8 @@
 
         function deleteDataTonaseByTPS3R(entry_id) {
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this data!",
+                    title: "Apakah kamu yakin?",
+                    text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -223,20 +223,20 @@
                                 method: 'DELETE',
                             })
                             .done((response) => {
-                                swal("Success data has been deleted!", {
+                                swal("Sukses menghapus data", {
                                     icon: "success",
                                 });
                                 table.ajax.reload();
                             })
                             .fail((errors) => {
-                                swal("Failed deleted data!", {
+                                swal("Gagal menghapus data", {
                                     icon: "warning",
                                 });
                                 return;
                             });
 
                     } else {
-                        swal("Data is safe!");
+                        swal("Data tetap aman");
                     }
                 });
         }

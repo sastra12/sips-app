@@ -65,14 +65,28 @@ class ManageCustomerByTPS3RController extends Controller
             ->select('waste_bank_id')
             ->get();
 
-        $validated = Validator::make($request->all(), [
-            'customer_name' => 'required',
-            'customer_address' => 'required',
-            'customer_neighborhood' => 'required|numeric',
-            'customer_community_association' => 'required|numeric',
-            'rubbish_fee' => 'required|numeric',
-            'customer_status' => 'required',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'customer_name' => 'required',
+                'customer_address' => 'required',
+                'customer_neighborhood' => 'required|numeric',
+                'customer_community_association' => 'required|numeric',
+                'rubbish_fee' => 'required|numeric',
+                'customer_status' => 'required',
+            ],
+            [
+                'customer_name.required' => 'Nama pelanggan tidak boleh kosong',
+                'customer_address.required' => 'Alamat pelanggan tidak boleh kosong',
+                'customer_neighborhood.required' => 'Data RT tidak boleh kosong',
+                'customer_neighborhood.numeric' => 'Data RT harus berupa angka',
+                'customer_community_association.required' => 'Data RW tidak boleh kosong',
+                'customer_community_association.numeric' => 'Data RW harus berupa angka',
+                'rubbish_fee.required' => 'Data iuran tidak boleh kosong',
+                'rubbish_fee.numeric' => 'Data iuran harus berupa angka',
+                'customer_status.required' => 'Data status tidak boleh kosong',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([
@@ -109,14 +123,28 @@ class ManageCustomerByTPS3RController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'customer_name' => 'required',
-            'customer_address' => 'required',
-            'customer_neighborhood' => 'required|numeric',
-            'customer_community_association' => 'required|numeric',
-            'rubbish_fee' => 'required|numeric',
-            'customer_status' => 'required',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'customer_name' => 'required',
+                'customer_address' => 'required',
+                'customer_neighborhood' => 'required|numeric',
+                'customer_community_association' => 'required|numeric',
+                'rubbish_fee' => 'required|numeric',
+                'customer_status' => 'required',
+            ],
+            [
+                'customer_name.required' => 'Nama pelanggan tidak boleh kosong',
+                'customer_address.required' => 'Alamat pelanggan tidak boleh kosong',
+                'customer_neighborhood.required' => 'Data RT tidak boleh kosong',
+                'customer_neighborhood.numeric' => 'Data RT harus berupa angka',
+                'customer_community_association.required' => 'Data RW tidak boleh kosong',
+                'customer_community_association.numeric' => 'Data RW harus berupa angka',
+                'rubbish_fee.required' => 'Data iuran tidak boleh kosong',
+                'rubbish_fee.numeric' => 'Data iuran harus berupa angka',
+                'customer_status.required' => 'Data status tidak boleh kosong',
+            ]
+        );
         if ($validated->fails()) {
             return response()->json([
                 'status' => 'Error',

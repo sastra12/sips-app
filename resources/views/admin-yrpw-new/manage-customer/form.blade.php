@@ -52,7 +52,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="waste_id">Bank Sampah</label>
+                        <label for="waste_id">Nama TPS3R</label>
                         <select id='waste_id' class="form-control" name='waste_id'>
                             @foreach ($waste_banks as $waste_bank)
                                 <option value="{{ $waste_bank->waste_bank_id }}"

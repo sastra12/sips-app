@@ -16,7 +16,7 @@
                     @csrf
                     @method('post')
                     <div class="form-group">
-                        <label for="waste_bank_name">Nama Bank Sampah</label>
+                        <label for="waste_bank_name">Nama TPS3R</label>
                         <input autocomplete="off" type="text" class="form-control" id="waste_bank_name_edit"
                             name="waste_bank_name" value="{{ old('waste_bank_name') }}">
                         <input type="hidden" id="update_id">

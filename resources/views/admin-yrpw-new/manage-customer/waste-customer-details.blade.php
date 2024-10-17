@@ -5,37 +5,40 @@
         <span class="material-icons-outlined"> space_dashboard </span>
         <span class="title">Dashboard</span>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    @foreach ($waste_banks as $item)
-                        @if ($item->waste_bank_id == request()->query('bankId'))
-                            <h5>Data Pelanggan {{ $item->waste_name }}</h5>
-                        @endif
-                    @endforeach
-                    <button onclick="createDataCustomer()" class="btn btn-sm btn-success">Tambah Data Pelanggan</button>
-                </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th scope="col">Nama Pelanggan</th>
-                                <th scope="col">Alamat</th>
-                                <th scope="col">RT</th>
-                                <th scope="col">RW</th>
-                                <th scope="col">Nominal</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                    </table>
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        @foreach ($waste_banks as $item)
+                            @if ($item->waste_bank_id == request()->query('bankId'))
+                                <h6>Data Pelanggan {{ $item->waste_name }}</h6>
+                            @endif
+                        @endforeach
+                        <button onclick="createDataCustomer()" class="btn btn-sm custom-btn-sm btn-success">Tambah Data
+                            Pelanggan</button>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No</th>
+                                    <th scope="col">Nama Pelanggan</th>
+                                    <th scope="col">Alamat</th>
+                                    <th scope="col">RT</th>
+                                    <th scope="col">RW</th>
+                                    <th scope="col">Nominal</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    @includeIf('admin-yrpw.manage-customer.form')
+    @includeIf('admin-yrpw-new.manage-customer.form')
 @endsection
 
 @push('script')
@@ -174,8 +177,8 @@
 
         function deleteData(url) {
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this data!",
+                    title: "Apakah kamu yakin?",
+                    text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -187,20 +190,20 @@
                                 method: 'DELETE',
                             })
                             .done((response) => {
-                                swal("Success data has been deleted!", {
+                                swal("Sukses menghapus data", {
                                     icon: "success",
                                 });
                                 table.ajax.reload();
                             })
                             .fail((errors) => {
-                                swal("Failed deleted data!", {
+                                swal("Gagal menghapus data", {
                                     icon: "warning",
                                 });
                                 return;
                             });
 
                     } else {
-                        swal("Data is safe!", {
+                        swal("Data tetap aman", {
                             icon: "success"
                         });
                     }

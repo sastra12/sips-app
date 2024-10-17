@@ -39,10 +39,20 @@ class VillageController extends Controller
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'village_name' => 'required|unique:villages,village_name',
-            'village_code' => 'required|numeric'
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'village_name' => 'required|unique:villages,village_name',
+                'village_code' => 'required|numeric'
+            ],
+            // Custom Error Message
+            [
+                'village_name.required' => 'Nama desa tidak boleh kosong',
+                'village_name.unique' => 'Nama desa sudah ada, silakan pilih yang lain',
+                'village_code.required' => 'Kode desa tidak boleh kosong',
+                'village_code.numeric' => 'Kode desa harus berupa angka',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([

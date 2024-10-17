@@ -54,6 +54,7 @@
 
             // Untuk membuat form isian null
             $("#waste_bank_name").val("")
+            $("#village_id").val("")
 
             // Membersihkan list error
             $('#error_list').html('')
@@ -71,7 +72,15 @@
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form').modal('hide');
-                        location.reload();
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            icon: "success",
+                            button: "Ok!",
+                        }).
+                        then((willDelete) => {
+                            location.reload();
+                        });
                     } else if (response.status == "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
@@ -123,7 +132,7 @@
                             text: response.message,
                             icon: "success",
                             button: "Ok!",
-                        });
+                        })
                         table.ajax.reload()
                         $("#update_id").val("")
                     } else if (response.status == "Error") {
@@ -142,8 +151,8 @@
 
         function deleteData(url) {
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this data!",
+                    title: "Apakah kamu yakin?",
+                    text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -155,17 +164,22 @@
                                 method: 'DELETE',
                             })
                             .done((response) => {
-                                location.reload();
+                                swal("Sukses menghapus data", {
+                                        icon: "success",
+                                    })
+                                    .then((willDelete) => {
+                                        location.reload();
+                                    });
                             })
                             .fail((errors) => {
-                                swal("Failed deleted data!", {
+                                swal("Gagal menghapus data", {
                                     icon: "warning",
                                 });
                                 return;
                             });
 
                     } else {
-                        swal("Data is safe!");
+                        swal("Data tetap aman");
                     }
                 });
         }
@@ -208,7 +222,15 @@
                 success: function(response) {
                     if (response.status == "Success") {
                         $('#modal-form-tonase').modal('hide');
-                        window.location.href = "{{ route('waste-entri.index') }}";
+                        swal({
+                                title: "Success!",
+                                text: response.message,
+                                icon: "success",
+                                button: "Ok!",
+                            })
+                            .then((willDelete) => {
+                                window.location.href = "{{ route('waste-entri.index') }}";
+                            });
                     } else if (response.status == "Error") {
                         $('#error_list_tonase').html('')
                         $('#error_list_tonase').addClass('alert alert-danger')

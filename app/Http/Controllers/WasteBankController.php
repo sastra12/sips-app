@@ -58,10 +58,18 @@ class WasteBankController extends Controller
 
     public function store(Request $request)
     {
-        $validated = Validator::make($request->all(), [
-            'waste_bank_name' => 'required',
-            'village_id' => 'required',
-        ]);
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'waste_bank_name' => 'required',
+                'village_id' => 'required',
+            ],
+            // Custom Error Messages
+            [
+                'waste_bank_name.required' => 'Nama TPS3R tidak boleh kosong',
+                'village_id.required' => 'Desa tidak boleh kosong',
+            ]
+        );
 
         if ($validated->fails()) {
             return response()->json([
@@ -96,6 +104,8 @@ class WasteBankController extends Controller
     {
         $validated = Validator::make($request->all(), [
             'waste_bank_name_edit' => 'required',
+        ], [
+            'waste_bank_name_edit.required' => 'Nama TPS3R tidak boleh kosong'
         ]);
         if ($validated->fails()) {
             return response()->json([

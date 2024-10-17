@@ -14,10 +14,17 @@ class AuthController extends Controller
 
     public function authenticate(Request $request)
     {
-        $validated = $request->validate([
-            'username' => 'required',
-            'password' => 'required'
-        ]);
+        $validated = $request->validate(
+            [
+                'username' => 'required',
+                'password' => 'required'
+            ],
+            // Custom Error Message
+            [
+                'username.required' => 'Username tidak boleh kosong',
+                'password.required' => 'Password tidak boleh kosong'
+            ]
+        );
         if (Auth::attempt($validated)) {
             $request->session()->regenerate();
             // acces route dashboard

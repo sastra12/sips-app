@@ -65,7 +65,14 @@ class UserController extends Controller
             $rules['waste_name'] = 'required';
         }
 
-        $validated = Validator::make($request->all(), $rules);
+        // Custom error messages
+        $messages = [
+            'name.required' => 'Nama tidak boleh kosong',
+            'role_user.required' => 'Role user tidak boleh kosong',
+            'waste_name.required' => 'TPS3R tidak boleh kosong'
+        ];
+
+        $validated = Validator::make($request->all(), $rules, $messages);
 
         if ($validated->fails()) {
             return response()->json([
@@ -112,7 +119,11 @@ class UserController extends Controller
             $rules['waste_name'] = 'required';
         }
 
-        $validated = Validator::make($request->all(), $rules);
+        $messages = [
+            'waste_name.required' => 'TPS3R tidak boleh kosong'
+        ];
+
+        $validated = Validator::make($request->all(), $rules, $messages);
 
         if ($validated->fails()) {
             return response()->json([

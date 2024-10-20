@@ -36,17 +36,19 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <div class="invoice-title">
-                    <img width="100" height="75" src="{{ asset('images/yrpw.jpg') }}">
-                    <h3 class="pull-right">Yayasan "Rijig Pradana Wetan"</h3>
-                </div>
+                {{-- <div class="invoice-title"> --}}
+                {{-- <img width="100" height="75" src="{{ asset('images/yrpw.jpg') }}">
+                    <h3 class="pull-right">Yayasan "Rijig Pradana Wetan"</h3> --}}
+                <h3 style="text-align: center">{{ $waste_name }}</h3>
+                {{-- </div> --}}
                 <hr>
                 <div class="row">
                     <div class="col-xs-6">
                         <address>
                             <strong>Pelanggan:</strong><br>
                             {{ $customer->customer_name }}.<br>
-                            {{ $customer->customer_address }}<br>
+                            {{ $customer->customer_address }}, RT: {{ $customer->customer_neighborhood }}, RW:
+                            {{ $customer->customer_community_association }}<br>
                             {{ $customer->waste_bank->waste_name }}<br>
                         </address>
                     </div>

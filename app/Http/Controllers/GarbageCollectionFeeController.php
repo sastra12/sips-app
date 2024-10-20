@@ -40,7 +40,7 @@ class GarbageCollectionFeeController extends Controller
         } else {
             $year_payment = $request->input('year_payment');
             $customer_id = $request->input('customerId');
-            $customers = Customer::select(['customer_id', 'customer_name', 'customer_address', 'waste_id'])
+            $customers = Customer::select(['customer_id', 'customer_name', 'customer_address', 'waste_id', 'customer_community_association', 'customer_neighborhood'])
                 ->with(['waste_payments' => function ($query) use ($year_payment) {
                     $query->where('year_payment', '=', $year_payment)
                         ->orderByRaw("FIELD(month_payment, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember') ASC");
@@ -52,6 +52,7 @@ class GarbageCollectionFeeController extends Controller
 
             return view('admin-tps3r-new.manage-garbage-collection-fee.customer-payment-record-pdf', [
                 'customer' => $customers,
+                'waste_name' => $customers->waste_bank->waste_name,
                 'year' => $year_payment
             ]);
         }

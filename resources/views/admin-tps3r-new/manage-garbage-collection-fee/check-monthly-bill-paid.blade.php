@@ -62,7 +62,6 @@
                                     <th scope="col">Nominal</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Tanggal Bayar</th>
-                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -116,10 +115,6 @@
                         "targets": 7,
                         "className": "text-center"
                     },
-                    {
-                        "targets": 8,
-                        "className": "text-center"
-                    },
                 ],
                 columns: [{
                         data: 'DT_RowIndex',
@@ -144,9 +139,6 @@
                     },
                     {
                         data: 'paid_date',
-                    },
-                    {
-                        data: 'action',
                     },
                 ]
             })

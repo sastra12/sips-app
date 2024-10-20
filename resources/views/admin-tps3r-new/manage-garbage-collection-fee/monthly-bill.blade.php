@@ -5,6 +5,7 @@
         <span class="material-icons-outlined"> space_dashboard </span>
         <span class="title">Dashboard</span>
     </div>
+
     <div class="content">
         <div class="row">
             <div class="col-md-12">
@@ -28,6 +29,7 @@
         </div>
     </div>
     @includeIf('admin-tps3r-new.manage-garbage-collection-fee.form')
+    @includeIf('admin-tps3r-new.manage-garbage-collection-fee.form-detail-paid')
 @endsection
 
 @push('script')
@@ -37,6 +39,44 @@
             e.preventDefault()
             storeDataPayment()
         })
+
+        $("#download-detail-paid").click(function(e) {
+            e.preventDefault()
+            downloadPdfDetailPaymentCustomer()
+            $("#modal-form-detail-paid").modal("hide")
+
+            // Untuk membuat form isian null
+            $("#year_waste_payment").val("")
+            $("#customerId").val("")
+
+            // Membersihkan list error
+            $('#error_list').html('')
+            $('#error_list').removeClass('alert alert-danger')
+
+        })
+        // Download pdf rincian pembayaran pelanggan
+        function downloadPdfDetailPaymentCustomer() {
+            let year_payment = $('#year_waste_payment_detail').val();
+            let customerId = $('#customerId').val()
+            let downloadUrl = "{{ route('download-customer-paid-tps3r') }}?year_payment=" + year_payment + "&customerId=" +
+                customerId;
+            // Redirect browser ke URL download
+            window.open(downloadUrl, '_blank');
+        }
+
+        function detailsWastePayment(idCustomer) {
+            $("#modal-form-detail-paid").modal("show")
+            $("#modal-form-detail-paid .modal-title").html("Rincian Pembayaran")
+
+            // Untuk membuat form isian null
+            $("#month_monthly_bill").val("")
+            $("#year_waste_payment").val("")
+            $("#customerId").val(idCustomer)
+
+            // Membersihkan list error
+            $('#error_list').html('')
+            $('#error_list').removeClass('alert alert-danger')
+        }
 
         function addWastePayment(idCustomer, rubbishFee) {
             // untuk menampilkan modal dan ganti title

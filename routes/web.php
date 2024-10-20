@@ -27,7 +27,8 @@ Route::get('/', [AuthController::class, 'authView'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::view('/export-excel-by-month-view', 'export-excel.export-by-month');
-Route::view('/export-excel-by-year', 'export-excel.export-by-year');
+Route::view('/customer_payment_records', 'admin-tps3r-new.manage-garbage-collection-fee.customer-payment-record-pdf');
+
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard-new', [DashboardController::class, 'dashboard'])->name('dashboard');
@@ -86,6 +87,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/monthly-bill-paid', [GarbageCollectionFeeController::class, 'checkMonthlyBillPaid'])->name('monthlyBillPaid');
         Route::get('/monthly-bill-unpaid', [GarbageCollectionFeeController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaid');
         Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('store-payment');
+
+        // Download pdf detail pembayaran customer
+        Route::get('/download-pdf-detail-paid-customer', [GarbageCollectionFeeController::class, 'downloadDetailPaidCustomerByTPS3R'])->name('download-customer-paid-tps3r');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');

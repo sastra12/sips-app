@@ -11,12 +11,50 @@ use App\Models\WastePayment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class GarbageCollectionFeeController extends Controller
 {
 
     public function index()
     {
+    }
+
+    public function downloadDetailPaidCustomerByTPS3R(Request $request)
+    {
+        $validated = Validator::make(
+            $request->all(),
+            [
+                'year_payment' => 'required|digits:4',
+            ],
+            [
+                'year_payment.digits' => 'Data tahun harus terdiri dari :digits angka',
+            ]
+        );
+
+        if ($validated->fails()) {
+            return response()->json([
+                'status' => 'Error',
+                'errors' => $validated->messages()
+            ]);
+        } else {
+            $year_payment = $request->input('year_payment');
+            $customer_id = $request->input('customerId');
+            $customers = Customer::select(['customer_id', 'customer_name', 'customer_address', 'waste_id'])
+                ->with(['waste_payments' => function ($query) use ($year_payment) {
+                    $query->where('year_payment', '=', $year_payment)
+                        ->orderByRaw("FIELD(month_payment, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember') ASC");
+                }, 'waste_bank' => function ($query) {
+                    $query->select('waste_name', 'waste_bank_id');
+                }])
+                ->where('customer_id', $customer_id)
+                ->first();
+
+            return view('admin-tps3r-new.manage-garbage-collection-fee.customer-payment-record-pdf', [
+                'customer' => $customers,
+                'year' => $year_payment
+            ]);
+        }
     }
 
     public function customerData()
@@ -33,7 +71,9 @@ class GarbageCollectionFeeController extends Controller
         return Datatables::of($customers)
             ->addIndexColumn()
             ->addColumn('action', function ($customer) {
-                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-sm custom-btn-sm btn-info">Tambah Pembayaran</button>';
+                return '<button onclick="addWastePayment(' . $customer->customer_id . ', ' . $customer->rubbish_fee . ')" class="btn btn-sm custom-btn-sm btn-info">Tambah Pembayaran</button>
+                <a onclick="detailsWastePayment(' . $customer->customer_id . ')" class="btn btn-sm custom-btn-sm btn-success">Rincian Pembayaran</a>
+                ';
             })
             ->make();
     }
@@ -101,9 +141,6 @@ class GarbageCollectionFeeController extends Controller
             // return response()->json($customers);
             return Datatables::of($customers)
                 ->addIndexColumn()
-                ->addColumn('action', function ($customer) {
-                    return '<button onclick="downloadProofOfPyament(' . $customer->customer_id . ')" class="btn btn-sm custom-btn-sm btn-info">Nota Pembayaran</button>';
-                })
                 ->addColumn('badge_success', function ($customer) {
                     return '<span class="badge badge-success">Lunas</span>';
                 })

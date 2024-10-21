@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
@@ -69,54 +71,22 @@ class CustomerController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'customer_name' => 'required',
-                'customer_address' => 'required',
-                'customer_neighborhood' => 'required|numeric',
-                'customer_community_association' => 'required|numeric',
-                'rubbish_fee' => 'required|numeric',
-                'customer_status' => 'required',
-                'waste_id' => 'required',
-            ],
-            // Custom Error Message
-            [
-                'customer_name.required' => 'Nama pelanggan tidak boleh kosong',
-                'customer_address.required' => 'Alamat pelanggan tidak boleh kosong',
-                'customer_neighborhood.required' => 'Data RT tidak boleh kosong',
-                'customer_neighborhood.numeric' => 'Data RT harus berupa angka',
-                'customer_community_association.required' => 'Data RW tidak boleh kosong',
-                'customer_community_association.numeric' => 'Data RW harus berupa angka',
-                'rubbish_fee.required' => 'Data iuran tidak boleh kosong',
-                'rubbish_fee.numeric' => 'Data iuran harus berupa angka',
-                'customer_status.required' => 'Data status tidak boleh kosong',
-                'waste_id.required' => 'Data TPS3R tidak boleh kosong',
-            ]
-        );
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = new Customer();
-            $data->customer_name = $request->input('customer_name');
-            $data->customer_address = $request->input('customer_address');
-            $data->customer_neighborhood = $request->input('customer_neighborhood');
-            $data->customer_community_association = $request->input('customer_community_association');
-            $data->rubbish_fee = $request->input('rubbish_fee');
-            $data->customer_status = $request->input('customer_status');
-            $data->waste_id = $request->input('waste_id');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Added Data'
-            ]);
-        }
+        $validated = $request->safe();
+        $data = new Customer();
+        $data->customer_name = $validated['customer_name'];
+        $data->customer_address = $validated['customer_address'];
+        $data->customer_neighborhood = $validated['customer_neighborhood'];
+        $data->customer_community_association = $validated['customer_community_association'];
+        $data->rubbish_fee = $validated['rubbish_fee'];
+        $data->customer_status = $validated['customer_status'];
+        $data->waste_id = $validated['waste_id'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Added Data'
+        ]);
     }
 
     public function show($id)
@@ -130,51 +100,21 @@ class CustomerController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateCustomerRequest $request, $id)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'customer_name' => 'required',
-                'customer_address' => 'required',
-                'customer_neighborhood' => 'required|numeric',
-                'customer_community_association' => 'required|numeric',
-                'rubbish_fee' => 'required|numeric',
-                'customer_status' => 'required',
-            ],
-            // Custom Error Message
-            [
-                'customer_name.required' => 'Nama pelanggan tidak boleh kosong',
-                'customer_address.required' => 'Alamat pelanggan tidak boleh kosong',
-                'customer_neighborhood.required' => 'Data RT tidak boleh kosong',
-                'customer_neighborhood.numeric' => 'Data RT harus berupa angka',
-                'customer_community_association.required' => 'Data RW tidak boleh kosong',
-                'customer_community_association.numeric' => 'Data RW harus berupa angka',
-                'rubbish_fee.required' => 'Data iuran tidak boleh kosong',
-                'rubbish_fee.numeric' => 'Data iuran harus berupa angka',
-                'customer_status.required' => 'Data status tidak boleh kosong',
-            ]
-
-        );
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = Customer::query()->find($id);
-            $data->customer_name = $request->input('customer_name');
-            $data->customer_address = $request->input('customer_address');
-            $data->customer_neighborhood = $request->input('customer_neighborhood');
-            $data->customer_community_association = $request->input('customer_community_association');
-            $data->rubbish_fee = $request->input('rubbish_fee');
-            $data->customer_status = $request->input('customer_status');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
-        }
+        $validated = $request->safe();
+        $data = Customer::query()->find($id);
+        $data->customer_name = $validated['customer_name'];
+        $data->customer_address = $validated['customer_address'];
+        $data->customer_neighborhood = $validated['customer_neighborhood'];
+        $data->customer_community_association = $validated['customer_community_association'];
+        $data->rubbish_fee = $validated['rubbish_fee'];
+        $data->customer_status = $validated['customer_status'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
+        ]);
     }
 
     public function destroy($id)

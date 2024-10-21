@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreWasteBankRequest;
+use App\Http\Requests\UpdateWasteBankRequest;
 use App\Models\Village;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
@@ -56,36 +58,18 @@ class WasteBankController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreWasteBankRequest $request)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'waste_bank_name' => 'required',
-                'village_id' => 'required',
-            ],
-            // Custom Error Messages
-            [
-                'waste_bank_name.required' => 'Nama TPS3R tidak boleh kosong',
-                'village_id.required' => 'Desa tidak boleh kosong',
-            ]
-        );
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = new WasteBank();
-            $data->waste_name = $request->input('waste_bank_name');
-            $data->village_id = $request->input('village_id');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Added Data'
-            ]);
-        }
+        $validated = $request->safe();
+        $data = new WasteBank();
+        $data->waste_name = $validated['waste_bank_name'];
+        $data->village_id = $validated['village_id'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Added Data'
+        ]);
+        // }
     }
 
 
@@ -100,27 +84,16 @@ class WasteBankController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateWasteBankRequest $request, $id)
     {
-        $validated = Validator::make($request->all(), [
-            'waste_bank_name_edit' => 'required',
-        ], [
-            'waste_bank_name_edit.required' => 'Nama TPS3R tidak boleh kosong'
+        $validated = $request->safe();
+        $data = WasteBank::query()->find($id);
+        $data->waste_name = $validated['waste_bank_name_edit'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
         ]);
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = WasteBank::query()->find($id);
-            $data->waste_name = $request->input('waste_bank_name_edit');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
-        }
     }
 
     public function destroy($id)

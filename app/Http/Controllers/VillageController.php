@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreVillageRequest;
+use App\Http\Requests\UpdateVillageRequest;
 use App\Models\Village;
 use Illuminate\Http\Request;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+
 
 class VillageController extends Controller
 {
@@ -38,38 +40,17 @@ class VillageController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreVillageRequest $request)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'village_name' => 'required|unique:villages,village_name',
-                'village_code' => 'required|numeric'
-            ],
-            // Custom Error Message
-            [
-                'village_name.required' => 'Nama desa tidak boleh kosong',
-                'village_name.unique' => 'Nama desa sudah ada, silakan pilih yang lain',
-                'village_code.required' => 'Kode desa tidak boleh kosong',
-                'village_code.numeric' => 'Kode desa harus berupa angka',
-            ]
-        );
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = new Village();
-            $data->village_name = $request->input('village_name');
-            $data->village_code = $request->input('village_code');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Added Data'
-            ]);
-        }
+        $validated = $request->safe();
+        $data = new Village();
+        $data->village_name =  $validated['village_name'];
+        $data->village_code = $validated['village_code'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Added Data'
+        ]);
     }
 
     public function show($id)
@@ -83,39 +64,17 @@ class VillageController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateVillageRequest $request, $id)
     {
+        $validated = $request->safe();
         $data = Village::query()->find($id);
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'village_name' => [
-                    'required',
-                    Rule::unique('villages')->ignore($data->village_id, 'village_id')
-                ],
-                'village_code' => 'required|numeric',
-            ], // Custom Error Message
-            [
-                'village_name.required' => 'Nama desa tidak boleh kosong',
-                'village_name.unique' => 'Nama desa sudah ada, silakan pilih yang lain',
-                'village_code.required' => 'Kode desa tidak boleh kosong',
-                'village_code.numeric' => 'Kode desa harus berupa angka',
-            ]
-        );
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data->village_name = $request->input('village_name');
-            $data->village_code = $request->input('village_code');
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
-        }
+        $data->village_name = $validated['village_name'];
+        $data->village_code = $validated['village_code'];
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
+        ]);
     }
 
     public function destroy($id)

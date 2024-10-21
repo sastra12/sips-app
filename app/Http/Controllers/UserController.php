@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -53,48 +55,26 @@ class UserController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $role_user = $request->input('role_user');
-        $rules = [
-            'name' => 'required',
-            'role_user' => 'required'
-        ];
+        // Validation dengan form request
+        $validated = $request->safe();
+        $data = new User();
+        $data->name = $validated['name'];
+        // kenapa kok pakai $request->input, karena username dan passwordnya tidak di validasi
+        $data->username = $request->input('username');
+        $data->password = bcrypt($request->input('password'));
+        $data->role_id = $validated['role_user'];
+        $data->save();
 
-        if ($role_user == 2) {
-            $rules['waste_name'] = 'required';
-        }
+        // Menyimpan ke tabel intermediate
+        $data->user_waste_banks()->attach($request->input('waste_name'));
 
-        // Custom error messages
-        $messages = [
-            'name.required' => 'Nama tidak boleh kosong',
-            'role_user.required' => 'Role user tidak boleh kosong',
-            'waste_name.required' => 'TPS3R tidak boleh kosong'
-        ];
-
-        $validated = Validator::make($request->all(), $rules, $messages);
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = new User();
-            $data->name = $request->input('name');
-            $data->username = $request->input('username');
-            $data->password = bcrypt($request->input('password'));
-            $data->role_id = $request->input('role_user');
-            $data->save();
-
-            // Menyimpan ke tabel intermediate
-            $data->user_waste_banks()->attach($request->input('waste_name'));
-
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Added Data'
-            ]);
-        }
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Added Data'
+        ]);
+        // }
     }
 
     public function show($id)
@@ -108,52 +88,32 @@ class UserController extends Controller
         //
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
-        $role_user = $request->input('role');
-        $rules = [
-            'role' => 'required'
-        ];
-
-        if ($role_user == 2) {
-            $rules['waste_name'] = 'required';
-        }
-
-        $messages = [
-            'waste_name.required' => 'TPS3R tidak boleh kosong'
-        ];
-
-        $validated = Validator::make($request->all(), $rules, $messages);
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = User::query()->find($id);
-            $data->role_id = $request->input('role');
-            $data->save();
-            // Menyimpan ke tabel intermediate
-            if ($request->input('role') != 2) {
-                $data->user_waste_banks()->detach($request->input('waste_name'));
-            } elseif ($request->input('role') == 2) {
-                // apakah sebelumnya data relasinya ada
-                $existingPivot = $data->user_waste_banks()->wherePivot('user_id', $id)->exists();
-                if ($existingPivot) {
-                    // kalo ada update waste_id nya
-                    $data->user_waste_banks()->updateExistingPivot($data->user_waste_banks->first()->pivot->waste_id, [
-                        'waste_id' => $request->input('waste_name')
-                    ]);
-                } else {
-                    $data->user_waste_banks()->attach($request->input('waste_name'));
-                }
+        // Validation dengan form request
+        $validated = $request->safe();
+        $data = User::query()->find($id);
+        $data->role_id = $validated['role'];
+        $data->save();
+        // Menyimpan ke tabel intermediate
+        if ($request->input('role') != 2) {
+            $data->user_waste_banks()->detach($request->input('waste_name'));
+        } elseif ($request->input('role') == 2) {
+            // apakah sebelumnya data relasinya ada
+            $existingPivot = $data->user_waste_banks()->wherePivot('user_id', $id)->exists();
+            if ($existingPivot) {
+                // kalo ada update waste_id nya
+                $data->user_waste_banks()->updateExistingPivot($data->user_waste_banks->first()->pivot->waste_id, [
+                    'waste_id' => $request->input('waste_name')
+                ]);
+            } else {
+                $data->user_waste_banks()->attach($request->input('waste_name'));
             }
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
         }
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
+        ]);
     }
 
     public function destroy($id)

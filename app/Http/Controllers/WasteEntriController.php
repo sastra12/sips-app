@@ -205,6 +205,17 @@ class WasteEntriController extends Controller
         $end_date = $request->input('end_date');
         $waste_id = $request->input('waste_id');
 
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ]);
+
+        // Tampilkan display
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->messages())->withInput();
+        }
+
         // Lakukan query berdasarkan filter yang diterima
         $waste_entries = WasteEntry::with(['waste_bank' => function ($query) {
             $query->select('waste_bank_id', 'waste_name');
@@ -287,6 +298,18 @@ class WasteEntriController extends Controller
 
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
+
+        dd($start_date);
+
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ], []);
+
+        // Tampilkan display
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->messages())->withInput();
+        }
 
         // Lakukan query berdasarkan filter yang diterima
         $userId = Auth::user()->id;

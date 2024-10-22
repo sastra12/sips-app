@@ -11,6 +11,8 @@ use DataTables;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\WasteEntriesExport;
+use App\Http\Requests\StoreWasteEntriRequest;
+use App\Http\Requests\UpdateWasteEntriRequest;
 
 class WasteEntriController extends Controller
 {
@@ -398,112 +400,63 @@ class WasteEntriController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreWasteEntriRequest $request)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'waste_organic' => 'required|numeric',
-                'waste_anorganic' => 'required|numeric',
-                'waste_residue' => 'required|numeric',
-                'date_entri' => 'required',
-            ],
-            [
-                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
-                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
-                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
-                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
-                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
-                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
-                'date_entri.required' => 'Tanggal boleh kosong',
-            ]
-        );
+        $validated = $request->validated();
 
-        if ($validated->fails()) {
+        $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
+            ->where('waste_id', '=', $request->input('waste_bank_id'))
+            ->exists();
+        // Cek apakah data tonase dengan tanggal sekian sudah di input
+        if ($data) {
             return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
+                'status' => 'Failed',
+                'message' => 'Data tonase pada tanggal ini sudah di inputkan'
             ]);
         } else {
-            $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
-                ->where('waste_id', '=', $request->input('waste_bank_id'))
-                ->exists();
-            // Cek apakah data tonase dengan tanggal sekian sudah di input
-            if ($data) {
-                return response()->json([
-                    'status' => 'Failed',
-                    'message' => 'Data tonase pada tanggal ini sudah di inputkan'
-                ]);
-            } else {
-                $data = new WasteEntry();
-                $data->waste_organic = $request->input('waste_organic');
-                $data->waste_anorganic = $request->input('waste_anorganic');
-                $data->waste_residue = $request->input('waste_residue');
-                $data->created_at = $request->input('date_entri');
-                $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-                $data->waste_id = $request->input('waste_bank_id');
-                $data->user_id = Auth::user()->id;
-                $data->save();
-                return response()->json([
-                    'status' => 'Success',
-                    'message' => 'Success Added Data'
-                ]);
-            }
+            $data = new WasteEntry();
+            $data->waste_organic = $validated['waste_organic'];
+            $data->waste_anorganic = $validated['waste_anorganic'];
+            $data->waste_residue = $validated['waste_residue'];
+            $data->created_at = $validated['date_entri'];
+            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+            $data->waste_id = $request->input('waste_bank_id');
+            $data->user_id = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Added Data'
+            ]);
         }
     }
 
     // Admin TPS3R
-    public function userTPS3RStore(Request $request)
+    public function userTPS3RStore(StoreWasteEntriRequest $request)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'waste_organic' => 'required|numeric',
-                'waste_anorganic' => 'required|numeric',
-                'waste_residue' => 'required|numeric',
-                'date_entri' => 'required',
-            ],
-            [
-                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
-                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
-                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
-                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
-                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
-                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
-                'date_entri.required' => 'Tanggal boleh kosong',
-            ]
-        );
-
-        if ($validated->fails()) {
+        $validated = $request->validated();
+        $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
+            ->where('waste_id', '=', $request->input('waste_bank_id'))
+            ->exists();
+        // Cek apakah data tonase dengan tanggal sekian sudah di input
+        if ($data) {
             return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
+                'status' => 'Failed',
+                'message' => 'Data tonase pada tanggal ini sudah di inputkan'
             ]);
         } else {
-            $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
-                ->where('waste_id', '=', $request->input('waste_bank_id'))
-                ->exists();
-            // Cek apakah data tonase dengan tanggal sekian sudah di input
-            if ($data) {
-                return response()->json([
-                    'status' => 'Failed',
-                    'message' => 'Data tonase pada tanggal ini sudah di inputkan'
-                ]);
-            } else {
-                $data = new WasteEntry();
-                $data->waste_organic = $request->input('waste_organic');
-                $data->waste_anorganic = $request->input('waste_anorganic');
-                $data->waste_residue = $request->input('waste_residue');
-                $data->created_at = $request->input('date_entri');
-                $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-                $data->waste_id = $request->input('waste_bank_id');
-                $data->user_id = Auth::user()->id;
-                $data->save();
-                return response()->json([
-                    'status' => 'Success',
-                    'message' => 'Success Added Data'
-                ]);
-            }
+            $data = new WasteEntry();
+            $data->waste_organic = $validated['waste_organic'];
+            $data->waste_anorganic = $validated['waste_anorganic'];
+            $data->waste_residue = $validated['waste_residue'];
+            $data->created_at = $validated['date_entri'];
+            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+            $data->waste_id = $request->input('waste_bank_id');
+            $data->user_id = Auth::user()->id;
+            $data->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Added Data'
+            ]);
         }
     }
 
@@ -527,92 +480,40 @@ class WasteEntriController extends Controller
     }
 
     // Admin YRPW
-    public function update(Request $request, $id)
+    public function update(UpdateWasteEntriRequest $request, $id)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'waste_organic' => 'required|numeric',
-                'waste_anorganic' => 'required|numeric',
-                'waste_residue' => 'required|numeric',
-                'date_entri' => 'required',
-            ],
-            [
-                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
-                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
-                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
-                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
-                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
-                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
-                'date_entri.required' => 'Tanggal boleh kosong',
-            ]
-        );
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = WasteEntry::query()->find($id);
-            $data->waste_organic = $request->input('waste_organic');
-            $data->waste_anorganic = $request->input('waste_anorganic');
-            $data->waste_residue = $request->input('waste_residue');
-            $data->created_at = $request->input('date_entri');
-            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-            $data->user_id = Auth::user()->id;
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
-        }
+        $validated = $request->validated();
+        $data = WasteEntry::query()->find($id);
+        $data->waste_organic = $validated['waste_organic'];
+        $data->waste_anorganic = $validated['waste_anorganic'];
+        $data->waste_residue = $validated['waste_residue'];
+        $data->created_at = $validated['date_entri'];
+        $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+        $data->user_id = Auth::user()->id;
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
+        ]);
     }
 
     // Admin TPS3R
-    public function userTPS3RUpdate(Request $request, $id)
+    public function userTPS3RUpdate(UpdateWasteEntriRequest $request, $id)
     {
-        $validated = Validator::make(
-            $request->all(),
-            [
-                'waste_organic' => 'required|numeric',
-                'waste_anorganic' => 'required|numeric',
-                'waste_residue' => 'required|numeric',
-                'date_entri' => 'required',
-            ],
-            // Custom Error Validation Messages
-            [
-                'waste_organic.required' => 'Data sampah organik tidak boleh kosong',
-                'waste_organic.numeric' => 'Data sampah organik harus berupa angka',
-                'waste_anorganic.required' => 'Data sampah anorganik tidak boleh kosong',
-                'waste_anorganic.numeric' => 'Data sampah anorganik harus berupa angka',
-                'waste_residue.required' => 'Data sampah residu tidak boleh kosong',
-                'waste_residue.numeric' => 'Data sampah residu harus berupa angka',
-                'date_entri.required' => 'Tanggal boleh kosong',
-            ]
-
-        );
-
-        if ($validated->fails()) {
-            return response()->json([
-                'status' => 'Error',
-                'errors' => $validated->messages()
-            ]);
-        } else {
-            $data = WasteEntry::query()->find($id);
-            $data->waste_organic = $request->input('waste_organic');
-            $data->waste_anorganic = $request->input('waste_anorganic');
-            $data->waste_residue = $request->input('waste_residue');
-            $data->created_at = $request->input('date_entri');
-            $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-            $data->waste_id = $request->input('waste_bank_id');
-            $data->user_id = Auth::user()->id;
-            $data->save();
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Success Updated Data'
-            ]);
-        }
+        $validated = $request->validated();
+        $data = WasteEntry::query()->find($id);
+        $data->waste_organic = $validated['waste_organic'];
+        $data->waste_anorganic = $validated['waste_anorganic'];
+        $data->waste_residue = $validated['waste_residue'];
+        $data->created_at = $validated['date_entri'];
+        $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
+        $data->waste_id = $request->input('waste_bank_id');
+        $data->user_id = Auth::user()->id;
+        $data->save();
+        return response()->json([
+            'status' => 'Success',
+            'message' => 'Success Updated Data'
+        ]);
     }
 
     // Admin YRPW

@@ -245,19 +245,19 @@ body {
 }
 
 .table th {
-    font-size: 14px !important;
+    font-size: 12px !important;
     color: var(--text-color) !important;
 }
 
 .table td {
-    font-size: 14px !important;
+    font-size: 12px !important;
     color: var(--text-color);
     font-weight: 600 !important;
 }
 
 .custom-btn-sm {
     padding: 2px 4px !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
 }
 
 /* Responsive Media Query*/

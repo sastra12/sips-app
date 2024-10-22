@@ -6,9 +6,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Http\Request;
 use DataTables;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {

@@ -6,9 +6,7 @@ use App\Http\Requests\StoreWasteBankRequest;
 use App\Http\Requests\UpdateWasteBankRequest;
 use App\Models\Village;
 use App\Models\WasteBank;
-use Illuminate\Http\Request;
 use DataTables;
-use Illuminate\Support\Facades\Validator;
 
 class WasteBankController extends Controller
 {

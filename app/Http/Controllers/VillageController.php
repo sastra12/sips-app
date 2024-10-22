@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreVillageRequest;
 use App\Http\Requests\UpdateVillageRequest;
 use App\Models\Village;
-use Illuminate\Http\Request;
 use DataTables;
-use Illuminate\Support\Facades\Validator;
 
 
 class VillageController extends Controller

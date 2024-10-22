@@ -8,7 +8,6 @@ use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
 use DataTables;
-use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {

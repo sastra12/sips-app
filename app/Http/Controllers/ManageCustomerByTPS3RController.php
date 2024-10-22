@@ -8,10 +8,8 @@ use App\Http\Requests\UpdateCustomerTPS3RRequest;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
-use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ManageCustomerByTPS3RController extends Controller

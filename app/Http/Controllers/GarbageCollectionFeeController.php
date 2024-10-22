@@ -11,7 +11,6 @@ use App\Models\WastePayment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class GarbageCollectionFeeController extends Controller
 {

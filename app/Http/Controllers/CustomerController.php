@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCustomerRequest;
-use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
@@ -70,7 +69,7 @@ class CustomerController extends Controller
         //
     }
 
-    public function store(StoreCustomerRequest $request)
+    public function store(CustomerRequest $request)
     {
         $validated = $request->safe();
         $data = new Customer();
@@ -99,7 +98,7 @@ class CustomerController extends Controller
         //
     }
 
-    public function update(UpdateCustomerRequest $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
         $validated = $request->safe();
         $data = Customer::query()->find($id);

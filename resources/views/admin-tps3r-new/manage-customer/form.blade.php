@@ -23,22 +23,22 @@
                     </div>
                     <div class="form-group">
                         <label for="customer_address">Alamat</label>
-                        <input autocomplete="off" type="text" class="form-control" id="customer_address"
-                            name="customer_address" value="{{ old('	customer_address') }}">
+                        <input type="text" class="form-control" id="customer_address" name="customer_address"
+                            value="{{ old('	customer_address') }}">
                     </div>
                     <div class="form-group">
                         <label for="customer_neighborhood">RT</label>
-                        <input autocomplete="off" type="text" class="form-control" id="customer_neighborhood"
-                            name="customer_neighborhood" value="{{ old('customer_neighborhood') }}">
+                        <input type="text" class="form-control" id="customer_neighborhood"
+                            name="customer_neighborhood" value="{{ old('customer_neighborhood') }}" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="customer_community_association">RW</label>
-                        <input autocomplete="off" type="text" class="form-control"
-                            id="customer_community_association" name="customer_community_association"
-                            value="{{ old('customer_community_association') }}">
+                        <input type="text" class="form-control" id="customer_community_association"
+                            name="customer_community_association" value="{{ old('customer_community_association') }}"
+                            autocomplete="off">
                     </div>
                     <div class="form-group">
-                        <label for="rubbish_fee">rubbish_fee</label>
+                        <label for="rubbish_fee">Iuran</label>
                         <input autocomplete="off" type="text" class="form-control" id="rubbish_fee"
                             name="rubbish_fee" value="{{ old('rubbish_fee') }}">
                     </div>

@@ -11,8 +11,7 @@ use DataTables;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\WasteEntriesExport;
-use App\Http\Requests\StoreWasteEntriRequest;
-use App\Http\Requests\UpdateWasteEntriRequest;
+use App\Http\Requests\WasteEntriRequest;
 
 class WasteEntriController extends Controller
 {
@@ -400,7 +399,7 @@ class WasteEntriController extends Controller
         //
     }
 
-    public function store(StoreWasteEntriRequest $request)
+    public function store(WasteEntriRequest $request)
     {
         $validated = $request->validated();
 
@@ -431,7 +430,7 @@ class WasteEntriController extends Controller
     }
 
     // Admin TPS3R
-    public function userTPS3RStore(StoreWasteEntriRequest $request)
+    public function userTPS3RStore(WasteEntriRequest $request)
     {
         $validated = $request->validated();
         $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
@@ -480,7 +479,7 @@ class WasteEntriController extends Controller
     }
 
     // Admin YRPW
-    public function update(UpdateWasteEntriRequest $request, $id)
+    public function update(WasteEntriRequest $request, $id)
     {
         $validated = $request->validated();
         $data = WasteEntry::query()->find($id);
@@ -498,7 +497,7 @@ class WasteEntriController extends Controller
     }
 
     // Admin TPS3R
-    public function userTPS3RUpdate(UpdateWasteEntriRequest $request, $id)
+    public function userTPS3RUpdate(WasteEntriRequest $request, $id)
     {
         $validated = $request->validated();
         $data = WasteEntry::query()->find($id);

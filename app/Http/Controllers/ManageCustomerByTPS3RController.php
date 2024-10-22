@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CustomersExport;
-use App\Http\Requests\StoreCustomerTPS3RRequest;
-use App\Http\Requests\UpdateCustomerTPS3RRequest;
+use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,7 +55,7 @@ class ManageCustomerByTPS3RController extends Controller
         //
     }
 
-    public function store(StoreCustomerTPS3RRequest $request)
+    public function store(CustomerRequest $request)
     {
         // Dapatkan id waste_bank berdasarkan user yang login
         $waste_id = WasteBank::whereHas('waste_bank_users', function (Builder $query) {
@@ -92,7 +91,7 @@ class ManageCustomerByTPS3RController extends Controller
         //
     }
 
-    public function update(UpdateCustomerTPS3RRequest $request, $id)
+    public function update(CustomerRequest $request, $id)
     {
         $validated = $request->validated();
         $data = Customer::query()->find($id);

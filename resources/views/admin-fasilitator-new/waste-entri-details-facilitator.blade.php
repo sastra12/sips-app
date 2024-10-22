@@ -20,12 +20,32 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-12 mb-2">
+                                <label for="start_date">Tanggal awal</label>
                                 <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal">
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal" name="start_date"
+                                    value="{{ old('start_date') }}">
+                                @error('start_date')
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ $message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-12 mb-2">
+                                <label for="end_date">Tanggal akhir</label>
                                 <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir">
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir" name="end_date"
+                                    value="{{ old('end_date') }}">
+                                @error('end_date')
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ $message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-sm-12">
                                 <div class="row">
@@ -166,11 +186,6 @@
             let end_date = $('#end_date').val();
             let waste_id = bankId
 
-            // Validasi inputan tidak boleh kosong
-            if (!start_date || !end_date) {
-                alert('Semua input harus diisi sebelum mendownload file!');
-                return;
-            }
             let downloadUrl = "{{ route('export-tonase-facilitator.data') }}?start_date=" + start_date +
                 "&end_date=" +
                 end_date + "&waste_id=" + bankId;

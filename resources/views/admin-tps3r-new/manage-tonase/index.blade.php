@@ -20,8 +20,10 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-12 mb-2">
+                                <label for="start_date">Tanggal awal</label>
                                 <input id="start_date" type="date" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal" name="start_date">
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Awal" name="start_date"
+                                    value="{{ old('start_date') }}">
                                 @error('start_date')
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         {{ $message }}
@@ -32,8 +34,10 @@
                                 @enderror
                             </div>
                             <div class="col-12 mb-2">
+                                <label for="end_date">Tanggal akhir</label>
                                 <input id="end_date" type="date" class="form-control" aria-label="Sizing example input"
-                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir" name="end_date">
+                                    aria-describedby="inputGroup-sizing-sm" placeholder="Tanggal Akhir" name="end_date"
+                                    value="{{ old('end_date') }}">
                                 @error('end_date')
                                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                         {{ $message }}

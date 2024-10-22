@@ -20,6 +20,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-12 mb-2">
+                                <label for="start_date">Tanggal awal</label>
                                 <input id="start_date" type="date"
                                     class="form-control @error('start_date') is-invalid @enderror"
                                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
@@ -34,6 +35,7 @@
                                 @enderror
                             </div>
                             <div class="col-12 mb-2">
+                                <label for="end_date">Tanggal akhir</label>
                                 <input id="end_date" type="date"
                                     class="form-control @error('end_date') is-invalid @enderror"
                                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"

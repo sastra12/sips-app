@@ -209,6 +209,9 @@ class WasteEntriController extends Controller
         $validator = Validator::make($request->all(), [
             'start_date' => 'required',
             'end_date' => 'required',
+        ], [
+            'start_date.required' => 'Tanggal awal harus diisi',
+            'end_date.required' => 'Tanggal akhir harus diisi',
         ]);
 
         // Tampilkan display
@@ -225,8 +228,12 @@ class WasteEntriController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        // Cek apakah tanggal awal lebih besar dari tangal akhir
+        if ($start_date > $end_date) {
+            return redirect()->back()->with('failed', 'Maaf tanggal awal lebih besar dari tanggal akhir. Mohon periksa kembali.')->withInput();
+        }
         // Cek apakah datanya null atau tidak
-        if (count($waste_entries) == null) {
+        elseif (count($waste_entries) == null) {
             return redirect()->back()->with('failed', 'Maaf Data Tonase Tidak Ada');
         } else {
             foreach ($waste_entries as $value) {
@@ -259,6 +266,20 @@ class WasteEntriController extends Controller
         $end_date = $request->input('end_date');
         $waste_id = $request->input('waste_id');
 
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required',
+            'end_date' => 'required',
+        ], [
+            'start_date.required' => 'Tanggal awal harus diisi',
+            'end_date.required' => 'Tanggal akhir harus diisi',
+        ]);
+
+        // Tampilkan display
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->messages())->withInput();
+        }
+
         // Lakukan query berdasarkan filter yang diterima
         $waste_entries = WasteEntry::with(['waste_bank' => function ($query) {
             $query->select('waste_bank_id', 'waste_name');
@@ -267,7 +288,13 @@ class WasteEntriController extends Controller
             ->whereBetween('created_at', [$start_date, $end_date])
             ->orderByDesc('created_at')
             ->get();
-        if (count($waste_entries) == null) {
+
+        // Cek apakah tanggal awal lebih besar dari tangal akhir
+        if ($start_date > $end_date) {
+            return redirect()->back()->with('failed', 'Maaf tanggal awal lebih besar dari tanggal akhir. Mohon periksa kembali.')->withInput();
+        }
+        // cek apakah datanya null 
+        elseif (count($waste_entries) == null) {
             return redirect()->back()->with('failed', 'Maaf Data Tonase Tidak Ada');
         } else {
             foreach ($waste_entries as $value) {
@@ -299,12 +326,13 @@ class WasteEntriController extends Controller
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
 
-        dd($start_date);
-
         $validator = Validator::make($request->all(), [
             'start_date' => 'required',
             'end_date' => 'required',
-        ], []);
+        ], [
+            'start_date.required' => 'Tanggal awal harus diisi',
+            'end_date.required' => 'Tanggal akhir harus diisi',
+        ]);
 
         // Tampilkan display
         if ($validator->fails()) {
@@ -323,9 +351,12 @@ class WasteEntriController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        // dd($waste_entries);
+        // Cek apakah tanggal awal lebih besar dari tangal akhir
+        if ($start_date > $end_date) {
+            return redirect()->back()->with('failed', 'Maaf tanggal awal lebih besar dari tanggal akhir. Mohon periksa kembali.')->withInput();
+        }
         // Cek apakah datanya null atau tidak
-        if (count($waste_entries) == null) {
+        elseif (count($waste_entries) == null) {
             return redirect()->back()->with('failed', 'Maaf Data Tonase Tidak Ada');
         } else {
             foreach ($waste_entries as $value) {

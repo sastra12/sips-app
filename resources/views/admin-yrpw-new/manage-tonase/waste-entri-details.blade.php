@@ -93,6 +93,7 @@
         </div>
     </div>
     @includeIf('admin-yrpw-new.manage-tonase.form')
+    @includeIf('admin-yrpw-new.manage-tonase.edit')
 @endsection
 
 @push('script')
@@ -101,15 +102,26 @@
         let urlParams = new URLSearchParams(window.location.search);
         let bankId = urlParams.get('bankId');
 
+        // $("#save-project-tonase").click(function(e) {
+        //     e.preventDefault()
+        //     if ($("#waste_entry_id").val() == null || $("#waste_entry_id").val() == "") {
+        //         storeDataTonaseYRPW()
+        //     } else {
+        //         updateDataTonaseYRPW()
+        //     }
+        // })
+
+        // Simpan data tonase
         $("#save-project-tonase").click(function(e) {
             e.preventDefault()
-            if ($("#waste_entry_id").val() == null || $("#waste_entry_id").val() == "") {
-                storeDataTonaseYRPW()
-            } else {
-                updateDataTonaseYRPW()
-            }
+            storeDataTonaseYRPW()
         })
 
+        // Update data tonase
+        $("#update-project-tonase").click(function(e) {
+            e.preventDefault()
+            updateDataTonaseYRPW()
+        })
 
         function createDataTonaseYRPW() {
             $("#modal-form-tonase").modal("show")
@@ -130,19 +142,19 @@
                 url: "{{ route('waste-entri.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
-                    $("#waste_organic").val(response.waste_organic)
-                    $("#waste_anorganic").val(response.waste_anorganic)
-                    $("#waste_residue").val(response.waste_residue)
+                    $("#waste_organic_edit").val(response.waste_organic)
+                    $("#waste_anorganic_edit").val(response.waste_anorganic)
+                    $("#waste_residue_edit").val(response.waste_residue)
                     if (response.created_at) {
                         let dateISO = response.created_at
                         let formatDate = dateISO.substring(0, 10);
-                        $("#date_entri").val(formatDate);
+                        $("#date_entri_edit").val(formatDate);
                     }
 
-                    $("#modal-form-tonase").modal("show")
-                    $("#modal-form-tonase .modal-title").html("Edit Data Tonase")
-                    $('#error_list_tonase').html('')
-                    $('#error_list_tonase').removeClass('alert alert-danger')
+                    $("#modal-edit-tonase").modal("show")
+                    $("#modal-edit-tonase .modal-title").html("Edit Data Tonase")
+                    $('#error_list_tonase_edit').html('')
+                    $('#error_list_tonase_edit').removeClass('alert alert-danger')
                 },
                 error: function(response) {
                     console.log(response)
@@ -196,11 +208,11 @@
         function updateDataTonaseYRPW() {
             let id = $("#waste_entry_id").val()
             let data = {
-                waste_organic: $("#waste_organic").val(),
-                waste_anorganic: $("#waste_anorganic").val(),
-                waste_residue: $("#waste_residue").val(),
-                date_entri: $("#date_entri").val(),
-                waste_bank_id: $("#waste_bank_id").val()
+                waste_organic: $("#waste_organic_edit").val(),
+                waste_anorganic: $("#waste_anorganic_edit").val(),
+                waste_residue: $("#waste_residue_edit").val(),
+                // date_entri: $("#date_entri").val(),
+                // waste_bank_id: $("#waste_bank_id").val()
             }
             $.ajax({
                 url: "{{ route('waste-entri.update', '') }}/" + id,
@@ -208,7 +220,7 @@
                 data: data,
                 success: function(response) {
                     if (response.status == "Success") {
-                        $('#modal-form-tonase').modal('hide');
+                        $('#modal-edit-tonase').modal('hide');
                         swal({
                             title: "Success!",
                             text: response.message,
@@ -217,10 +229,10 @@
                         });
                         table.ajax.reload()
                     } else if (response.status = "Error") {
-                        $('#error_list_tonase').html('')
-                        $('#error_list_tonase').addClass('alert alert-danger')
+                        $('#error_list_tonase_edit').html('')
+                        $('#error_list_tonase_edit').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {
-                            $('#error_list_tonase').append('<li>' + value + '</li>')
+                            $('#error_list_tonase_edit').append('<li>' + value + '</li>')
                         })
                     }
                 },

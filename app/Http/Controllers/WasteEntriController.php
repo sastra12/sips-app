@@ -11,6 +11,7 @@ use DataTables;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\WasteEntriesExport;
+use App\Http\Requests\UpdateWasteEntriRequest;
 use App\Http\Requests\WasteEntriRequest;
 
 class WasteEntriController extends Controller
@@ -479,14 +480,14 @@ class WasteEntriController extends Controller
     }
 
     // Admin YRPW
-    public function update(WasteEntriRequest $request, $id)
+    public function update(UpdateWasteEntriRequest $request, $id)
     {
         $validated = $request->validated();
         $data = WasteEntry::query()->find($id);
         $data->waste_organic = $validated['waste_organic'];
         $data->waste_anorganic = $validated['waste_anorganic'];
         $data->waste_residue = $validated['waste_residue'];
-        $data->created_at = $validated['date_entri'];
+        // $data->created_at = $validated['date_entri'];
         $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
         $data->user_id = Auth::user()->id;
         $data->save();
@@ -497,14 +498,14 @@ class WasteEntriController extends Controller
     }
 
     // Admin TPS3R
-    public function userTPS3RUpdate(WasteEntriRequest $request, $id)
+    public function userTPS3RUpdate(UpdateWasteEntriRequest $request, $id)
     {
         $validated = $request->validated();
         $data = WasteEntry::query()->find($id);
         $data->waste_organic = $validated['waste_organic'];
         $data->waste_anorganic = $validated['waste_anorganic'];
         $data->waste_residue = $validated['waste_residue'];
-        $data->created_at = $validated['date_entri'];
+        // $data->created_at = $validated['date_entri'];
         $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
         $data->waste_id = $request->input('waste_bank_id');
         $data->user_id = Auth::user()->id;

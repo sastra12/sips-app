@@ -35,6 +35,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Route Admin YRPW
     Route::middleware(['checkRole:1'])->group(function () {
+        // Rata" Tonase perhari 
+        Route::get('tonase-average-by-current-date', [DashboardController::class, 'getAverageTonaseByCurrentDate'])->name('average-tonase-by-current-date');
+        // mendapatkan rata" tonase dari awal bulan sampai tanggal saat ini
+        Route::get('tonase-average', [DashboardController::class, 'getAverageTonase'])->name('average-tonase');
+
         // Manajemen Desa
         Route::get('/village/data', [VillageController::class, 'data'])->name('village.data');
         Route::resource('village', VillageController::class);

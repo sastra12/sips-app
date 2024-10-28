@@ -8,7 +8,7 @@
         </span>
         <ul class="dropdown-menu">
             <li style="cursor: default">Selamat datang, {{ Auth::user()->name }}</li>
-            <li><a href="#">Profile</a></li>
+            {{-- <li><a href="#">Profile</a></li> --}}
             <li><a href="#" onclick="document.getElementById('logout-form').submit()">Logout</a></li>
         </ul>
     </div>

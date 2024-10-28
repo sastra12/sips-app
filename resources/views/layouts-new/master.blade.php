@@ -49,6 +49,10 @@
     {{-- Datatable --}}
     <script src="{{ asset('js/jquery.dataTables.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.js') }}"></script>
+
+    {{-- Library Chart JS --}}
+    {{-- <script src="{{ asset('js/chart.min.js') }}"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @stack('script')
 </body>
 

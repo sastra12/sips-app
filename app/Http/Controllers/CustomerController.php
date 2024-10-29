@@ -71,6 +71,7 @@ class CustomerController extends Controller
 
     public function store(CustomerRequest $request)
     {
+        // dd($request->input('waste_id'));
         $validated = $request->safe();
         $data = new Customer();
         $data->customer_name = $validated['customer_name'];

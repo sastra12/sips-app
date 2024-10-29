@@ -59,11 +59,11 @@
         }
 
         function editDataVillage(id) {
+            $("#update_id").val(id)
             $.ajax({
                 url: "{{ route('village.show', '') }}/" + id,
                 type: "GET",
                 success: function(response) {
-                    $("#update_id").val(id)
                     $('#village_name').val(response.village_name)
                     $('#village_code').val(response.village_code)
 

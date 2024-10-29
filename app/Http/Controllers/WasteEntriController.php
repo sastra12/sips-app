@@ -90,6 +90,7 @@ class WasteEntriController extends Controller
     // Admin TPS3R
     public function dataTonaseByAdminTPS3R(Request $request)
     {
+        // ini masih ngebug
         $userId = Auth::user()->id;
         $wasteEntries = WasteEntry::whereHas('waste_bank', function (Builder $query) use ($userId) {
             $query->whereHas('waste_bank_users', function (Builder $query) use ($userId) {

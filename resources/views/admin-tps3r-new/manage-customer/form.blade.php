@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label for="customer_address">Alamat</label>
                         <input type="text" class="form-control" id="customer_address" name="customer_address"
-                            value="{{ old('	customer_address') }}">
+                            autocomplete="off" value="{{ old('	customer_address') }}">
                     </div>
                     <div class="form-group">
                         <label for="customer_neighborhood">RT</label>

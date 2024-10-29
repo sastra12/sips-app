@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class CustomerRequest extends FormRequest
+class CustomerStoreTPS3RRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,6 @@ class CustomerRequest extends FormRequest
             'customer_community_association' => 'required|numeric',
             'rubbish_fee' => 'required|numeric',
             'customer_status' => 'required',
-            'waste_id' => 'required',
         ];
     }
 

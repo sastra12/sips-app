@@ -20,7 +20,6 @@
                         <input autocomplete="off" type="text" class="form-control" id="waste_organic_edit"
                             name="waste_organic" value="{{ old('waste_organic') }}">
                     </div>
-                    <input type="hidden" id="waste_bank_id">
                     <input type="hidden" id="waste_entry_id">
                     <div class="form-group">
                         <label for="waste_anorganic">Sampah Anorganik</label>

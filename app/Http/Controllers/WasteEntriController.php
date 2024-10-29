@@ -435,9 +435,15 @@ class WasteEntriController extends Controller
     public function userTPS3RStore(WasteEntriRequest $request)
     {
         $validated = $request->validated();
+        // Dapatkan id waste_bank berdasarkan user yang login
+        $waste_id = WasteBank::whereHas('waste_bank_users', function (Builder $query) {
+            $query->where('user_id', '=', Auth::user()->id);
+        })->pluck('waste_bank_id');
+
         $data = WasteEntry::where('created_at', '=', $request->input('date_entri'))
-            ->where('waste_id', '=', $request->input('waste_bank_id'))
+            ->where('waste_id', '=', $waste_id[0])
             ->exists();
+
         // Cek apakah data tonase dengan tanggal sekian sudah di input
         if ($data) {
             return response()->json([
@@ -451,7 +457,7 @@ class WasteEntriController extends Controller
             $data->waste_residue = $validated['waste_residue'];
             $data->created_at = $validated['date_entri'];
             $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-            $data->waste_id = $request->input('waste_bank_id');
+            $data->waste_id = $waste_id[0];
             $data->user_id = Auth::user()->id;
             $data->save();
             return response()->json([
@@ -501,14 +507,19 @@ class WasteEntriController extends Controller
     // Admin TPS3R
     public function userTPS3RUpdate(UpdateWasteEntriRequest $request, $id)
     {
+        // dd($request);
         $validated = $request->validated();
+        $waste_id = WasteBank::whereHas('waste_bank_users', function (Builder $query) {
+            $query->where('user_id', '=', Auth::user()->id);
+        })->pluck('waste_bank_id');
+
         $data = WasteEntry::query()->find($id);
         $data->waste_organic = $validated['waste_organic'];
         $data->waste_anorganic = $validated['waste_anorganic'];
         $data->waste_residue = $validated['waste_residue'];
         // $data->created_at = $validated['date_entri'];
         $data->waste_total = $request->input('waste_organic') + $request->input('waste_anorganic') + $request->input('waste_residue');
-        $data->waste_id = $request->input('waste_bank_id');
+        $data->waste_id = $waste_id[0];
         $data->user_id = Auth::user()->id;
         $data->save();
         return response()->json([

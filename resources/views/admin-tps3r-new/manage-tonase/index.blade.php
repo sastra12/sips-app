@@ -139,7 +139,6 @@
                 waste_anorganic: $("#waste_anorganic").val(),
                 waste_residue: $("#waste_residue").val(),
                 date_entri: $("#date_entri").val(),
-                waste_bank_id: $("#waste_bank_id").val()
             }
             $.ajax({
                 url: "{{ route('waste-entri-user.store') }}",
@@ -210,8 +209,6 @@
                 waste_organic: $("#waste_organic_edit").val(),
                 waste_anorganic: $("#waste_anorganic_edit").val(),
                 waste_residue: $("#waste_residue_edit").val(),
-                // date_entri: $("#date_entri").val(),
-                waste_bank_id: $("#waste_bank_id").val()
             }
             $.ajax({
                 url: "{{ route('waste-entri-user.update', '') }}/" + id,
@@ -351,9 +348,6 @@
                         data: 'action',
                     },
                 ],
-                createdRow: function(row, data, dataIndex) {
-                    $("#waste_bank_id").val(data.waste_id)
-                }
             });
         });
 

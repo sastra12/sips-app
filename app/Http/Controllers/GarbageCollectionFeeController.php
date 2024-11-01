@@ -27,6 +27,7 @@ class GarbageCollectionFeeController extends Controller
                 'year_payment' => 'required|digits:4',
             ],
             [
+                'year_payment.required' => 'Data tahun tidak boleh kosong',
                 'year_payment.digits' => 'Data tahun harus terdiri dari :digits angka',
             ]
         );

@@ -95,6 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Download pdf detail pembayaran customer
         Route::get('/download-pdf-detail-paid-customer', [GarbageCollectionFeeController::class, 'downloadDetailPaidCustomerByTPS3R'])->name('download-customer-paid-tps3r');
+        Route::get('/download-pdf-view', [GarbageCollectionFeeController::class, 'downloadPdf'])->name('download-pdf-url');
 
         // Download Excel
         Route::get("/export-excel-tonase-by-tps3r", [WasteEntriController::class, 'exportTonaseByTPS3R'])->name('export-tonase-tps3r.data');

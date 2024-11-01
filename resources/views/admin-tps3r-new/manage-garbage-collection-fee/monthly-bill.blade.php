@@ -42,26 +42,38 @@
 
         $("#download-detail-paid").click(function(e) {
             e.preventDefault()
-            downloadPdfDetailPaymentCustomer()
-            $("#modal-form-detail-paid").modal("hide")
-
             // Untuk membuat form isian null
-            $("#year_waste_payment").val("")
-            $("#customerId").val("")
-
-            // Membersihkan list error
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
-
+            downloadPdfDetailPaymentCustomer()
         })
         // Download pdf rincian pembayaran pelanggan
         function downloadPdfDetailPaymentCustomer() {
             let year_payment = $('#year_waste_payment_detail').val();
             let customerId = $('#customerId').val()
-            let downloadUrl = "{{ route('download-customer-paid-tps3r') }}?year_payment=" + year_payment + "&customerId=" +
-                customerId;
+            // let downloadUrl = "{{ route('download-customer-paid-tps3r') }}?year_payment=" + year_payment + "&customerId=" +
+            //     customerId;
+            $.ajax({
+                url: "{{ route('download-customer-paid-tps3r') }}",
+                method: 'GET',
+                data: {
+                    year_payment: year_payment,
+                    customerId: customerId
+                },
+                success: function(response) {
+                    if (response.status == "Error") {
+                        $('#error_list_detail_paid').html('')
+                        $('#error_list_detail_paid').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list_detail_paid').append('<li>' + value + '</li>')
+                        })
+                    } else {
+                        let downloadUrl = "{{ route('download-customer-paid-tps3r') }}?year_payment=" +
+                            year_payment + "&customerId=" + customerId;
+                        window.open(downloadUrl, '_blank');
+                    }
+                }
+            })
             // Redirect browser ke URL download
-            window.open(downloadUrl, '_blank');
+            // window.open(downloadUrl, '_blank');
         }
 
         function detailsWastePayment(idCustomer) {
@@ -69,13 +81,12 @@
             $("#modal-form-detail-paid .modal-title").html("Rincian Pembayaran")
 
             // Untuk membuat form isian null
-            $("#month_monthly_bill").val("")
-            $("#year_waste_payment").val("")
+            $('#year_waste_payment_detail').val("")
             $("#customerId").val(idCustomer)
 
             // Membersihkan list error
-            $('#error_list').html('')
-            $('#error_list').removeClass('alert alert-danger')
+            $('#error_list_detail_paid').html('')
+            $('#error_list_detail_paid').removeClass('alert alert-danger')
         }
 
         function addWastePayment(idCustomer, rubbishFee) {

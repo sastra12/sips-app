@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <ul id="error_list">
+                <ul id="error_list_detail_paid">
 
                 </ul>
                 <form action="" method="post">

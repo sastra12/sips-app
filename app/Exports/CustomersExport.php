@@ -17,7 +17,7 @@ class CustomersExport implements FromView
 
     public function view(): View
     {
-        return view('export-excel.export-customer-tps3r', [
+        return view('export-excel.export-customers', [
             'customers' => $this->customers
         ]);
     }

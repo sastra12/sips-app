@@ -35,6 +35,12 @@
             @yield('content')
         </main>
         <!-- End Main Content -->
+
+        {{-- Footer --}}
+        <footer class="footer">
+            <h6>@Copyright SIGAP RIJIG SAMPAH (SISTEM INFORMASI TANGGAP RIJIG SAMPAH)</h6>
+        </footer>
+        {{-- End Footer --}}
     </div>
     {{-- JQuery --}}
     <script src="{{ asset('js/jquery.min.js') }}"></script>

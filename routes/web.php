@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerByAdminFasilitator;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GarbageCollectionFeeController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VillageController;
 use App\Http\Controllers\WasteBankController;
 use App\Http\Controllers\WasteEntriController;
-use App\Models\WasteBank;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -111,7 +111,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/waste-bank-facilitator', [WasteEntriController::class, 'wasteBankFacilitator'])->name('waste-bank-facilitator.data');
         Route::get('/waste-entri-on-facilitator', [WasteEntriController::class, 'wasteEntriDataOnFacilitator'])->name('waste-entri-facilitator.data');
 
+        // Lihat Data Pelanggan
+        Route::get('/waste-bank-customer-admin-facilitator/data', [CustomerByAdminFasilitator::class, 'wasteBankCustomerData'])->name('waste-bank-customer-onfacilitator.data');
+        Route::get('/customer-details-view-facilitator', [CustomerByAdminFasilitator::class, 'viewCustomerDetailsFacilitator'])->name('customer-details-facilitator.view');
+        Route::get('/customer-by-waste-bank-facilitator/data', [CustomerByAdminFasilitator::class, 'customerDataFacilitator'])->name('customer-by-waste-bank-facilitator.data');
+        Route::resource('customer-by-admin-facilitator', CustomerByAdminFasilitator::class);
+
         // Download Excel
+        // Data Tonase
         Route::get("/export-excel-tonase-by-facilitator", [WasteEntriController::class, 'exportTonaseByFacilitator'])->name('export-tonase-facilitator.data');
+        // Data Pelanggan
+        Route::get("/export-excel-customer-by-facilitator", [CustomerByAdminFasilitator::class, 'exportCustomerByFacilitator'])->name('customer-export-facilitator');
     });
 });

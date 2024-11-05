@@ -91,6 +91,20 @@
                     </span> Data Tonase
                 </a>
             </li>
+            <li class="sidebar-list-item">
+                <a href="{{ route('view-waste-bank-facilitator.view') }}">
+                    <span class="material-icons-outlined">
+                        recycling
+                    </span> Data Iuran
+                </a>
+            </li>
+            <li class="sidebar-list-item">
+                <a href="{{ route('customer-by-admin-facilitator.index') }}">
+                    <span class="material-icons-outlined">
+                        people
+                    </span> Data Pelanggan
+                </a>
+            </li>
         @endif
 
         <li class="sidebar-list-item">

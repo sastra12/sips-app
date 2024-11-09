@@ -99,7 +99,7 @@
                 </a>
             </li>
             <li class="sidebar-list-item">
-                <a href="{{ route('view-waste-bank-facilitator.view') }}">
+                <a href="{{ route('customer-billing-view-facilitator') }}">
                     <span class="material-icons-outlined">
                         analytics
                     </span> Data Iuran

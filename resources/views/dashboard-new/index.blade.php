@@ -52,21 +52,21 @@
                     <span class="card-box-title">Jumlah Pelanggan</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $tps3r['customers'] }}</span>
+                <span class="card-box-subtitle">{{ $tps3r['customers'] }} Orang</span>
             </div>
             <div class="card-box">
                 <div class="card-inner">
-                    <span class="card-box-title">Pelanggan Lunas {{ $tps3r['current_month'] }}</span>
+                    <span class="card-box-title">Lunas Bulan {{ $tps3r['current_month'] }}</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $tps3r['paid'] }}</span>
+                <span class="card-box-subtitle">{{ $tps3r['paid'] }} Orang</span>
             </div>
             <div class="card-box">
                 <div class="card-inner">
-                    <span class="card-box-title">Pelanggan Belum Lunas {{ date('F') }}</span>
+                    <span class="card-box-title">Belum Lunas Bulan {{ date('F') }}</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $tps3r['unpaid'] }}</span>
+                <span class="card-box-subtitle">{{ $tps3r['unpaid'] }} Orang</span>
             </div>
         </div>
     @endif

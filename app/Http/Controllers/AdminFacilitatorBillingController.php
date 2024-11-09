@@ -11,15 +11,10 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\CustomerUnpaidMonthlyBillExport;
 
-class AdminYrpwBillingController extends Controller
+class AdminFacilitatorBillingController extends Controller
 {
-
     public function data()
     {
-        // Carbon::setLocale('id');
-        // $month = Carbon::now()->translatedFormat('F');
-        // $year = Carbon::now()->format('Y');
-
         $wasteBank = WasteBank::query()
             ->select("waste_bank_id", "waste_name", "village_id")
             ->with(['village' => function ($query) {
@@ -30,7 +25,7 @@ class AdminYrpwBillingController extends Controller
         return DataTables::of($wasteBank)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
-                return '<a href="' . route('billing-customer-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Detail Iuran Pelanggan</a>';
+                return '<a href="' . route('billing-customer-details-facilitator', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Detail Iuran Pelanggan</a>';
             })
             ->addColumn('village_name', function ($data) {
                 return $data->village->village_name;
@@ -40,8 +35,9 @@ class AdminYrpwBillingController extends Controller
 
     public function index()
     {
-        return view('admin-yrpw-new.billing-report.index');
+        return view('admin-fasilitator-new.billing-report.index');
     }
+
 
     public function billCustomerDetail(Request $request)
     {
@@ -49,7 +45,7 @@ class AdminYrpwBillingController extends Controller
         $paymentTotal = Customer::query()->where('waste_id', '=', $bankId)->sum('rubbish_fee');
         $wasteName = WasteBank::query()->select('waste_name')->where('waste_bank_id', '=', $bankId)->first();
         // dd($wasteName);
-        return view('admin-yrpw-new.billing-report.billing-customer-detail-view', [
+        return view('admin-fasilitator-new.billing-report.billing-customer-detail-view', [
             'waste_name' => $wasteName,
             'paymentTotal' => $paymentTotal
         ]);

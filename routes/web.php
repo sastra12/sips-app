@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminFacilitatorBillingController;
 use App\Http\Controllers\AdminYrpwBillingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerByAdminFasilitator;
@@ -76,7 +77,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Download Excel
         Route::get("/export-excel-tonase-by-yrpw", [WasteEntriController::class, 'exportTonaseByYRPW'])->name('export-tonase-yrpw.data');
-        Route::get('/export-excel-customer-unpaid-monthly-bill-yrpw', [AdminYrpwBillingController::class, 'exportCustomerUnpaidMonthlyBillYrpw'])->name('export-customer-unpaid-yrpw');
+        Route::get('/export-excel-customer-unpaid-monthly-bill-yrpw', [AdminYrpwBillingController::class, 'exportCustomerUnpaidMonthlyBill'])->name('export-customer-unpaid-yrpw');
     });
 
     // Route Admin TPS3R
@@ -126,6 +127,15 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/customer-details-view-facilitator', [CustomerByAdminFasilitator::class, 'viewCustomerDetailsFacilitator'])->name('customer-details-facilitator.view');
         Route::get('/customer-by-waste-bank-facilitator/data', [CustomerByAdminFasilitator::class, 'customerDataFacilitator'])->name('customer-by-waste-bank-facilitator.data');
         Route::resource('customer-by-admin-facilitator', CustomerByAdminFasilitator::class);
+
+        // Data Iuran
+        Route::get('/bill-report-customer-facilitator', [AdminFacilitatorBillingController::class, 'data'])->name('customer-billing-facilitator');
+        Route::get('/bill-report-customer-view-facilitator', [AdminFacilitatorBillingController::class, 'index'])->name('customer-billing-view-facilitator');
+        Route::get('/bill-report-customer-details-view-facilitator', [AdminFacilitatorBillingController::class, 'billCustomerDetail'])->name('billing-customer-details-facilitator');
+        Route::get('/bill-customer-paid-facilitator', [AdminFacilitatorBillingController::class, 'checkMonthlyBillPaid'])->name('monthlyBillPaidFacilitator');
+        Route::get('/bill-customer-unpaid-facilitator', [AdminFacilitatorBillingController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaidFacilitator');
+        Route::get('/export-excel-customer-unpaid-monthly-bill-facilitator', [AdminFacilitatorBillingController::class, 'exportCustomerUnpaidMonthlyBill'])->name('export-customer-unpaid-facilitator');
+
 
         // Download Excel
         // Data Tonase

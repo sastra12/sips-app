@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DataTables;
 use App\Models\Customer;
+use App\Models\User;
+use App\Models\WasteBank;
 use App\Models\WastePayment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Validator;
@@ -86,7 +88,18 @@ class GarbageCollectionFeeController extends Controller
 
     public function checkMonthlyBillPaidView()
     {
-        return view('admin-tps3r-new.manage-garbage-collection-fee.check-monthly-bill-paid');
+        $bankId = WasteBank::query()->whereHas('waste_bank_users', function (Builder $query) {
+            $query->where('user_id', Auth::user()->id);
+        })->first();
+
+        $paymentTotal = Customer::query()->where('waste_id', '=', $bankId->waste_bank_id)->sum('rubbish_fee');
+
+        return view(
+            'admin-tps3r-new.manage-garbage-collection-fee.check-monthly-bill-paid',
+            [
+                'paymentTotal' => $paymentTotal
+            ]
+        );
     }
 
     public function checkMonthlyBillUnpaidView()
@@ -127,9 +140,10 @@ class GarbageCollectionFeeController extends Controller
                     $query->where('month_payment', $month_payment)
                         ->where('year_payment', $year_payment);
                 })
-                ->with(['waste_payments' => function ($query) {
-                    $query->select("customer_id", "created_at");
-                }])
+                ->withSum(['waste_payments as total_due_this_month' => function ($query) use ($month_payment, $year_payment) {
+                    $query->where('month_payment', '=', $month_payment)
+                        ->where('year_payment', '=', $year_payment);
+                }], 'amount_due')
                 ->orderByDesc('created_at')
                 ->get();
 

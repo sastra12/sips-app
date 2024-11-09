@@ -6,6 +6,8 @@
         <span class="title">Dashboard</span>
     </div>
     <div class="content">
+        <h6>Estimasi Total Iuran Tiap Bulan Rp. {{ number_format($paymentTotal, 2, ',', '.') }}
+        </h6>
         <div class="row">
             <div class="col-md-12">
                 <ul id="error_list">
@@ -132,7 +134,7 @@
                         data: 'customer_community_association',
                     },
                     {
-                        data: 'rubbish_fee',
+                        data: 'total_due_this_month',
                     },
                     {
                         data: 'badge_success',
@@ -143,10 +145,6 @@
                 ]
             })
         })
-
-        function downloadProofOfPyament(customerId) {
-            console.log(customerId)
-        }
 
         function checkMonthlyBillPaid() {
             $.ajax({

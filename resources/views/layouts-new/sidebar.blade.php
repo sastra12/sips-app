@@ -47,6 +47,13 @@
                     </span> Manajemen Tonase
                 </a>
             </li>
+            <li class="sidebar-list-item">
+                <a href="{{ route('customer-billing-view') }}">
+                    <span class="material-icons-outlined">
+                        analytics
+                    </span> Data Iuran
+                </a>
+            </li>
         @elseif (Auth::user()->role_id == 2)
             <li class="sidebar-list-item">
                 <a href="{{ route('waste-entri-user.index') }}">
@@ -94,7 +101,7 @@
             <li class="sidebar-list-item">
                 <a href="{{ route('view-waste-bank-facilitator.view') }}">
                     <span class="material-icons-outlined">
-                        recycling
+                        analytics
                     </span> Data Iuran
                 </a>
             </li>

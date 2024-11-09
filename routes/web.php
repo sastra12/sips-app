@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminYrpwBillingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerByAdminFasilitator;
 use App\Http\Controllers\CustomerController;
@@ -65,8 +66,17 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('waste-entri-data-by-waste-bank/data', [WasteEntriController::class, 'wasteEntriData'])->name('waste-entri-data-by-waste-bank.data');
         Route::resource('waste-entri', WasteEntriController::class);
 
+        // Data Iuran
+        Route::get('/bill-report-customer', [AdminYrpwBillingController::class, 'data'])->name('customer-billing');
+        Route::get('/bill-report-customer-view', [AdminYrpwBillingController::class, 'index'])->name('customer-billing-view');
+        Route::get('/bill-report-customer-details-view', [AdminYrpwBillingController::class, 'billCustomerDetail'])->name('billing-customer-details');
+        Route::get('/bill-customer-paid', [AdminYrpwBillingController::class, 'checkMonthlyBillPaid'])->name('monthlyBillPaidYrpw');
+        Route::get('/bill-customer-unpaid', [AdminYrpwBillingController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaidYrpw');
+
+
         // Download Excel
         Route::get("/export-excel-tonase-by-yrpw", [WasteEntriController::class, 'exportTonaseByYRPW'])->name('export-tonase-yrpw.data');
+        Route::get('/export-excel-customer-unpaid-monthly-bill-yrpw', [AdminYrpwBillingController::class, 'exportCustomerUnpaidMonthlyBillYrpw'])->name('export-customer-unpaid-yrpw');
     });
 
     // Route Admin TPS3R

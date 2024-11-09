@@ -6,8 +6,8 @@
         <span class="title">Dashboard</span>
     </div>
     <div class="content">
-        <h6>Estimasi Total Iuran Tiap Bulan Rp. {{ number_format($paymentTotal, 2, ',', '.') }}
-        </h6>
+        <h6>Estimasi Total Iuran Tiap Bulan Rp. {{ number_format($paymentTotal, 2, ',', '.') }}</h6>
+        <h6 style="margin: 16px 0 16px 0" id="information"></h6>
         <div class="row">
             <div class="col-md-12">
                 <ul id="error_list">
@@ -76,6 +76,7 @@
 @push('script')
     <script>
         let tablePaid, tableUnpaid;
+        let totalPaidThisMonth = 0;
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
@@ -176,6 +177,20 @@
 
                         table.clear().draw();
                         table.rows.add(response.data).draw();
+
+                        response.data.map(function(e) {
+                            totalPaidThisMonth += parseInt(e.total_due_this_month)
+                        })
+
+                        if (totalPaidThisMonth > 0) {
+                            $("#information").text("Total Iuran Bulan " + $("#month_payment").val() +
+                                " sebesar Rp. " +
+                                totalPaidThisMonth.toLocaleString('id-ID', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                }))
+                            totalPaidThisMonth = 0;
+                        }
                     }
                 },
                 error: function(response) {
@@ -189,6 +204,7 @@
             $('#error_list').removeClass('alert alert-danger')
             $("#month_payment").val("")
             $("#year_payment").val("")
+            $("#information").text("")
             table.clear().draw(); // Mengosongkan DataTable
         });
     </script>

@@ -80,6 +80,7 @@ class AdminYrpwBillingController extends Controller
             $month_payment = $request->input('month_payment');
             $year_payment = $request->input('year_payment');
             $customers = Customer::query()
+                ->select("customer_id", "customer_address", "customer_name", "customer_neighborhood", "customer_community_association")
                 ->whereHas('waste_payments', function (Builder $query) use ($month_payment, $year_payment) {
                     $query->where('month_payment', '=', $month_payment)
                         ->where('year_payment', '=', $year_payment);
@@ -98,9 +99,7 @@ class AdminYrpwBillingController extends Controller
                     'message' => 'Tidak ada data untuk bulan dan tahun yang dipilih.'
                 ]);
             }
-            // return response()->json([
-            //     'data' => $customers
-            // ]);
+
             return Datatables::of($customers)
                 ->addIndexColumn()
                 ->addColumn('badge_success', function ($customer) {

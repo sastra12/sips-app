@@ -213,7 +213,7 @@
                         data: 'customer_community_association',
                     },
                     {
-                        data: 'rubbish_fee',
+                        data: 'total_due_this_month',
                     },
                     {
                         data: 'badge_success',
@@ -325,9 +325,6 @@
                                     maximumFractionDigits: 2
                                 }))
                             totalPaidThisMonth = 0;
-                        } else if (totalPaidThisMonth == 0) {
-                            $("#information").text("Total Iuran Bulan " + $("#month_payment_paid").val() +
-                                " sebesar Rp. 0")
                         }
                     }
                 },

@@ -97,7 +97,7 @@
             // Untuk membuat form isian null
             $("#month_monthly_bill").val("")
             $("#year_waste_payment").val("")
-            $("#amount_due").val(rubbishFee)
+            $("#amount_due").val("")
             $("#customerId").val(idCustomer)
 
             // Membersihkan list error

@@ -41,8 +41,7 @@
                     <input type="hidden" id="customerId">
                     <div class="form-group">
                         <label for="amount_due">Jumlah Tagihan</label>
-                        <input autocomplete="off" type="text" class="form-control" id="amount_due" name="amount_due"
-                            disabled="disabled">
+                        <input autocomplete="off" type="text" class="form-control" id="amount_due" name="amount_due">
                     </div>
                     <div class="modal-footer">
                         <button id="save-project" type="submit" class="btn btn-sm btn-primary">Simpan</button>

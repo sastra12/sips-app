@@ -255,13 +255,17 @@ class GarbageCollectionFeeController extends Controller
             $request->all(),
             [
                 'month' => 'required',
-                'year' => 'required|digits:4'
+                'year' => 'required|digits:4',
+                'amount_due' => 'required|numeric|min:4'
             ],
             // Custom Error Messages Validation
             [
                 'month.required' => 'Data bulan tidak boleh kosong',
                 'year.required' => 'Data tahun tidak boleh kosong',
                 'year.digits' => 'Data tahun harus terdiri dari :digits angka',
+                'amount_due.required' => 'Data tagihan tidak boleh kosong',
+                'amount_due.numeric' => 'Data tagihan harus angka',
+                'amount_due.min' => 'Data tagihan minimal terdiri dari :min angka',
             ]
         );
         if ($validated->fails()) {

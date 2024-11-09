@@ -25,9 +25,6 @@ class CustomerController extends Controller
             ->addColumn('action', function ($data) {
                 return '<a href="' . route('customer-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Customer Details</a>';
             })
-            ->addColumn('village_name', function ($data) {
-                return $data->village->village_name;
-            })
             ->make();
     }
 

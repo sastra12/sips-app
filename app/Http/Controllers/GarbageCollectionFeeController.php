@@ -200,9 +200,6 @@ class GarbageCollectionFeeController extends Controller
                     $query->where('month_payment', $month_payment)
                         ->where('year_payment', $year_payment);
                 })
-                ->with(['waste_bank' => function ($query) {
-                    $query->select('waste_bank_id', 'waste_name');
-                }])
                 ->orderByDesc('created_at')
                 ->get();
 

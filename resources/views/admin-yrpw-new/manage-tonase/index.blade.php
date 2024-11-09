@@ -68,7 +68,7 @@
                         data: 'waste_name',
                     },
                     {
-                        data: 'village',
+                        data: 'village.village_name',
                     },
                     {
                         data: 'action',

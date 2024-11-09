@@ -27,9 +27,6 @@ class AdminFacilitatorBillingController extends Controller
             ->addColumn('action', function ($data) {
                 return '<a href="' . route('billing-customer-details-facilitator', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Detail Iuran Pelanggan</a>';
             })
-            ->addColumn('village_name', function ($data) {
-                return $data->village->village_name;
-            })
             ->make();
     }
 

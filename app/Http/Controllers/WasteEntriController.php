@@ -35,9 +35,6 @@ class WasteEntriController extends Controller
                 <a href="' . route('waste-entri-details.view', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm btn-info custom-btn-sm">Tonase Details</a>
             ';
             })
-            ->addColumn('village', function ($data) {
-                return $data->village->village_name;
-            })
             ->make();
     }
 
@@ -191,7 +188,7 @@ class WasteEntriController extends Controller
 
     public function wasteEntriDetailsFacilitator()
     {
-        return view('admin-fasilitator-new.waste-entri-details-facilitator');
+        return view('admin-fasilitator-new.tonase-data.waste-entri-details-facilitator');
     }
 
     // Admin YRPW Export Data By Month
@@ -393,7 +390,7 @@ class WasteEntriController extends Controller
     // Admin Tonase
     public function viewWasteBankFacilitator()
     {
-        return view('admin-fasilitator-new.index');
+        return view('admin-fasilitator-new.tonase-data.index');
     }
 
     public function create()

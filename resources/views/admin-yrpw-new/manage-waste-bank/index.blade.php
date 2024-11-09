@@ -293,7 +293,7 @@
                         data: 'waste_name',
                     },
                     {
-                        data: 'waste_bank_village',
+                        data: 'village.village_name',
                     },
                     {
                         data: 'action',

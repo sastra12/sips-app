@@ -36,9 +36,6 @@ class ManageCustomerByTPS3RController extends Controller
                 <button onclick="deleteDataCustomerByTPS3R(' . $data->customer_id . ')" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>  
             ';
             })
-            ->addColumn('waste_name', function ($data) {
-                return $data->waste_bank->waste_name;
-            })
             ->make();
     }
 

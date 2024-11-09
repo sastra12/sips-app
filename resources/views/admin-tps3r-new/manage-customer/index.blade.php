@@ -261,8 +261,7 @@
                         data: 'DT_RowIndex',
                     },
                     {
-                        // buat penomoran
-                        data: 'waste_name',
+                        data: 'waste_bank.waste_name',
                     },
                     {
                         data: 'customer_name',

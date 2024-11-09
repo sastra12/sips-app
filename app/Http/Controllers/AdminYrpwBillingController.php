@@ -16,10 +16,6 @@ class AdminYrpwBillingController extends Controller
 
     public function data()
     {
-        // Carbon::setLocale('id');
-        // $month = Carbon::now()->translatedFormat('F');
-        // $year = Carbon::now()->format('Y');
-
         $wasteBank = WasteBank::query()
             ->select("waste_bank_id", "waste_name", "village_id")
             ->with(['village' => function ($query) {
@@ -31,9 +27,6 @@ class AdminYrpwBillingController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
                 return '<a href="' . route('billing-customer-details', ['bankId' => $data->waste_bank_id]) . '" class="btn btn-sm custom-btn-sm btn-info">Detail Iuran Pelanggan</a>';
-            })
-            ->addColumn('village_name', function ($data) {
-                return $data->village->village_name;
             })
             ->make();
     }

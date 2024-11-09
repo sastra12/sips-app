@@ -28,9 +28,6 @@ class WasteBankController extends Controller
                 <button onclick="createDataTonase(' . $data->waste_bank_id . ')" class="btn btn-sm custom-btn-sm btn-warning">Tambah Tonase</button>
             ';
             })
-            ->addColumn('waste_bank_village', function ($data) {
-                return $data->village->village_name;
-            })
             ->make();
     }
 

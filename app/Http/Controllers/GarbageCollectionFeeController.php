@@ -144,6 +144,11 @@ class GarbageCollectionFeeController extends Controller
                     $query->where('month_payment', '=', $month_payment)
                         ->where('year_payment', '=', $year_payment);
                 }], 'amount_due')
+                ->with(['waste_payments' => function ($query) use ($month_payment, $year_payment) {
+                    $query->select("payment_id", "customer_id", "created_at")
+                        ->where('month_payment', '=', $month_payment)
+                        ->where('year_payment', '=', $year_payment);
+                }])
                 ->orderByDesc('created_at')
                 ->get();
 
@@ -161,6 +166,12 @@ class GarbageCollectionFeeController extends Controller
                 })
                 ->addColumn('paid_date', function ($customer) {
                     return date('d F Y', strtotime($customer->waste_payments[0]->created_at));
+                })
+                ->addColumn('action', function ($customer) {
+                    // return $customer->waste_payments[0]->payment_id;
+                    return  '
+                        <button onclick="deleteDataPayment(`' . $customer->waste_payments[0]->payment_id  . '`)" class="btn btn-sm custom-btn-sm btn-danger">Hapus</button>
+                    ';
                 })
                 ->rawColumns(['badge_success', 'action'])
                 ->make();
@@ -331,5 +342,11 @@ class GarbageCollectionFeeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function deletedWastePayment($id)
+    {
+        $data = WastePayment::query()->where('payment_id', $id);
+        $data->delete();
     }
 }

@@ -64,6 +64,7 @@
                                     <th scope="col">Nominal</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Tanggal Bayar</th>
+                                    <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
                         </table>
@@ -75,7 +76,7 @@
 @endsection
 @push('script')
     <script>
-        let tablePaid, tableUnpaid;
+        let table;
         let totalPaidThisMonth = 0;
         $(document).ready(function() {
             $.ajaxSetup({
@@ -118,6 +119,10 @@
                         "targets": 7,
                         "className": "text-center"
                     },
+                    {
+                        "targets": 8,
+                        "className": "text-center"
+                    },
                 ],
                 columns: [{
                         data: 'DT_RowIndex',
@@ -142,6 +147,9 @@
                     },
                     {
                         data: 'paid_date',
+                    },
+                    {
+                        data: 'action',
                     },
                 ]
             })
@@ -170,6 +178,8 @@
                             button: "Ok!",
                             dangerMode: true,
                         });
+                        // Jika kosong maka reset informationnya
+                        $("#information").text("")
                     } else {
                         // Hapus list errornya
                         $('#error_list').empty()
@@ -207,5 +217,45 @@
             $("#information").text("")
             table.clear().draw(); // Mengosongkan DataTable
         });
+
+        function deleteDataPayment(payment_id) {
+            swal({
+                    title: "Apakah kamu yakin?",
+                    text: "Setelah dihapus, Anda tidak akan dapat memulihkan data ini!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                                url: "{{ route('deletePayment', '') }}/" + payment_id,
+                                method: 'DELETE',
+                            })
+                            .done((response) => {
+                                swal("Sukses menghapus data", {
+                                        icon: "success",
+                                        button: "Ok!",
+                                    })
+                                    .then(willDelete => {
+                                        if (willDelete) {
+                                            table.clear().draw();
+                                            checkMonthlyBillPaid()
+                                        }
+                                    });;
+
+                            })
+                            .fail((errors) => {
+                                swal("Gagal menghapus data", {
+                                    icon: "warning",
+                                });
+                                return;
+                            });
+
+                    } else {
+                        swal("Data tetap aman");
+                    }
+                });
+        }
     </script>
 @endpush

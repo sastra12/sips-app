@@ -103,6 +103,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/monthly-bill-paid', [GarbageCollectionFeeController::class, 'checkMonthlyBillPaid'])->name('monthlyBillPaid');
         Route::get('/monthly-bill-unpaid', [GarbageCollectionFeeController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaid');
         Route::post('/monthly-bill', [GarbageCollectionFeeController::class, 'store'])->name('store-payment');
+        Route::delete('/monthly-bill-paid/{id}', [GarbageCollectionFeeController::class, 'deletedWastePayment'])->name('deletePayment');
 
         // Download pdf detail pembayaran customer
         Route::get('/download-pdf-detail-paid-customer', [GarbageCollectionFeeController::class, 'downloadDetailPaidCustomerByTPS3R'])->name('download-customer-paid-tps3r');

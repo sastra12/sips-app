@@ -125,10 +125,15 @@ class UserController extends Controller
 
     public function destroy($id)
     {
-        $data = User::query()->find($id);
-        DB::transaction(function () use ($data) {
+        DB::beginTransaction();
+        try {
+            $data = User::query()->find($id);
             $data->user_waste_banks()->detach();
             $data->delete();
-        });
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

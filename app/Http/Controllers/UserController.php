@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use DataTables;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -56,22 +57,30 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         // Validation dengan form request
-        $validated = $request->safe();
-        $data = new User();
-        $data->name = $validated['name'];
-        // kenapa kok pakai $request->input, karena username dan passwordnya tidak di validasi
-        $data->username = $request->input('username');
-        $data->password = bcrypt($request->input('password'));
-        $data->role_id = $validated['role_user'];
-        $data->save();
+        DB::beginTransaction();
+        try {
+            $validated = $request->safe();
+            $data = new User();
+            $data->name = $validated['name'];
+            // kenapa kok pakai $request->input, karena username dan passwordnya tidak di validasi
+            $data->username = $request->input('username');
+            $data->password = bcrypt($request->input('password'));
+            $data->role_id = $validated['role_user'];
+            $data->save();
 
-        // Menyimpan ke tabel intermediate
-        $data->user_waste_banks()->attach($request->input('waste_name'));
+            // Menyimpan ke tabel intermediate
+            $data->user_waste_banks()->attach($request->input('waste_name'));
+            DB::commit();
 
-        return response()->json([
-            'status' => 'Success',
-            'message' => 'Success Added Data'
-        ]);
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Success Added Data'
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
         // }
     }
 
@@ -117,7 +126,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $data = User::query()->find($id);
-        $data->user_waste_banks()->detach();
-        $data->delete();
+        DB::transaction(function () use ($data) {
+            $data->user_waste_banks()->detach();
+            $data->delete();
+        });
     }
 }

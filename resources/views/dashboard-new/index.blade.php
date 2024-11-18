@@ -12,28 +12,28 @@
                     <span class="card-box-title">Desa Dampingan</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $yrpw['villages'] }}</span>
+                <span class="card-box-subtitle">{{ $yrpw['villages'] }} Desa</span>
             </div>
             <div class="card-box">
                 <div class="card-inner">
                     <span class="card-box-title">TPS3R</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $yrpw['waste_banks'] }}</span>
+                <span class="card-box-subtitle">{{ $yrpw['waste_banks'] }} TPS3R</span>
             </div>
             <div class="card-box">
                 <div class="card-inner">
                     <span class="card-box-title">Pelanggan</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $yrpw['customers'] }}</span>
+                <span class="card-box-subtitle">{{ $yrpw['customers'] }} Orang</span>
             </div>
             <div class="card-box">
                 <div class="card-inner">
                     <span class="card-box-title">Jumlah Admin</span>
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
-                <span class="card-box-subtitle">{{ $yrpw['users'] }}</span>
+                <span class="card-box-subtitle">{{ $yrpw['users'] }} Orang</span>
             </div>
         </div>
         {{-- Chart Tonase --}}
@@ -67,6 +67,30 @@
                     <span class="material-icons-outlined"> inventory_2 </span>
                 </div>
                 <span class="card-box-subtitle">{{ $tps3r['unpaid'] }} Orang</span>
+            </div>
+        </div>
+    @elseif (Auth::user()->role_id == 3)
+        <div class="main-cards-second">
+            <div class="card-box">
+                <div class="card-inner">
+                    <span class="card-box-title">Jumlah TPS3R</span>
+                    <span class="material-icons-outlined"> inventory_2 </span>
+                </div>
+                <span class="card-box-subtitle">{{ $facilitator['waste_banks'] }} TPS3R</span>
+            </div>
+            <div class="card-box">
+                <div class="card-inner">
+                    <span class="card-box-title">Desa Dampingan</span>
+                    <span class="material-icons-outlined"> inventory_2 </span>
+                </div>
+                <span class="card-box-subtitle">{{ $facilitator['villages'] }} Desa</span>
+            </div>
+            <div class="card-box">
+                <div class="card-inner">
+                    <span class="card-box-title">Pelanggan</span>
+                    <span class="material-icons-outlined"> inventory_2 </span>
+                </div>
+                <span class="card-box-subtitle">{{ $facilitator['customers'] }} Orang</span>
             </div>
         </div>
     @endif

@@ -67,6 +67,12 @@ class DashboardController extends Controller
                 'paid' => $customersPaid,
                 'unpaid' => $customersUnpaid,
                 'current_month' => $month
+            ],
+
+            'facilitator' => [
+                'villages' => $villages,
+                'waste_banks' => $waste_banks,
+                'customers' => $customers
             ]
         ]);
     }

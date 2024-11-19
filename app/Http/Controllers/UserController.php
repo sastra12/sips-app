@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
 use DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -20,9 +21,9 @@ class UserController extends Controller
             }, 'user_waste_banks' => function ($query) {
                 $query->select('waste_name');
             }])
+            ->where('id', '!=', Auth::user()->id)
             ->orderByDesc('created_at')
             ->get();
-
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()

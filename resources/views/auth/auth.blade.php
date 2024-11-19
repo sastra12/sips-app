@@ -18,9 +18,12 @@
     <link rel="stylesheet" href="{{ asset('AdminLTE-3/dist/css/adminlte.min.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page images-bg">
+    <div class="background-image-login"></div>
     <div class="login-box">
         <div class="card">
             <div class="card-body login-card-body">

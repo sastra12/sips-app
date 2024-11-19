@@ -26,6 +26,10 @@ body {
     font-size: 35px;
 }
 
+.images-bg {
+    background-image: url("../images/YRPW-Login.jpg");
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: 300px 1fr 1fr 1fr;

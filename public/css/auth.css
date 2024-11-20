@@ -1,0 +1,11 @@
+html,
+body {
+    height: 100%;
+    /* Pastikan elemen HTML dan Body memiliki tinggi penuh */
+    margin: 0;
+}
+
+.container {
+    height: 100%;
+    /* Pastikan kontainer mengambil tinggi penuh */
+}

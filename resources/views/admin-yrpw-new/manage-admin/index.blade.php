@@ -49,10 +49,11 @@
         })
 
         // Value for username and password
-        $("#name").on("keyup", function() {
-            let inputName = $("#name").val().toLowerCase().split(" ").join("")
+        $("#name").on("change", function() {
+            const inputName = $("#name").val().toLowerCase().split(" ").join("")
+            const generateChar = (Math.random() + 1).toString(36).substring(7)
             $("#username").val(inputName);
-            $("#password").val(inputName);
+            $("#password").val(inputName + '-' + generateChar);
         })
 
         function createDataAdmin() {

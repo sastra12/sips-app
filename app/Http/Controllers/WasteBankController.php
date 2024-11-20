@@ -93,7 +93,18 @@ class WasteBankController extends Controller
 
     public function destroy($id)
     {
-        $data = WasteBank::query()->find($id);
-        $data->delete();
+        try {
+            $data = WasteBank::query()->find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 'Success',
+                'message' => "Sukses menghapus data"
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'False',
+                'message' => 'Gagal menghapus data'
+            ]);
+        }
     }
 }

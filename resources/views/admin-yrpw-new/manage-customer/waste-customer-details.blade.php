@@ -149,6 +149,7 @@
                     customer_community_association: $("#customer_community_association").val(),
                     rubbish_fee: $("#rubbish_fee").val(),
                     customer_status: $("#customer_status").val(),
+                    waste_id: bankId,
                 },
                 success: function(response) {
                     if (response.status == "Success") {
@@ -190,18 +191,23 @@
                                 method: 'DELETE',
                             })
                             .done((response) => {
-                                swal("Sukses menghapus data", {
-                                    icon: "success",
-                                });
-                                table.ajax.reload();
+                                if (response.status == "Success") {
+                                    swal({
+                                        title: "Success!",
+                                        text: response.message,
+                                        icon: "success",
+                                        button: "Ok!",
+                                    });
+                                    table.ajax.reload();
+                                } else if (response.status == "False") {
+                                    swal({
+                                        title: "Failed!",
+                                        text: response.message,
+                                        icon: "error",
+                                        button: "Ok!",
+                                    });
+                                }
                             })
-                            .fail((errors) => {
-                                swal("Gagal menghapus data", {
-                                    icon: "warning",
-                                });
-                                return;
-                            });
-
                     } else {
                         swal("Data tetap aman", {
                             icon: "success"

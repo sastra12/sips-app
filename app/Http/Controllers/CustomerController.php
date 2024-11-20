@@ -115,7 +115,19 @@ class CustomerController extends Controller
 
     public function destroy($id)
     {
-        $data = Customer::query()->find($id);
-        $data->delete();
+        try {
+            $data = Customer::query()->find($id);
+            $data->delete();
+            return response()->json([
+                'status' => 'Success',
+                'message' => "Sukses menghapus data"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 'False',
+                'message' => 'Gagal menghapus data'
+            ]);
+        }
     }
 }

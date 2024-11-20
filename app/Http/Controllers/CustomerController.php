@@ -106,6 +106,7 @@ class CustomerController extends Controller
         $data->customer_community_association = $validated['customer_community_association'];
         $data->rubbish_fee = $validated['rubbish_fee'];
         $data->customer_status = $validated['customer_status'];
+        $data->waste_id = $validated['waste_id'];
         $data->save();
         return response()->json([
             'status' => 'Success',

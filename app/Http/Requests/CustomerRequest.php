@@ -32,6 +32,7 @@ class CustomerRequest extends FormRequest
             'customer_community_association' => 'required|numeric',
             'rubbish_fee' => 'required|numeric',
             'customer_status' => 'required',
+            'waste_id' => 'required',
         ];
     }
 

@@ -132,9 +132,16 @@ class UserController extends Controller
             $data->user_waste_banks()->detach();
             $data->delete();
             DB::commit();
+            return response()->json([
+                'status' => 'Success',
+                'message' => "Sukses menghapus data"
+            ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            throw $th;
+            return response()->json([
+                'status' => 'False',
+                'message' => 'Gagal menghapus data'
+            ]);
         }
     }
 }

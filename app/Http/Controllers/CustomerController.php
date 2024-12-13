@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CustomerRequest;
+use App\Jobs\ImportCsvCustomersToDatabaseJob;
 use App\Models\Customer;
 use App\Models\WasteBank;
 use Illuminate\Http\Request;
 use DataTables;
+use Exception;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -33,8 +38,12 @@ class CustomerController extends Controller
         return view('admin-yrpw-new.manage-customer.index',);
     }
 
-    public function viewCustomerDetails()
+    public function viewCustomerDetails(Request $request)
     {
+        $waste_id = WasteBank::query()->find($request->input('bankId'));
+        if (!$waste_id) {
+            abort(404);
+        }
         $waste_banks = WasteBank::query()->get();
         $customer_status = ['Rumah Tangga', 'Non Rumah Tangga'];
         return view('admin-yrpw-new.manage-customer.waste-customer-details', [
@@ -83,6 +92,101 @@ class CustomerController extends Controller
             'status' => 'Success',
             'message' => 'Success Added Data'
         ]);
+    }
+
+    public function uploadFileCustomer(Request $request)
+    {
+        try {
+            $wasteId = $request->input('bankId');
+            $validated = Validator::make(
+                $request->all(),
+                [
+                    'file' => 'required|mimes:csv,txt',
+                    'bankId' => 'required'
+                ],
+                [
+                    'file.required' => 'File tidak boleh kosong',
+                    'file.mimes' => 'File harus dalam format csv',
+                    'bankId.required' => 'Id TPS tidak boleh kosong'
+                ]
+            );
+
+            if ($validated->fails()) {
+                return response()->json([
+                    'status' => 'Error',
+                    'errors' => $validated->messages()
+                ]);
+            }
+
+            if ($request->hasFile('file')) {
+                // nama file
+                $fileName = $request->file('file')->getClientOriginalName();
+                // path file
+                $fileWithPath = public_path('uploads') . '/' . $fileName;
+                // cek apakah nama file sudah ada di directory
+                if (!file_exists($fileWithPath)) {
+                    $request->file('file')->move(public_path('uploads'), $fileName);
+                }
+                // load file csv
+                $records = array_map('str_getcsv', file($fileWithPath));
+                $header = null;
+                $dataFromCsv = [];
+                foreach ($records as $record) {
+                    if ($header == null) {
+                        $header = $record;
+                    } else {
+                        $dataFromCsv[] = $record;
+                    }
+                }
+                // pecah data dengan chunk
+                $dataFromCsv = array_chunk($dataFromCsv, 500);
+                $batch = Bus::batch([])->dispatch();
+
+                // looping through each 1000/300 employess
+                foreach ($dataFromCsv as $index => $dataCsv) {
+                    // looping through each employess data
+                    foreach ($dataCsv as $data) {
+                        $employeeData[$index][] = array_combine($header, $data);
+                    }
+                    $batch->add(new ImportCsvCustomersToDatabaseJob($employeeData[$index], $wasteId));
+                }
+                session([
+                    'batchId' => $batch->id,
+                    'message' => 'Proses di lakukan di belakang',
+                    'fileName' => $fileWithPath
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            dd($e);
+        }
+    }
+
+    public function progress()
+    {
+        return view('progress.progress-yrpw');
+    }
+
+    public function batchStatus(Request $request)
+    {
+        // Ambil batch id dari session
+        $batchId = $request->session()->get('batchId');
+        $fileName = $request->session()->get('fileName');
+        $batch = Bus::findBatch($batchId);
+        if ($batch) {
+            if ($batch->finished()) {
+                $request->session()->forget('message');
+                $request->session()->forget('batchId');
+                unlink($fileName);
+            }
+            return response()->json([
+                'total_jobs' => $batch->totalJobs,
+                'processed_jobs' => $batch->processedJobs(),
+                'progress' => $batch->progress(),
+                'pending_jobs' => $batch->pendingJobs,
+                'status' => $batch->finished() ? 'Selesai' : 'Sedang diproses'
+            ]);
+        }
     }
 
     public function show($id)

@@ -17,6 +17,8 @@
                         @endforeach
                         <button onclick="createDataCustomer()" class="btn btn-sm custom-btn-sm btn-success">Tambah Data
                             Pelanggan</button>
+                        <button onclick="uploadDataCustomer()" class="btn btn-sm custom-btn-sm btn-info">Upload Data
+                            Pelanggan</button>
                     </div>
                     <div class="card-body table-responsive">
                         <table class="table table-striped">
@@ -39,6 +41,7 @@
         </div>
     </div>
     @includeIf('admin-yrpw-new.manage-customer.form')
+    @includeIf('admin-yrpw-new.manage-customer.form-file')
 @endsection
 
 @push('script')
@@ -55,6 +58,44 @@
                 updateDataCustomer()
             }
         })
+
+        $("#save-file-btn").click(function(e) {
+            e.preventDefault()
+
+            let formData = new FormData()
+            const file = $("#customer_file").prop('files')[0]
+            formData.append('file', file)
+            formData.append('bankId', bankId)
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "{{ route('file-customer-yrpw') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function(response) {
+                    if (response.status == "Error") {
+                        $('#error_list_file').html('')
+                        $('#error_list_file').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list_file').append('<li>' + value + '</li>')
+                        })
+                    } else {
+                        window.location.href = "{{ route('progress-view-yrpw') }}";
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            })
+        })
+
+        function uploadDataCustomer() {
+            $("#modal-form-file").modal("show")
+            $("#modal-form-file .modal-title").html("Tambah Data Pelanggan")
+        }
 
         function createDataCustomer() {
             // untuk menampilkan modal dan ganti title
@@ -123,7 +164,7 @@
                             button: "Ok!",
                         });
                         table.ajax.reload()
-                    } else if (response.status = "Error") {
+                    } else if (response.status == "Error") {
                         $('#error_list').html('')
                         $('#error_list').addClass('alert alert-danger')
                         $.each(response.errors, function(key, value) {

@@ -60,6 +60,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::resource('customer', CustomerController::class);
         Route::get('/customer-details-view', [CustomerController::class, 'viewCustomerDetails'])->name('customer-details.view');
         Route::get('/customer-by-waste-bank/data', [CustomerController::class, 'customerData'])->name('customer-by-waste-bank.data');
+        Route::post('/upload-file-customer-yrpw', [CustomerController::class, 'uploadFileCustomer'])->name('file-customer-yrpw');
+        Route::get('/progress', [CustomerController::class, 'progress'])->name('progress-view-yrpw');
+        Route::get('/batch-status', [CustomerController::class, 'batchStatus'])->name('batch-status-yrpw');
 
         // Manajemen Tonase
         Route::get('/waste-bank-waste-entri/data', [WasteEntriController::class, 'data'])->name('waste-entri.data');
@@ -93,6 +96,9 @@ Route::group(['middleware' => 'auth'], function () {
         // Manajemen Pelanggan By Admin TPS3R
         Route::get('/admin-tps3r-customer/data', [ManageCustomerByTPS3RController::class, 'data'])->name('admin-tps3r-customers.data');
         Route::resource('admin-tps3r-customer', ManageCustomerByTPS3RController::class);
+        Route::post('/upload-file-customer-tps3r', [ManageCustomerByTPS3RController::class, 'uploadFileCustomer'])->name('file-customer-tps3r');
+        Route::get('/progress-tps3r', [ManageCustomerByTPS3RController::class, 'progress'])->name('progress-view-tps3r');
+        Route::get('/batch-status-tps3r', [ManageCustomerByTPS3RController::class, 'batchStatus'])->name('batch-status-tps3r');
 
 
         // Manajemen Iuran
@@ -137,11 +143,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/bill-customer-unpaid-facilitator', [AdminFacilitatorBillingController::class, 'checkMonthlyBillUnpaid'])->name('monthlyBillUnpaidFacilitator');
         Route::get('/export-excel-customer-unpaid-monthly-bill-facilitator', [AdminFacilitatorBillingController::class, 'exportCustomerUnpaidMonthlyBill'])->name('export-customer-unpaid-facilitator');
 
-
         // Download Excel
         // Data Tonase
         Route::get("/export-excel-tonase-by-facilitator", [WasteEntriController::class, 'exportTonaseByFacilitator'])->name('export-tonase-facilitator.data');
         // Data Pelanggan
         Route::get("/export-excel-customer-by-facilitator", [CustomerByAdminFasilitator::class, 'exportCustomerByFacilitator'])->name('customer-export-facilitator');
     });
+});
+
+Route::fallback(function () {
+    abort(404);
 });

@@ -10,9 +10,11 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-sm btn-success">Tambah Data
+                        <button onclick="createDataCustomerByTPS3R()" class="btn btn-sm custom-btn-sm btn-success">Tambah Data
                             Pelanggan</button>
-                        <button id="downloadDataCustomer" class="btn btn-sm btn-info">Download Data
+                        <button id="downloadDataCustomer" class="btn btn-sm custom-btn-sm btn-info">Download Data
+                            Pelanggan</button>
+                        <button onclick="uploadDataCustomer()" class="btn btn-sm custom-btn-sm btn-primary">Upload Data
                             Pelanggan</button>
                     </div>
                     <div class="card-body table-responsive">
@@ -38,6 +40,7 @@
         </div>
     </div>
     @includeIf('admin-tps3r-new.manage-customer.form')
+    @includeIf('admin-tps3r-new.manage-customer.form-file')
 @endsection
 
 @push('script')
@@ -51,6 +54,43 @@
                 updateDataCustomerByTPS3R()
             }
         })
+
+        $("#save-file-btn").click(function(e) {
+            e.preventDefault()
+
+            let formData = new FormData()
+            const file = $("#customer_file").prop('files')[0]
+            formData.append('file', file)
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "{{ route('file-customer-tps3r') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                success: function(response) {
+                    if (response.status == "Error") {
+                        $('#error_list_file').html('')
+                        $('#error_list_file').addClass('alert alert-danger')
+                        $.each(response.errors, function(key, value) {
+                            $('#error_list_file').append('<li>' + value + '</li>')
+                        })
+                    } else {
+                        window.location.href = "{{ route('progress-view-tps3r') }}";
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            })
+        })
+
+        function uploadDataCustomer() {
+            $("#modal-form-file").modal("show")
+            $("#modal-form-file .modal-title").html("Tambah Data Pelanggan")
+        }
 
         function createDataCustomerByTPS3R() {
             // untuk menampilkan modal dan ganti title
@@ -285,8 +325,15 @@
                         data: 'action',
                     },
                 ],
-
+                initComplete: function() {
+                    if (table.data().count() === 0) {
+                        $("#downloadDataCustomer").prop('disabled', true)
+                    } else {
+                        $("#downloadDataCustomer").prop('disabled', false)
+                    }
+                }
             });
         });
+        // cek length
     </script>
 @endpush

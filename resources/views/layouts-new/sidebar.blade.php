@@ -54,6 +54,13 @@
                     </span> Data Iuran
                 </a>
             </li>
+            <li class="sidebar-list-item">
+                <a href="{{ route('progress-view-yrpw') }}">
+                    <span class="material-icons-outlined">
+                        sync
+                    </span> Progress
+                </a>
+            </li>
         @elseif (Auth::user()->role_id == 2)
             <li class="sidebar-list-item">
                 <a href="{{ route('waste-entri-user.index') }}">
@@ -88,6 +95,13 @@
                     <span class="material-icons-outlined">
                         unpublished
                     </span> Tagihan Belum Lunas
+                </a>
+            </li>
+            <li class="sidebar-list-item">
+                <a href="{{ route('progress-view-tps3r') }}">
+                    <span class="material-icons-outlined">
+                        sync
+                    </span> Progress
                 </a>
             </li>
         @else

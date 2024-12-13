@@ -121,8 +121,14 @@
                     {
                         data: 'customer_status',
                     },
-                ]
-
+                ],
+                initComplete: function() {
+                    if (table.data().count() === 0) {
+                        $("#downloadDataCustomer").prop('disabled', true)
+                    } else {
+                        $("#downloadDataCustomer").prop('disabled', false)
+                    }
+                }
             });
         });
     </script>

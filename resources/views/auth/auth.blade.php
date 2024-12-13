@@ -13,10 +13,11 @@
 </head>
 
 <body>
-    <div class="container h-100">
+    <div class="container ">
         <div class="row justify-content-center align-items-center h-100">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="card">
+                    <img src="images/yrpw.jpg" alt="...">
                     <div class="card-body login-card-body">
                         @if (session('status'))
                             <div class="alert alert-danger">

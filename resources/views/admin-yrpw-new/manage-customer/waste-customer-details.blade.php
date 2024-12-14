@@ -95,6 +95,10 @@
         function uploadDataCustomer() {
             $("#modal-form-file").modal("show")
             $("#modal-form-file .modal-title").html("Tambah Data Pelanggan")
+
+            // Membersihkan list error
+            $('#error_list_file').html('')
+            $('#error_list_file').removeClass('alert alert-danger')
         }
 
         function createDataCustomer() {

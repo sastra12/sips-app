@@ -132,7 +132,7 @@ class CustomerController extends Controller
                 $header = null;
                 $dataFromCsv = [];
                 foreach ($records as $record) {
-                    if ($header == null) {
+                    if (!$header) {
                         $header = $record;
                     } else {
                         $dataFromCsv[] = $record;

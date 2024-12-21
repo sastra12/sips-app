@@ -22,8 +22,7 @@ class CustomerController extends Controller
             ->with(['village' => function ($query) {
                 $query->select("village_id", "village_name");
             }])
-            ->orderByDesc("created_at")
-            ->get();
+            ->orderByDesc("created_at");
 
         return Datatables::of($listdata)
             ->addIndexColumn()
@@ -57,8 +56,8 @@ class CustomerController extends Controller
         $waste_id = $request->input('bankId');
         $listdata = Customer::query()
             ->where('waste_id', '=', $waste_id)
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
+
         return Datatables::of($listdata)
             ->addIndexColumn()
             ->addColumn('action', function ($data) {
@@ -132,7 +131,7 @@ class CustomerController extends Controller
                 $header = null;
                 $dataFromCsv = [];
                 foreach ($records as $record) {
-                    if (!$header) {
+                    if ($header == null) {
                         $header = $record;
                     } else {
                         $dataFromCsv[] = $record;

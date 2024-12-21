@@ -271,6 +271,7 @@
             table = $('.table').DataTable({
                 ordering: false,
                 processing: true,
+                serverSide: true,
                 autowidth: false,
                 ajax: {
                     url: "{{ route('customer-by-waste-bank.data') }}",

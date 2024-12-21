@@ -102,15 +102,6 @@
         let urlParams = new URLSearchParams(window.location.search);
         let bankId = urlParams.get('bankId');
 
-        // $("#save-project-tonase").click(function(e) {
-        //     e.preventDefault()
-        //     if ($("#waste_entry_id").val() == null || $("#waste_entry_id").val() == "") {
-        //         storeDataTonaseYRPW()
-        //     } else {
-        //         updateDataTonaseYRPW()
-        //     }
-        // })
-
         // Simpan data tonase
         $("#save-project-tonase").click(function(e) {
             e.preventDefault()
@@ -285,6 +276,7 @@
             table = $('.table').DataTable({
                 ordering: false,
                 processing: true,
+                serverSide: true,
                 autowidth: false,
                 ajax: {
                     url: "{{ route('waste-entri-data-by-waste-bank.data') }}",
@@ -374,11 +366,6 @@
             let end_date = $('#end_date').val();
             let waste_id = bankId
 
-            // Validasi inputan tidak boleh kosong
-            // if (!start_date || !end_date) {
-            //     alert('Semua input harus diisi sebelum mendownload file!');
-            //     return;
-            // }
             let downloadUrl = "{{ route('export-tonase-yrpw.data') }}?start_date=" + start_date + "&end_date=" +
                 end_date + "&waste_id=" + bankId;
             // Redirect browser ke URL download

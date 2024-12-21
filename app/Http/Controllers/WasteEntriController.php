@@ -24,8 +24,7 @@ class WasteEntriController extends Controller
             ->with(['village' => function ($query) {
                 $query->select("village_id", "village_name");
             }])
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
 
         return Datatables::of($wasteBankData)
             // for number
@@ -38,11 +37,13 @@ class WasteEntriController extends Controller
             ->make();
     }
 
+    // Admin YRPW
     public function viewWasteEntriDetails()
     {
         return view('admin-yrpw-new.manage-tonase.waste-entri-details');
     }
 
+    // Admin YRPW
     public function wasteEntriData(Request $request)
     {
         $waste_id = $request->input('bankId');
@@ -62,7 +63,7 @@ class WasteEntriController extends Controller
             $query->where('created_at', '<=', $end_date);
         }
 
-        $listdata = $query->orderByDesc('created_at')->get();
+        $listdata = $query->orderByDesc('created_at');
 
         return Datatables::of($listdata)
             // for number
@@ -81,8 +82,6 @@ class WasteEntriController extends Controller
             })
             ->make();
     }
-
-
 
     // Admin TPS3R
     public function dataTonaseByAdminTPS3R(Request $request)

@@ -16,8 +16,8 @@ class WasteBankController extends Controller
             ->with(["village" => function ($query) {
                 $query->select("village_id", "village_name");
             }])
-            ->orderByDesc("created_at")
-            ->get();
+            ->orderByDesc("created_at");
+
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()

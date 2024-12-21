@@ -193,6 +193,7 @@
             table = $('.table').DataTable({
                 ordering: false,
                 processing: true,
+                serverSide: true,
                 autowidth: false,
                 ajax: {
                     url: "{{ route('village.data') }}",

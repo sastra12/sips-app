@@ -13,8 +13,7 @@ class VillageController extends Controller
     public function data()
     {
         $listdata = Village::query()
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
 
         return Datatables::of($listdata)
             // for number

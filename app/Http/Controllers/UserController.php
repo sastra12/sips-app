@@ -22,8 +22,8 @@ class UserController extends Controller
                 $query->select('waste_name');
             }])
             ->where('id', '!=', Auth::user()->id)
-            ->orderByDesc('created_at')
-            ->get();
+            ->orderByDesc('created_at');
+
         return Datatables::of($listdata)
             // for number
             ->addIndexColumn()

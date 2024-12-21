@@ -334,9 +334,6 @@
             })
         }
 
-        console.log(totalPaidThisMonth)
-
-
         $('#resetDataPaid').click(function() {
             $('#error_list_paid').empty()
             $('#error_list_paid').removeClass('alert alert-danger')

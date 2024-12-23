@@ -146,6 +146,7 @@
                 </div>
             </div>
         </div>
+        @includeIf('layouts-new.loading-screen')
     </div>
 @endsection
 @push('script')
@@ -345,6 +346,7 @@
 
 
         function checkMonthlyBillUnpaid() {
+            $("#loading-screen").modal("show")
             $.ajax({
                 url: "{{ route('monthlyBillUnpaidYrpw') }}",
                 type: "GET",
@@ -372,6 +374,7 @@
                         // Hapus list errornya
                         $('#error_list_unpaid').empty()
                         $('#error_list_unpaid').removeClass('alert alert-danger')
+                        $("#loading-screen").modal("hide")
                         tableUnpaid.clear().draw();
                         tableUnpaid.rows.add(response.data).draw();
                     }

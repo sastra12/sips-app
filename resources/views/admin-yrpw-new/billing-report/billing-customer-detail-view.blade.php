@@ -346,7 +346,6 @@
 
 
         function checkMonthlyBillUnpaid() {
-            $("#loading-screen").modal("show")
             $.ajax({
                 url: "{{ route('monthlyBillUnpaidYrpw') }}",
                 type: "GET",
@@ -372,11 +371,14 @@
                         });
                     } else {
                         // Hapus list errornya
+                        $("#loading-screen").modal("show")
                         $('#error_list_unpaid').empty()
                         $('#error_list_unpaid').removeClass('alert alert-danger')
-                        $("#loading-screen").modal("hide")
                         tableUnpaid.clear().draw();
                         tableUnpaid.rows.add(response.data).draw();
+                        setTimeout(function() {
+                            $("#loading-screen").modal("hide");
+                        }, 1000);
                     }
                 },
                 error: function(response) {
